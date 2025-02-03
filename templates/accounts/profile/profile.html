@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar avatar-lg mb-3">
+                    {% else %}
+                        <div class="avatar avatar-lg bg-primary text-white mb-3 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-2x"></i>
+                        </div>
+                    {% endif %}
+                    <h4 class="card-title">{{ user.get_full_name|default:user.username }}</h4>
+                    <p class="text-muted">@{{ user.username }}</p>
+                    <p class="card-text">{{ user.bio|default:"No bio provided." }}</p>
+                    <a href="{% url 'update_profile' %}" class="btn btn-primary">
+                        <i class="fas fa-edit me-2"></i>Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="col-md-8">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">
+                                <i class="fas fa-clipboard-list me-2"></i>Boards
+                            </h5>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Created
+                                    <span class="badge bg-primary rounded-pill">{{ user.owned_boards.count }}</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Participating
+                                    <span class="badge bg-primary rounded-pill">{{ user.teams.all|length }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">
+                                <i class="fas fa-tasks me-2"></i>Tasks
+                            </h5>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Created
+                                    <span class="badge bg-success rounded-pill">{{ user.created_tasks.count }}</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Assigned
+                                    <span class="badge bg-success rounded-pill">{{ user.assigned_tasks.count }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-info">
+                                <i class="fas fa-users me-2"></i>Teams
+                            </h5>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Owned
+                                    <span class="badge bg-info rounded-pill">{{ user.owned_teams.count }}</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Member of
+                                    <span class="badge bg-info rounded-pill">{{ user.teams.count }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-warning">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                            </h5>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Unread
+                                    <span class="badge bg-warning rounded-pill">{{ user.notifications.unread.count }}</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Total
+                                    <span class="badge bg-warning rounded-pill">{{ user.notifications.all.count }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-history me-2"></i>Recent Activity
+                    </h5>
+                    <div class="list-group list-group-flush">
+                        {% for notification in user.notifications.all|slice:":5" %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ notification.verb }}</h6>
+                                    <small class="text-muted">{{ notification.timestamp|timesince }} ago</small>
+                                </div>
+                                <p class="mb-1">{{ notification.description }}</p>
+                            </div>
+                        {% empty %}
+                            <div class="list-group-item text-center text-muted">
+                                No recent activity
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

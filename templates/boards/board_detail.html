@@ -1,0 +1,518 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ board.title }} - Kanban Board{% endblock %}
+
+{% block extra_css %}
+<style>
+    .kanban-container {
+        min-height: calc(100vh - 180px);
+        padding: 1rem;
+        background: var(--bs-gray-100);
+    }
+    
+    [data-bs-theme="dark"] .kanban-container {
+        background: var(--bs-gray-900);
+    }
+    
+    .board-header {
+        padding: 1rem;
+        background: var(--bs-white);
+        border-bottom: 1px solid var(--bs-gray-200);
+    }
+    
+    [data-bs-theme="dark"] .board-header {
+        background: var(--bs-gray-800);
+        border-color: var(--bs-gray-700);
+    }
+    
+    .column-container {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        padding: 1rem;
+        align-items: flex-start;
+    }
+    
+    .kanban-column {
+        flex: 0 0 300px;
+        background: var(--bs-gray-100);
+        border-radius: 0.5rem;
+        border: 1px solid var(--bs-gray-200);
+    }
+    
+    [data-bs-theme="dark"] .kanban-column {
+        background: var(--bs-gray-800);
+        border-color: var(--bs-gray-700);
+    }
+    
+    .column-header {
+        padding: 1rem;
+        border-bottom: 2px solid;
+        font-weight: 600;
+    }
+    
+    .task-list {
+        min-height: 100px;
+        padding: 0.5rem;
+    }
+    
+    .task-card {
+        background: var(--bs-white);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        cursor: grab;
+        border: 1px solid var(--bs-gray-200);
+    }
+    
+    [data-bs-theme="dark"] .task-card {
+        background: var(--bs-gray-900);
+        border-color: var(--bs-gray-700);
+    }
+    
+    .task-card:hover {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .task-card.dragging {
+        opacity: 0.5;
+    }
+    
+    .task-labels {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .task-label {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 1rem;
+    }
+    
+    .member-avatars {
+        display: flex;
+        margin-left: 0.5rem;
+    }
+    
+    .member-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        margin-left: -0.5rem;
+        border: 2px solid var(--bs-white);
+        background: var(--bs-gray-200);
+        overflow: hidden;
+    }
+    
+    [data-bs-theme="dark"] .member-avatar {
+        border-color: var(--bs-gray-900);
+    }
+    
+    .task-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 0.5rem;
+        color: var(--bs-gray-600);
+        font-size: 0.875rem;
+    }
+    
+    .task-meta i {
+        margin-right: 0.25rem;
+    }
+    
+    .add-task-btn {
+        width: 100%;
+        padding: 0.5rem;
+        text-align: left;
+        color: var(--bs-gray-600);
+        background: transparent;
+        border: 1px dashed var(--bs-gray-400);
+        border-radius: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    
+    .add-task-btn:hover {
+        background: var(--bs-gray-100);
+        color: var(--bs-primary);
+        border-color: var(--bs-primary);
+    }
+    
+    [data-bs-theme="dark"] .add-task-btn:hover {
+        background: var(--bs-gray-800);
+    }
+    
+    .progress {
+        height: 6px;
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Board Header -->
+<div class="board-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col">
+                <div class="d-flex align-items-center mb-4">
+                    <h4 class="mb-0 me-3">{{ board.title }}</h4>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <span class="ms-2 text-muted">{{ progress }}% complete</span>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="d-flex align-items-center gap-3">
+                    <!-- View Options -->
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary active">
+                            <i class="fas fa-columns"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="fas fa-table"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Team Members -->
+                    <div class="member-avatars">
+                        {% for member in board.team.members.all|slice:":5" %}
+                            <div class="member-avatar" title="{{ member.get_full_name|default:member.username }}">
+                                {% if member.avatar %}
+                                    <img src="{{ member.avatar.url }}" alt="{{ member.username }}" class="img-fluid">
+                                {% else %}
+                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary text-white">
+                                        {{ member.username|make_list|first|upper }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        {% if board.team.members.count > 5 %}
+                            <div class="member-avatar d-flex align-items-center justify-content-center bg-secondary text-white">
+                                +{{ board.team.members.count|add:"-5" }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Add Member Button -->
+                    {% if board.owner == request.user %}
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                            <i class="fas fa-user-plus"></i>
+                            Add Member
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Kanban Board -->
+<div class="kanban-container">
+    <div class="column-container">
+        {% for column in board.columns.all %}
+            <div class="kanban-column" data-column-id="{{ column.id }}">
+                <div class="column-header {{ column.type }}" data-column-id="{{ column.id }}">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>{{ column.title }}</span>
+                        <span class="badge bg-secondary">{{ column.tasks.count }}</span>
+                    </div>
+                </div>
+                
+                <div class="task-list" data-column-id="{{ column.id }}">
+                    {% for task in column.tasks.all %}
+                        <div class="task-card" draggable="true" data-task-id="{{ task.id }}">
+                            <!-- Task Labels -->
+                            <div class="task-labels">
+                                {% for label in task.labels.all %}
+                                    <span class="task-label" data-color="{{ label.color }}">{{ label.name }}</span>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Task Title -->
+                            <h6 class="mb-2">{{ task.title }}</h6>
+                            
+                            <!-- Task Meta -->
+                            <div class="task-meta">
+                                {% if task.due_date %}
+                                    <span><i class="fas fa-calendar"></i>{{ task.due_date|date:"M d" }}</span>
+                                {% endif %}
+                                
+                                {% if task.comments.exists %}
+                                    <span><i class="fas fa-comment"></i>{{ task.comments.count }}</span>
+                                {% endif %}
+                                
+                                {% if task.attachments.exists %}
+                                    <span><i class="fas fa-paperclip"></i>{{ task.attachments.count }}</span>
+                                {% endif %}
+                                
+                                {% if task.assigned_to %}
+                                    <div class="member-avatar ms-auto" title="{{ task.assigned_to.get_full_name|default:task.assigned_to.username }}">
+                                        {% if task.assigned_to.avatar %}
+                                            <img src="{{ task.assigned_to.avatar.url }}" alt="{{ task.assigned_to.username }}" class="img-fluid">
+                                        {% else %}
+                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary text-white">
+                                                {{ task.assigned_to.username|make_list|first|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Add Task Button -->
+                <div class="p-2">
+                    <button type="button" class="add-task-btn" data-bs-toggle="modal" data-bs-target="#createTaskModal" data-column-id="{{ column.id }}">
+                        <i class="fas fa-plus me-2"></i>Add Task
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Create Task Modal -->
+<div class="modal fade" id="createTaskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'task_create' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="column" id="columnInput">
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" name="title" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Assigned To</label>
+                        <select name="assigned_to" class="form-select">
+                            <option value="">Unassigned</option>
+                            {% for member in board.team.members.all %}
+                                <option value="{{ member.id }}">{{ member.get_full_name|default:member.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Due Date</label>
+                        <input type="datetime-local" name="due_date" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Priority</label>
+                        <select name="priority" class="form-select">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Labels</label>
+                        <div class="row g-2">
+                            {% for label in board.labels.all %}
+                                <div class="col-auto">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="labels" value="{{ label.id }}" class="form-check-input" id="label{{ label.id }}">
+                                        <label class="form-check-label label-color" data-color="{{ label.color }}" for="label{{ label.id }}">
+                                            {{ label.name }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Member Modal -->
+<div class="modal fade" id="addMemberModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Team Member</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'add_member' board.team.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Select User</label>
+                        <select name="user_id" class="form-select" required>
+                            <option value="">Choose a user...</option>
+                            {% for user in users %}
+                                {% if user not in board.team.members.all %}
+                                    <option value="{{ user.id }}">{{ user.get_full_name|default:user.username }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tasks = document.querySelectorAll('.task-card');
+    const columns = document.querySelectorAll('.task-list');
+    let draggedTask = null;
+    
+    // Initialize task drag events
+    tasks.forEach(task => {
+        task.addEventListener('dragstart', handleDragStart);
+        task.addEventListener('dragend', handleDragEnd);
+    });
+    
+    // Initialize column drag events
+    columns.forEach(column => {
+        column.addEventListener('dragover', handleDragOver);
+        column.addEventListener('drop', handleDrop);
+    });
+    
+    // Create Task Modal
+    const createTaskModal = document.getElementById('createTaskModal');
+    if (createTaskModal) {
+        createTaskModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const columnId = button.dataset.columnId;
+            document.getElementById('columnInput').value = columnId;
+        });
+    }
+    
+    function handleDragStart(e) {
+        draggedTask = this;
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', this.dataset.taskId);
+    }
+    
+    function handleDragEnd(e) {
+        this.classList.remove('dragging');
+        draggedTask = null;
+    }
+    
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    }
+    
+    async function handleDrop(e) {
+        e.preventDefault();
+        const taskId = e.dataTransfer.getData('text/plain');
+        const targetColumn = this;
+        const columnId = targetColumn.dataset.columnId;
+        
+        // Get the position in the column
+        const afterElement = getDragAfterElement(targetColumn, e.clientY);
+        const position = afterElement ? 
+            Array.from(targetColumn.children).indexOf(afterElement) :
+            targetColumn.children.length;
+        
+        try {
+            const response = await fetch('/boards/api/tasks/update-position/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    taskId: taskId,
+                    columnId: columnId,
+                    position: position
+                })
+            });
+            
+            if (response.ok) {
+                if (afterElement) {
+                    targetColumn.insertBefore(draggedTask, afterElement);
+                } else {
+                    targetColumn.appendChild(draggedTask);
+                }
+            } else {
+                console.error('Failed to update task position');
+            }
+        } catch (error) {
+            console.error('Error updating task position:', error);
+        }
+    }
+    
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.task-card:not(.dragging)')];
+        
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Set progress bar width
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        const progress = progressBar.getAttribute('aria-valuenow');
+        progressBar.style.width = `${progress}%`;
+    }
+
+    // Set label colors
+    document.querySelectorAll('.task-label').forEach(label => {
+        const color = label.dataset.color;
+        label.style.backgroundColor = `${color}20`;
+        label.style.color = color;
+    });
+
+    // Set label checkbox colors
+    document.querySelectorAll('.label-color').forEach(label => {
+        label.style.setProperty('--label-color', label.dataset.color);
+    });
+});
+</script>
+{% endblock %} 

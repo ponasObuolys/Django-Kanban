@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to Kanban Board{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row align-items-center min-vh-75">
+        <!-- Hero Section -->
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold mb-4">Organize Your Work with Kanban Board</h1>
+            <p class="lead mb-4">A modern task management solution for teams and individuals. Create boards, manage tasks, and collaborate effectively.</p>
+            {% if not user.is_authenticated %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg px-4 me-md-2">Get Started</a>
+                    <a href="{% url 'account_login' %}" class="btn btn-outline-secondary btn-lg px-4">Sign In</a>
+                </div>
+            {% else %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <a href="{% url 'board_list' %}" class="btn btn-primary btn-lg px-4 me-md-2">My Boards</a>
+                    <a href="{% url 'team_list' %}" class="btn btn-outline-secondary btn-lg px-4">My Teams</a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Feature Cards -->
+        <div class="col-lg-6">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="feature-icon bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-tasks fa-2x p-3"></i>
+                            </div>
+                            <h5 class="card-title">Task Management</h5>
+                            <p class="card-text">Create, organize, and track tasks with our intuitive Kanban board interface.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="feature-icon bg-success bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-users fa-2x p-3"></i>
+                            </div>
+                            <h5 class="card-title">Team Collaboration</h5>
+                            <p class="card-text">Work together seamlessly with team members on shared projects.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="feature-icon bg-info bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-bell fa-2x p-3"></i>
+                            </div>
+                            <h5 class="card-title">Real-time Notifications</h5>
+                            <p class="card-text">Stay updated with instant notifications about task and team activities.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="feature-icon bg-warning bg-gradient text-white rounded-3 mb-3">
+                                <i class="fas fa-chart-line fa-2x p-3"></i>
+                            </div>
+                            <h5 class="card-title">Progress Tracking</h5>
+                            <p class="card-text">Monitor project progress and team performance with detailed statistics.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Section -->
+    {% if user.is_authenticated %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Your Statistics</h2>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-primary">{{ user.owned_boards.count }}</h3>
+                    <p class="card-text">Boards Created</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-success">{{ user.teams.count }}</h3>
+                    <p class="card-text">Teams Joined</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-info">{{ user.assigned_tasks.count }}</h3>
+                    <p class="card-text">Tasks Assigned</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-warning">{{ user.created_tasks.count }}</h3>
+                    <p class="card-text">Tasks Created</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 0.75rem;
+}
+
+.min-vh-75 {
+    min-height: 75vh;
+}
+</style>
+{% endblock %} 
