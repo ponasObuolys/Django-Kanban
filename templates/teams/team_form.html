@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %}{{ title }} - Gretvė Tasker{% endblock %}
 
@@ -13,24 +14,18 @@
                     
                     <form method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
-                        
-                        {% for field in form %}
-                        <div class="mb-3">
-                            <label for="{{ field.id_for_label }}" class="form-label">
-                                {{ field.label }}
-                            </label>
-                            {{ field.errors }}
-                            {{ field }}
-                            {% if field.help_text %}
-                            <div class="form-text">{{ field.help_text }}</div>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
+                        {{ form|crispy }}
                         
                         <div class="d-flex justify-content-between align-items-center mt-4">
-                            <a href="{% url 'team_list' %}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Back to Teams
+                            {% if team %}
+                            <a href="{% url 'teams:team_detail' team_id=team.id %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
                             </a>
+                            {% else %}
+                            <a href="{% url 'teams:team_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                            {% endif %}
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save me-2"></i>Save Team
                             </button>

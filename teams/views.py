@@ -57,7 +57,7 @@ def team_create(request):
             )
             
             messages.success(request, 'Team created successfully.')
-            return redirect('team_detail', team_id=team.id)
+            return redirect('teams:team_detail', team_id=team.id)
     else:
         form = TeamForm()
     
@@ -73,7 +73,7 @@ def team_detail(request, team_id):
     # Check if user is a member of the team
     if not team.members.filter(id=request.user.id).exists():
         messages.error(request, "You don't have access to this team.")
-        return redirect('team_list')
+        return redirect('teams:team_list')
     
     members = team.teammembership_set.all()
     pending_invitations = team.invitations.filter(status='pending')
@@ -92,14 +92,14 @@ def team_edit(request, team_id):
     # Check if user is team admin
     if not team.teammembership_set.filter(user=request.user, role='admin').exists():
         messages.error(request, "You don't have permission to edit this team.")
-        return redirect('team_detail', team_id=team.id)
+        return redirect('teams:team_detail', team_id=team.id)
     
     if request.method == 'POST':
         form = TeamForm(request.POST, instance=team)
         if form.is_valid():
             form.save()
             messages.success(request, 'Team updated successfully.')
-            return redirect('team_detail', team_id=team.id)
+            return redirect('teams:team_detail', team_id=team.id)
     else:
         form = TeamForm(instance=team)
     
@@ -115,12 +115,12 @@ def team_delete(request, team_id):
     
     if team.owner != request.user:
         messages.error(request, "You don't have permission to delete this team.")
-        return redirect('team_detail', team_id=team.id)
+        return redirect('teams:team_detail', team_id=team.id)
     
     if request.method == 'POST':
         team.delete()
         messages.success(request, 'Team deleted successfully.')
-        return redirect('team_list')
+        return redirect('teams:team_list')
     
     return render(request, 'teams/team_confirm_delete.html', {
         'team': team
@@ -150,7 +150,7 @@ def send_invitation(request, team_id):
     # Check if user is team admin
     if not team.teammembership_set.filter(user=request.user, role='admin').exists():
         messages.error(request, "You don't have permission to send invitations.")
-        return redirect('team_detail', team_id=team.id)
+        return redirect('teams:team_detail', team_id=team.id)
     
     if request.method == 'POST':
         form = TeamInvitationForm(request.POST)
@@ -162,7 +162,7 @@ def send_invitation(request, team_id):
             # Check if user is already a member
             if team.members.filter(id=invitation.invited_user.id).exists():
                 messages.error(request, 'User is already a member of this team.')
-                return redirect('team_detail', team_id=team.id)
+                return redirect('teams:team_detail', team_id=team.id)
             
             # Check for existing pending invitation
             if TeamInvitation.objects.filter(
@@ -171,7 +171,7 @@ def send_invitation(request, team_id):
                 status='pending'
             ).exists():
                 messages.error(request, 'User already has a pending invitation.')
-                return redirect('team_detail', team_id=team.id)
+                return redirect('teams:team_detail', team_id=team.id)
             
             invitation.save()
             
@@ -185,7 +185,7 @@ def send_invitation(request, team_id):
             )
             
             messages.success(request, 'Invitation sent successfully.')
-            return redirect('team_detail', team_id=team.id)
+            return redirect('teams:team_detail', team_id=team.id)
     else:
         form = TeamInvitationForm()
     
@@ -224,7 +224,7 @@ def accept_invitation(request, invitation_id):
     )
     
     messages.success(request, f'You have joined team "{invitation.team.name}".')
-    return redirect('team_detail', team_id=invitation.team.id)
+    return redirect('teams:team_detail', team_id=invitation.team.id)
 
 @login_required
 def reject_invitation(request, invitation_id):
@@ -248,8 +248,8 @@ def reject_invitation(request, invitation_id):
         description=f'{request.user.username} has declined to join team "{invitation.team.name}"'
     )
     
-    messages.info(request, f'You have declined the invitation to join team "{invitation.team.name}".')
-    return redirect('team_list')
+    messages.success(request, 'Invitation rejected.')
+    return redirect('teams:invitation_list')
 
 @login_required
 def cancel_invitation(request, invitation_id):
@@ -272,7 +272,7 @@ def cancel_invitation(request, invitation_id):
     )
     
     messages.success(request, 'Invitation cancelled successfully.')
-    return redirect('invitation_list')
+    return redirect('teams:invitation_list')
 
 @login_required
 def team_members(request, team_id):
@@ -280,7 +280,7 @@ def team_members(request, team_id):
     
     if not team.members.filter(id=request.user.id).exists():
         messages.error(request, "You don't have access to this team.")
-        return redirect('team_list')
+        return redirect('teams:team_list')
     
     members = team.teammembership_set.all().select_related('user')
     
@@ -297,7 +297,7 @@ def change_member_role(request, team_id, user_id):
     # Check if user is team admin
     if not team.teammembership_set.filter(user=request.user, role='admin').exists():
         messages.error(request, "You don't have permission to change member roles.")
-        return redirect('team_members', team_id=team.id)
+        return redirect('teams:team_members', team_id=team.id)
     
     membership = get_object_or_404(TeamMembership, team=team, user_id=user_id)
     
@@ -309,13 +309,13 @@ def change_member_role(request, team_id, user_id):
                 admin_count = team.teammembership_set.filter(role='admin').count()
                 if admin_count <= 1:
                     messages.error(request, "Cannot remove the last admin.")
-                    return redirect('team_members', team_id=team.id)
+                    return redirect('teams:team_members', team_id=team.id)
             
             membership.role = new_role
             membership.save()
             messages.success(request, f"Member role updated to {new_role}.")
         
-    return redirect('team_members', team_id=team.id)
+    return redirect('teams:team_members', team_id=team.id)
 
 @login_required
 def add_member(request, team_id):
@@ -324,75 +324,72 @@ def add_member(request, team_id):
     # Check if user is team admin
     if not team.teammembership_set.filter(user=request.user, role='admin').exists():
         messages.error(request, "You don't have permission to add members.")
-        return redirect('team_members', team_id=team.id)
+        return redirect('teams:team_members', team_id=team.id)
     
     if request.method == 'POST':
         user_id = request.POST.get('user_id')
-        try:
-            user = User.objects.get(id=user_id)
+        if user_id:
+            user = get_object_or_404(User, id=user_id)
             
             # Check if user is already a member
             if team.members.filter(id=user.id).exists():
                 messages.error(request, 'User is already a member of this team.')
-            else:
-                TeamMembership.objects.create(
-                    team=team,
-                    user=user,
-                    role='member'
-                )
-                messages.success(request, f'{user.username} has been added to the team.')
-                
-                # Send notification to the added user
-                notify.send(
-                    request.user,
-                    recipient=user,
-                    verb='added you to',
-                    target=team,
-                    description=f'You have been added to team "{team.name}"'
-                )
-        except User.DoesNotExist:
-            messages.error(request, 'User not found.')
-    
-    return redirect('team_members', team_id=team.id)
+                return redirect('teams:team_members', team_id=team.id)
+            
+            # Add user to team
+            TeamMembership.objects.create(
+                team=team,
+                user=user,
+                role='member'
+            )
+            
+            # Notify added user
+            notify.send(
+                request.user,
+                recipient=user,
+                verb='added you to',
+                target=team,
+                description=f'You have been added to team "{team.name}"'
+            )
+            
+            messages.success(request, f'{user.username} has been added to the team.')
+        
+    return redirect('teams:team_members', team_id=team.id)
 
 @login_required
 def remove_member(request, team_id, user_id):
     team = get_object_or_404(Team, id=team_id)
+    user_to_remove = get_object_or_404(User, id=user_id)
     
     # Check if user is team admin
     if not team.teammembership_set.filter(user=request.user, role='admin').exists():
         messages.error(request, "You don't have permission to remove members.")
-        return redirect('team_members', team_id=team.id)
+        return redirect('teams:team_members', team_id=team.id)
     
-    try:
-        membership = TeamMembership.objects.get(team=team, user_id=user_id)
-        
-        # Prevent removing the last admin
-        if membership.role == 'admin':
-            admin_count = team.teammembership_set.filter(role='admin').count()
-            if admin_count <= 1:
-                messages.error(request, "Cannot remove the last admin.")
-                return redirect('team_members', team_id=team.id)
-        
-        # Prevent removing the team owner
-        if membership.user == team.owner:
-            messages.error(request, "Cannot remove the team owner.")
-            return redirect('team_members', team_id=team.id)
-        
-        user = membership.user
-        membership.delete()
-        
-        # Send notification to the removed user
-        notify.send(
-            request.user,
-            recipient=user,
-            verb='removed you from',
-            target=team,
-            description=f'You have been removed from team "{team.name}"'
-        )
-        
-        messages.success(request, f'{user.username} has been removed from the team.')
-    except TeamMembership.DoesNotExist:
-        messages.error(request, 'Member not found.')
+    # Prevent removing the team owner
+    if user_to_remove == team.owner:
+        messages.error(request, "Cannot remove the team owner.")
+        return redirect('teams:team_members', team_id=team.id)
     
-    return redirect('team_members', team_id=team.id)
+    membership = get_object_or_404(TeamMembership, team=team, user=user_to_remove)
+    
+    # Prevent removing the last admin
+    if membership.role == 'admin':
+        admin_count = team.teammembership_set.filter(role='admin').count()
+        if admin_count <= 1:
+            messages.error(request, "Cannot remove the last admin.")
+            return redirect('teams:team_members', team_id=team.id)
+    
+    membership.delete()
+    
+    # Notify removed user
+    notify.send(
+        request.user,
+        recipient=user_to_remove,
+        verb='removed you from',
+        target=team,
+        description=f'You have been removed from team "{team.name}"'
+    )
+    
+    messages.success(request, f'{user_to_remove.username} has been removed from the team.')
+    return redirect('teams:team_members', team_id=team.id)

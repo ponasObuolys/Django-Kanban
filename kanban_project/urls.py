@@ -32,7 +32,7 @@ urlpatterns += i18n_patterns(
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('accounts/signup/', CustomSignupView.as_view(), name='account_signup'),
     path('accounts/', include('allauth.urls')),  # django-allauth URLs
-    path('profile/', include('accounts.urls')),  # Your custom profile views
+    path('accounts/', include('accounts.urls')),  # Your custom profile views
     path('boards/', include('boards.urls')),
     path('teams/', include('teams.urls')),
     path('notifications/', include('notifications.urls', namespace='notifications')),

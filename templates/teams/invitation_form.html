@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
-{% block title %}Invite Members - {{ team.name }} - Gretvė Tasker{% endblock %}
+{% block title %}Invite Member - {{ team.name }} - Gretvė Tasker{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -9,37 +10,16 @@
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                            <h1 class="h3 mb-2">Invite Members</h1>
-                            <p class="text-muted mb-0">{{ team.name }}</p>
-                        </div>
-                        <a href="{% url 'team_detail' team_id=team.id %}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>Back to Team
-                        </a>
-                    </div>
-
+                    <h1 class="card-title h3 mb-4">Invite Member to {{ team.name }}</h1>
+                    
                     <form method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
+                        {{ form|crispy }}
                         
-                        {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {% for error in form.non_field_errors %}
-                            {{ error }}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-
-                        <div class="mb-4">
-                            <label for="{{ form.invited_user.id_for_label }}" class="form-label">Select User to Invite</label>
-                            {{ form.invited_user.errors }}
-                            {{ form.invited_user }}
-                            {% if form.invited_user.help_text %}
-                            <div class="form-text">{{ form.invited_user.help_text }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="d-grid">
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a href="{% url 'teams:team_detail' team_id=team.id %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-paper-plane me-2"></i>Send Invitation
                             </button>

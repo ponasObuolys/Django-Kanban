@@ -46,14 +46,14 @@
                                     </div>
                                 </div>
                                 <div class="ms-3">
-                                    <form method="post" action="{% url 'accept_invitation' invitation_id=invitation.id %}" 
+                                    <form method="post" action="{% url 'teams:accept_invitation' invitation_id=invitation.id %}" 
                                           class="d-inline">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-sm btn-success">
                                             <i class="fas fa-check me-1"></i>Accept
                                         </button>
                                     </form>
-                                    <form method="post" action="{% url 'reject_invitation' invitation_id=invitation.id %}" 
+                                    <form method="post" action="{% url 'teams:reject_invitation' invitation_id=invitation.id %}" 
                                           class="d-inline">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-sm btn-danger">
@@ -111,7 +111,7 @@
                                 </div>
                                 {% if invitation.status == 'pending' %}
                                 <div class="ms-3">
-                                    <form method="post" action="{% url 'cancel_invitation' invitation_id=invitation.id %}" 
+                                    <form method="post" action="{% url 'teams:cancel_invitation' invitation_id=invitation.id %}" 
                                           class="d-inline">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-sm btn-danger">

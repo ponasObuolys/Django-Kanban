@@ -10,7 +10,7 @@
             <h1 class="mb-2">{{ team.name }} - Members</h1>
             <p class="text-muted">Manage team members and their roles</p>
         </div>
-        <a href="{% url 'team_detail' team_id=team.id %}" class="btn btn-outline-secondary">
+        <a href="{% url 'teams:team_detail' team_id=team.id %}" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-2"></i>Back to Team
         </a>
     </div>
@@ -41,10 +41,12 @@
                                         <div class="d-flex align-items-center">
                                             {% if membership.user.avatar %}
                                                 <img src="{{ membership.user.avatar.url }}" alt="Avatar" 
-                                                     class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                                                     class="rounded-circle me-2" width="32" height="32">
                                             {% else %}
-                                                <img src="{% static 'images/default-avatar.svg' %}" alt="Avatar" 
-                                                     class="rounded-circle me-2" style="width: 32px; height: 32px; background-color: #fff;">
+                                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+                                                     style="width: 32px; height: 32px;">
+                                                    {{ membership.user.username|make_list|first|upper }}
+                                                </div>
                                             {% endif %}
                                             <div>
                                                 <div>{{ membership.user.username }}</div>
@@ -57,26 +59,34 @@
                                     </td>
                                     <td>
                                         {% if is_admin and membership.user != team.owner %}
-                                        <form method="post" action="{% url 'change_member_role' team_id=team.id user_id=membership.user.id %}" 
+                                        <form method="post" action="{% url 'teams:change_member_role' team_id=team.id user_id=membership.user.id %}" 
                                               class="d-flex align-items-center">
                                             {% csrf_token %}
                                             <select name="role" class="form-select form-select-sm" 
                                                     onchange="this.form.submit()" style="width: auto;">
-                                                <option value="member" {% if membership.role == 'member' %}selected{% endif %}>Member</option>
-                                                <option value="admin" {% if membership.role == 'admin' %}selected{% endif %}>Admin</option>
+                                                <option value="member" {% if membership.role == 'member' %}selected{% endif %}>
+                                                    Member
+                                                </option>
+                                                <option value="admin" {% if membership.role == 'admin' %}selected{% endif %}>
+                                                    Admin
+                                                </option>
                                             </select>
                                         </form>
                                         {% else %}
                                         <span class="badge {% if membership.role == 'admin' %}bg-primary{% else %}bg-secondary{% endif %}">
-                                            {{ membership.get_role_display }}
+                                            {{ membership.role|title }}
                                         </span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ membership.joined_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {{ membership.joined_at|date:"M d, Y" }}
+                                        </small>
+                                    </td>
                                     {% if is_admin %}
                                     <td>
                                         {% if membership.user != team.owner %}
-                                        <form method="post" action="{% url 'remove_member' team_id=team.id user_id=membership.user.id %}" 
+                                        <form method="post" action="{% url 'teams:remove_member' team_id=team.id user_id=membership.user.id %}" 
                                               class="d-inline" onsubmit="return confirm('Are you sure you want to remove this member?');">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-sm btn-danger">
@@ -100,50 +110,28 @@
         <div class="col-lg-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title mb-4">Add New Member</h5>
-                    <form method="post" action="{% url 'add_member' team_id=team.id %}">
+                    <h5 class="card-title mb-4">Add Member</h5>
+                    <form method="post" action="{% url 'teams:add_member' team_id=team.id %}">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label class="form-label">Select User</label>
                             <select name="user_id" class="form-select" required>
                                 <option value="">Choose a user...</option>
-                                {% for user in available_users %}
-                                <option value="{{ user.id }}">{{ user.username }}</option>
+                                {% for user in users %}
+                                    {% if user not in team.members.all %}
+                                        <option value="{{ user.id }}">{{ user.get_full_name|default:user.username }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-user-plus me-2"></i>Add Member
-                        </button>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>Add Member
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
-
-            {% if pending_invitations %}
-            <div class="card shadow-sm mt-4">
-                <div class="card-body">
-                    <h5 class="card-title mb-4">Pending Invitations</h5>
-                    <div class="list-group list-group-flush">
-                        {% for invitation in pending_invitations %}
-                        <div class="list-group-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div>{{ invitation.invited_user.username }}</div>
-                                    <small class="text-muted">Invited {{ invitation.created_at|timesince }} ago</small>
-                                </div>
-                                <form method="post" action="{% url 'cancel_invitation' invitation_id=invitation.id %}" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-times me-1"></i>Cancel
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
         </div>
         {% endif %}
     </div>
