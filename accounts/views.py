@@ -1,11 +1,29 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, login
 from django.contrib.auth.forms import PasswordChangeForm
-from .forms import CustomUserChangeForm, NotificationPreferencesForm
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.utils.decorators import method_decorator
+from django.views.generic import CreateView
+from allauth.account.views import SignupView
+from .forms import CustomUserChangeForm, NotificationPreferencesForm, CustomUserCreationForm
 
 # Create your views here.
+
+@method_decorator([ensure_csrf_cookie, csrf_protect], name='dispatch')
+class CustomSignupView(SignupView):
+    template_name = 'account/signup.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['csrf_token_value'] = self.request.META.get('CSRF_COOKIE', '')
+        return context
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Your account has been created successfully!')
+        return response
 
 @login_required
 def profile_view(request):

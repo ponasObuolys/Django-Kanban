@@ -63,8 +63,10 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'accounts.middleware.EnsureCsrfCookieMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -126,13 +128,24 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'lt'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Vilnius'
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
+
+# Available languages
+LANGUAGES = [
+    ('lt', 'Lietuvių'),
+    ('en', 'English'),
+]
+
+# Location of translation files
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 
 # Static files (CSS, JavaScript, Images)
@@ -173,7 +186,8 @@ LOGOUT_REDIRECT_URL = 'home'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_SESSION_REMEMBER = True
 
 # Email Configuration (for development)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -192,3 +206,34 @@ COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter',  'co
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# Security Settings
+SECURE_PROXY_SSL_HEADER = None
+SECURE_SSL_REDIRECT = False
+SECURE_HSTS_SECONDS = 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# CSRF Settings
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_PATH = '/'
+CSRF_COOKIE_DOMAIN = None
+CSRF_COOKIE_SAMESITE = None
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000']
+CSRF_USE_SESSIONS = False  # Changed to False to use cookies instead
+CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
+
+# Session Settings
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = None
+SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
+SESSION_COOKIE_DOMAIN = None
+SESSION_COOKIE_PATH = '/'
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'

@@ -1,0 +1,140 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDERS
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-03 20:40+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#: accounts/models.py:15
+msgid "User notification preferences"
+msgstr "Vartotojo pranešimų nustatymai"
+
+#: accounts/models.py:22
+msgid "user"
+msgstr "vartotojas"
+
+#: accounts/models.py:23
+msgid "users"
+msgstr "vartotojai"
+
+#: templates/account/signup.html:5 templates/account/signup.html:13
+#: templates/account/signup.html:42
+msgid "Sign Up"
+msgstr "Registruotis"
+
+#: templates/account/signup.html:48
+#, python-format
+msgid ""
+"\n"
+"                            Already have an account? Then please <a "
+"href=\"%(login_url)s\">sign in</a>.\n"
+"                            "
+msgstr ""
+"\n"
+"                            Jau turite paskyrą? Tada prašome <a "
+"href=\"%(login_url)s\">prisijungti</a>.\n"
+"                            "
+
+#: templates/base.html:111
+msgid "Language"
+msgstr "Kalba"
+
+#: templates/base.html:153
+msgid "All rights reserved."
+msgstr "Visos teisės saugomos."
+
+#: templates/home.html:5
+msgid "Welcome to Gretvėja Tasker"
+msgstr "Sveiki atvykę į Gretvėja Tasker"
+
+#: templates/home.html:12
+msgid "Organize Your Work with Gretvėja Tasker"
+msgstr "Organizuokite savo darbą su Gretvėja Tasker"
+
+#: templates/home.html:13
+msgid "A modern task management solution for teams and individuals. Create boards, manage tasks, and collaborate effectively."
+msgstr "Moderni užduočių valdymo sistema komandoms ir asmenims. Kurkite lentas, valdykite užduotis ir efektyviai bendradarbiaukite."
+
+#: templates/home.html:16
+msgid "Get Started"
+msgstr "Pradėti"
+
+#: templates/home.html:17
+msgid "Sign In"
+msgstr "Prisijungti"
+
+#: templates/home.html:21
+msgid "My Boards"
+msgstr "Mano lentos"
+
+#: templates/home.html:22
+msgid "My Teams"
+msgstr "Mano komandos"
+
+#: templates/home.html:36
+msgid "Task Management"
+msgstr "Užduočių valdymas"
+
+#: templates/home.html:37
+msgid "Create, organize, and track tasks with our intuitive task board interface."
+msgstr "Kurkite, organizuokite ir sekite užduotis naudodami intuityvią užduočių lentos sąsają."
+
+#: templates/home.html:47
+msgid "Team Collaboration"
+msgstr "Komandinis bendradarbiavimas"
+
+#: templates/home.html:48
+msgid "Work together seamlessly with team members on shared projects."
+msgstr "Sklandžiai dirbkite kartu su komandos nariais bendruose projektuose."
+
+#: templates/home.html:58
+msgid "Real-time Notifications"
+msgstr "Pranešimai realiu laiku"
+
+#: templates/home.html:59
+msgid "Stay updated with instant notifications about task and team activities."
+msgstr "Gaukite momentinius pranešimus apie užduočių ir komandos veiklas."
+
+#: templates/home.html:69
+msgid "Progress Tracking"
+msgstr "Pažangos sekimas"
+
+#: templates/home.html:70
+msgid "Monitor project progress and team performance with detailed statistics."
+msgstr "Stebėkite projekto eigą ir komandos našumą su detalia statistika."
+
+#: templates/home.html:82
+msgid "Your Statistics"
+msgstr "Jūsų statistika"
+
+#: templates/home.html:88
+msgid "Boards Created"
+msgstr "Sukurtos lentos"
+
+#: templates/home.html:96
+msgid "Teams Joined"
+msgstr "Prisijungtos komandos"
+
+#: templates/home.html:104
+msgid "Tasks Assigned"
+msgstr "Priskirtos užduotys"
+
+#: templates/home.html:112
+msgid "Tasks Created"
+msgstr "Sukurtos užduotys"
+
+#: templates/home.html:122
+msgid "Created by Aurimas Butvilauskas"
+msgstr "Sukūrė Aurimas Butvilauskas"

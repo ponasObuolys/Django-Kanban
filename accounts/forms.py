@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from .models import CustomUser
 
 class CustomUserChangeForm(UserChangeForm):
@@ -51,4 +51,25 @@ class NotificationPreferencesForm(forms.ModelForm):
             'team_invitations': self.cleaned_data.get('team_invitations', True),
             'board_updates': self.cleaned_data.get('board_updates', True)
         }
-        return super().save(commit=commit) 
+        return super().save(commit=commit)
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=150, required=True)
+    last_name = forms.CharField(max_length=150, required=True)
+    username = forms.CharField(
+        help_text='Required. 150 characters or fewer. Letters, numbers and @/./+/-/_ only - no spaces allowed.'
+    )
+    
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        if commit:
+            user.save()
+        return user 

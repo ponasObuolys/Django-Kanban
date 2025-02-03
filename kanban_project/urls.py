@@ -18,18 +18,27 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls.i18n import i18n_patterns
+from django.views.i18n import set_language
 from django.views.generic import TemplateView
+from accounts.views import CustomSignupView
 
 urlpatterns = [
+    path('i18n/', include('django.conf.urls.i18n')),
+]
+
+urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('accounts/', include('allauth.urls')),
+    path('accounts/signup/', CustomSignupView.as_view(), name='account_signup'),
+    path('accounts/', include('allauth.urls')),  # django-allauth URLs
+    path('profile/', include('accounts.urls')),  # Your custom profile views
     path('boards/', include('boards.urls')),
     path('teams/', include('teams.urls')),
-    path('profile/', include('accounts.urls')),
     path('notifications/', include('notifications.urls', namespace='notifications')),
-    path('__reload__/', include('django_browser_reload.urls')),
-]
+    path("__reload__/", include("django_browser_reload.urls")),  # Browser reload URLs
+    prefix_default_language=True
+)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,51 @@
+.task-label {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+
+.progress {
+    flex-grow: 1;
+    max-width: 200px;
+    height: 8px;
+    background-color: var(--bs-gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--bs-primary);
+    transition: width 0.3s ease;
+}
+
+/* Column header styles */
+.column-header {
+    padding: 12px;
+    font-weight: 600;
+    border-bottom: 3px solid;
+    margin-bottom: 16px;
+}
+
+.column-header.todo {
+    border-color: var(--todo-color);
+}
+
+.column-header.doing {
+    border-color: var(--doing-color);
+}
+
+.column-header.done {
+    border-color: var(--done-color);
+}
+
+.column-header.rejected {
+    border-color: var(--rejected-color);
+}
+
+.label-color {
+    color: var(--label-color);
+} 
