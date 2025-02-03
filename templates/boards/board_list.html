@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Boards - Gretvė Tasker{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">My Boards</h1>
+        <a href="{% url 'board_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Create New Board
+        </a>
+    </div>
+
+    <!-- Personal Boards -->
+    <div class="mb-5">
+        <h2 class="h4 mb-3">Personal Boards</h2>
+        {% if personal_boards %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for board in personal_boards %}
+                    <div class="col">
+                        <div class="card h-100 board-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{% url 'board_detail' board_id=board.id %}" class="text-decoration-none text-dark">
+                                        {{ board.title }}
+                                    </a>
+                                </h5>
+                                <p class="card-text text-muted">{{ board.description|truncatechars:100 }}</p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>Created {{ board.created_at|timesince }} ago
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>You don't have any personal boards yet.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Team Boards -->
+    <div>
+        <h2 class="h4 mb-3">Team Boards</h2>
+        {% if team_boards %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for board in team_boards %}
+                    <div class="col">
+                        <div class="card h-100 board-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{% url 'board_detail' board_id=board.id %}" class="text-decoration-none text-dark">
+                                        {{ board.title }}
+                                    </a>
+                                </h5>
+                                <p class="card-text text-muted">{{ board.description|truncatechars:100 }}</p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <i class="fas fa-users me-1"></i>{{ board.team.name }}
+                                    </small>
+                                </p>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>Created {{ board.created_at|timesince }} ago
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>You don't have any team boards yet.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .board-card {
+        transition: transform 0.2s ease-in-out;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .board-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .board-card .card-title a:hover {
+        color: var(--bs-primary) !important;
+    }
+</style>
+{% endblock %} 

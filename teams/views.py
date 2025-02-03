@@ -18,10 +18,26 @@ def team_list(request):
         status='pending'
     )
     
+    # Get membership info for each team
+    memberships = TeamMembership.objects.filter(user=request.user).select_related('team')
+    
+    # Create a dictionary of team_id: formatted_date
+    join_dates = {}
+    for membership in memberships:
+        time_diff = timezone.now() - membership.joined_at
+        days = time_diff.days
+        if days < 1:
+            join_dates[membership.team_id] = 'today'
+        elif days == 1:
+            join_dates[membership.team_id] = 'yesterday'
+        else:
+            join_dates[membership.team_id] = f'{days} days ago'
+    
     return render(request, 'teams/team_list.html', {
         'owned_teams': owned_teams,
         'member_teams': member_teams,
-        'pending_invitations': pending_invitations
+        'pending_invitations': pending_invitations,
+        'join_dates': join_dates
     })
 
 @login_required

@@ -9,7 +9,7 @@ from .forms import CustomUserChangeForm, NotificationPreferencesForm
 
 @login_required
 def profile_view(request):
-    return render(request, 'accounts/profile.html', {
+    return render(request, 'accounts/profile/profile.html', {
         'user': request.user
     })
 
@@ -31,9 +31,9 @@ def update_profile(request):
         
         user.save()
         messages.success(request, 'Your profile has been updated successfully.')
-        return redirect('settings_view')
+        return redirect('accounts:settings_view')
     
-    return redirect('settings_view')
+    return redirect('accounts:settings_view')
 
 @login_required
 def update_password(request):
@@ -46,7 +46,7 @@ def update_password(request):
         else:
             messages.error(request, 'Please correct the errors below.')
     
-    return redirect('settings_view')
+    return redirect('accounts:settings_view')
 
 @login_required
 def update_notifications(request):
@@ -58,7 +58,7 @@ def update_notifications(request):
         else:
             messages.error(request, 'Please correct the errors below.')
     
-    return redirect('settings_view')
+    return redirect('accounts:settings_view')
 
 @login_required
 def update_theme(request):
@@ -71,4 +71,4 @@ def update_theme(request):
         else:
             messages.error(request, 'Invalid theme selection.')
     
-    return redirect('settings_view')
+    return redirect('accounts:settings_view')

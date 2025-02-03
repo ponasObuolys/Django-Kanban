@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Team Invitations - Gretvė Tasker{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-2">Team Invitations</h1>
+            <p class="text-muted mb-0">Manage your team invitations</p>
+        </div>
+        <a href="{% url 'team_list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Teams
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Received Invitations -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-inbox me-2 text-primary"></i>Received Invitations
+                    </h5>
+                    
+                    {% if received_invitations %}
+                    <div class="list-group">
+                        {% for invitation in received_invitations %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="d-flex align-items-center">
+                                    {% if invitation.team.owner.avatar %}
+                                        <img src="{{ invitation.team.owner.avatar.url }}" alt="Avatar" 
+                                             class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                                    {% else %}
+                                        <img src="{% static 'images/default-avatar.svg' %}" alt="Avatar" 
+                                             class="rounded-circle me-2" style="width: 32px; height: 32px; background-color: #fff;">
+                                    {% endif %}
+                                    <div>
+                                        <div class="fw-bold">{{ invitation.team.name }}</div>
+                                        <small class="text-muted">
+                                            Invited by {{ invitation.invited_by.username }} 
+                                            {{ invitation.created_at|timesince }} ago
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <form method="post" action="{% url 'accept_invitation' invitation_id=invitation.id %}" 
+                                          class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="fas fa-check me-1"></i>Accept
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{% url 'reject_invitation' invitation_id=invitation.id %}" 
+                                          class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-times me-1"></i>Reject
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-inbox fa-2x mb-3"></i>
+                        <p class="mb-0">No pending invitations received</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sent Invitations -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-paper-plane me-2 text-success"></i>Sent Invitations
+                    </h5>
+                    
+                    {% if sent_invitations %}
+                    <div class="list-group">
+                        {% for invitation in sent_invitations %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="d-flex align-items-center">
+                                    {% if invitation.invited_user.avatar %}
+                                        <img src="{{ invitation.invited_user.avatar.url }}" alt="Avatar" 
+                                             class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                                    {% else %}
+                                        <img src="{% static 'images/default-avatar.svg' %}" alt="Avatar" 
+                                             class="rounded-circle me-2" style="width: 32px; height: 32px; background-color: #fff;">
+                                    {% endif %}
+                                    <div>
+                                        <div>
+                                            <span class="fw-bold">{{ invitation.invited_user.username }}</span>
+                                            <span class="text-muted">for {{ invitation.team.name }}</span>
+                                        </div>
+                                        <small class="text-muted">
+                                            Sent {{ invitation.created_at|timesince }} ago
+                                            {% if invitation.status != 'pending' %}
+                                            • {{ invitation.get_status_display }}
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                </div>
+                                {% if invitation.status == 'pending' %}
+                                <div class="ms-3">
+                                    <form method="post" action="{% url 'cancel_invitation' invitation_id=invitation.id %}" 
+                                          class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-times me-1"></i>Cancel
+                                        </button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-paper-plane fa-2x mb-3"></i>
+                        <p class="mb-0">No invitations sent</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .list-group-item {
+        border-left: none;
+        border-right: none;
+    }
+    
+    .list-group-item:first-child {
+        border-top: none;
+    }
+    
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %} 

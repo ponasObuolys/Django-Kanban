@@ -189,37 +189,62 @@ def column_delete(request, column_id):
 @login_required
 def task_create(request):
     if request.method == 'POST':
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            task = form.save(commit=False)
-            task.created_by = request.user
-            column = task.column
-            task.position = column.tasks.aggregate(Max('position'))['position__max'] or 0
-            task.position += 1
-            task.save()
-            form.save_m2m()  # Save many-to-many relationships
+        # Get the column ID from POST data
+        column_id = request.POST.get('column')
+        
+        try:
+            # Try to get the column and verify user has access
+            column = Column.objects.get(id=column_id)
+            board = column.board
             
-            # Send notification if task is assigned
-            if task.assigned_to:
-                notify.send(
-                    request.user,
-                    recipient=task.assigned_to,
-                    verb='assigned you to',
-                    target=task,
-                    description=f'You have been assigned to task "{task.title}"'
-                )
+            # Check if user has access to the board
+            if not (board.owner == request.user or
+                    (board.team and request.user in board.team.members.all())):
+                messages.error(request, "You don't have access to this board.")
+                return redirect('board_list')
             
-            messages.success(request, 'Task created successfully.')
-            return redirect('board_detail', board_id=task.column.board.id)
+            # Create form with POST data
+            form = TaskForm(request.POST)
+            form.fields['labels'].queryset = board.labels.all()
+            
+            if form.is_valid():
+                task = form.save(commit=False)
+                task.created_by = request.user
+                task.column = column  # Set the column explicitly
+                
+                # Set the position for the new task
+                max_position = task.column.tasks.aggregate(Max('position'))['position__max']
+                task.position = 1 if max_position is None else max_position + 1
+                
+                # Save the task
+                task.save()
+                form.save_m2m()  # Save many-to-many relationships
+                
+                # Send notification if task is assigned
+                if task.assigned_to:
+                    notify.send(
+                        request.user,
+                        recipient=task.assigned_to,
+                        verb='assigned you to',
+                        target=task,
+                        description=f'You have been assigned to task "{task.title}"'
+                    )
+                
+                messages.success(request, 'Task created successfully.')
+                return redirect('board_detail', board_id=board.id)
+            else:
+                # Return form errors as messages
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{field.title()}: {error}")
+                return redirect('board_detail', board_id=board.id)
+                
+        except Column.DoesNotExist:
+            messages.error(request, 'Invalid column specified.')
+            return redirect('board_list')
     else:
-        column_id = request.GET.get('column')
-        initial = {'column': column_id} if column_id else None
-        form = TaskForm(initial=initial)
-    
-    return render(request, 'boards/task_form.html', {
-        'form': form,
-        'title': 'Create Task'
-    })
+        messages.error(request, 'Invalid request method.')
+        return redirect('board_list')
 
 @login_required
 def task_edit(request, task_id):

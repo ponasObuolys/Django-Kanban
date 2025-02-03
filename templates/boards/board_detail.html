@@ -90,6 +90,8 @@
         font-size: 0.75rem;
         padding: 0.25rem 0.5rem;
         border-radius: 1rem;
+        color: var(--label-color);
+        background-color: var(--label-bg-color);
     }
     
     .member-avatars {
@@ -133,15 +135,21 @@
         border: 1px dashed var(--bs-gray-400);
         border-radius: 0.5rem;
         margin-top: 0.5rem;
+        transition: all 0.2s ease-in-out;
+        position: relative;
+        z-index: 1;
     }
     
-    .add-task-btn:hover {
+    .add-task-btn:hover,
+    .add-task-btn.hovered {
         background: var(--bs-gray-100);
         color: var(--bs-primary);
         border-color: var(--bs-primary);
+        z-index: 2;
     }
     
-    [data-bs-theme="dark"] .add-task-btn:hover {
+    [data-bs-theme="dark"] .add-task-btn:hover,
+    [data-bs-theme="dark"] .add-task-btn.hovered {
         background: var(--bs-gray-800);
     }
     
@@ -149,63 +157,41 @@
         height: 6px;
         margin-top: 0.5rem;
     }
+    
+    .label-color {
+        color: var(--label-color);
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Board Header -->
 <div class="board-header">
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col">
-                <div class="d-flex align-items-center mb-4">
-                    <h4 class="mb-0 me-3">{{ board.title }}</h4>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <span class="ms-2 text-muted">{{ progress }}% complete</span>
-                </div>
+                <h1 class="h3 mb-0">{{ board.title }}</h1>
+                {% if board.description %}
+                    <p class="text-muted mb-0">{{ board.description }}</p>
+                {% endif %}
             </div>
             <div class="col-auto">
-                <div class="d-flex align-items-center gap-3">
-                    <!-- View Options -->
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-primary active">
-                            <i class="fas fa-columns"></i>
-                        </button>
-                        <button type="button" class="btn btn-outline-primary">
-                            <i class="fas fa-list"></i>
-                        </button>
-                        <button type="button" class="btn btn-outline-primary">
-                            <i class="fas fa-table"></i>
-                        </button>
-                    </div>
-                    
-                    <!-- Team Members -->
-                    <div class="member-avatars">
-                        {% for member in board.team.members.all|slice:":5" %}
-                            <div class="member-avatar" title="{{ member.get_full_name|default:member.username }}">
-                                {% if member.avatar %}
-                                    <img src="{{ member.avatar.url }}" alt="{{ member.username }}" class="img-fluid">
-                                {% else %}
-                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary text-white">
-                                        {{ member.username|make_list|first|upper }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                        {% if board.team.members.count > 5 %}
-                            <div class="member-avatar d-flex align-items-center justify-content-center bg-secondary text-white">
-                                +{{ board.team.members.count|add:"-5" }}
-                            </div>
+                <div class="btn-group">
+                    {% if board.team %}
+                        {% if is_admin %}
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                                <i class="fas fa-user-plus me-2"></i>Add Member
+                            </button>
                         {% endif %}
-                    </div>
-                    
-                    <!-- Add Member Button -->
-                    {% if board.owner == request.user %}
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">
-                            <i class="fas fa-user-plus"></i>
-                            Add Member
+                        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#teamInfoModal">
+                            <i class="fas fa-users me-2"></i>Team Info
+                        </button>
+                    {% endif %}
+                    {% if board.owner == user %}
+                        <a href="{% url 'board_edit' board_id=board.id %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-edit me-2"></i>Edit Board
+                        </a>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal">
+                            <i class="fas fa-trash me-2"></i>Delete Board
                         </button>
                     {% endif %}
                 </div>
@@ -232,7 +218,9 @@
                             <!-- Task Labels -->
                             <div class="task-labels">
                                 {% for label in task.labels.all %}
-                                    <span class="task-label" data-color="{{ label.color }}">{{ label.name }}</span>
+                                    <span class="task-label" style="--label-color: {{ label.color }}; --label-bg-color: {{ label.color }}20">
+                                        {{ label.name }}
+                                    </span>
                                 {% endfor %}
                             </div>
                             
@@ -288,13 +276,22 @@
                 <h5 class="modal-title">Create New Task</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="post" action="{% url 'task_create' %}">
+            <form method="post" action="{% url 'task_create' %}" id="createTaskForm">
                 {% csrf_token %}
                 <div class="modal-body">
-                    <input type="hidden" name="column" id="columnInput">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <input type="hidden" name="column" id="columnInput" value="" required>
                     <div class="mb-3">
                         <label class="form-label">Title</label>
                         <input type="text" name="title" class="form-control" required>
+                        <div class="invalid-feedback">Please provide a title for the task.</div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Description</label>
@@ -304,9 +301,17 @@
                         <label class="form-label">Assigned To</label>
                         <select name="assigned_to" class="form-select">
                             <option value="">Unassigned</option>
-                            {% for member in board.team.members.all %}
-                                <option value="{{ member.id }}">{{ member.get_full_name|default:member.username }}</option>
-                            {% endfor %}
+                            {% if board.team %}
+                                {% for member in board.team.members.all %}
+                                    <option value="{{ member.id }}" {% if member == user %}selected{% endif %}>
+                                        {{ member.get_full_name|default:member.username }}
+                                    </option>
+                                {% endfor %}
+                            {% else %}
+                                <option value="{{ board.owner.id }}" {% if board.owner == user %}selected{% endif %}>
+                                    {{ board.owner.get_full_name|default:board.owner.username }}
+                                </option>
+                            {% endif %}
                         </select>
                     </div>
                     <div class="mb-3">
@@ -315,9 +320,9 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Priority</label>
-                        <select name="priority" class="form-select">
+                        <select name="priority" class="form-select" required>
                             <option value="low">Low</option>
-                            <option value="medium">Medium</option>
+                            <option value="medium" selected>Medium</option>
                             <option value="high">High</option>
                         </select>
                     </div>
@@ -328,7 +333,7 @@
                                 <div class="col-auto">
                                     <div class="form-check">
                                         <input type="checkbox" name="labels" value="{{ label.id }}" class="form-check-input" id="label{{ label.id }}">
-                                        <label class="form-check-label label-color" data-color="{{ label.color }}" for="label{{ label.id }}">
+                                        <label class="form-check-label label-color" for="label{{ label.id }}" style="--label-color: {{ label.color }}">
                                             {{ label.name }}
                                         </label>
                                     </div>
@@ -347,6 +352,7 @@
 </div>
 
 <!-- Add Member Modal -->
+{% if board.team %}
 <div class="modal fade" id="addMemberModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -354,7 +360,7 @@
                 <h5 class="modal-title">Add Team Member</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="post" action="{% url 'add_member' board.team.id %}">
+            <form method="post" action="{% url 'teams:add_member' team_id=board.team.id %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
@@ -377,11 +383,70 @@
         </div>
     </div>
 </div>
+{% endif %}
+
+<!-- Delete Board Modal -->
+<div class="modal fade" id="deleteBoardModal" tabindex="-1" aria-labelledby="deleteBoardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="deleteBoardModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Delete Board
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <p class="mb-0">
+                        You are about to delete the board "{{ board.title }}". This action cannot be undone.
+                        All tasks, columns, and associated data will be permanently deleted.
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <h6>Board Information:</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-columns me-2"></i>
+                            <strong>Columns:</strong> {{ board.columns.count }}
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-tasks me-2"></i>
+                            <strong>Tasks:</strong> {{ board.get_total_tasks }}
+                        </li>
+                        {% if board.team %}
+                        <li>
+                            <i class="fas fa-users me-2"></i>
+                            <strong>Team:</strong> {{ board.team.name }}
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <form method="post" action="{% url 'board_delete' board_id=board.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-2"></i>Delete Board
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Bootstrap modals
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modalEl => {
+        new bootstrap.Modal(modalEl);
+    });
+
     const tasks = document.querySelectorAll('.task-card');
     const columns = document.querySelectorAll('.task-list');
     let draggedTask = null;
@@ -400,11 +465,41 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Create Task Modal
     const createTaskModal = document.getElementById('createTaskModal');
+    const createTaskForm = document.getElementById('createTaskForm');
+    const addTaskButtons = document.querySelectorAll('.add-task-btn');
+    
+    // Add hover state class
+    addTaskButtons.forEach(button => {
+        button.addEventListener('mouseenter', () => button.classList.add('hovered'));
+        button.addEventListener('mouseleave', () => button.classList.remove('hovered'));
+    });
+
     if (createTaskModal) {
         createTaskModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
-            const columnId = button.dataset.columnId;
+            const columnId = button.getAttribute('data-column-id');
             document.getElementById('columnInput').value = columnId;
+            
+            // Reset form and clear any previous error messages
+            createTaskForm.reset();
+            createTaskForm.classList.remove('was-validated');
+            const alerts = createTaskForm.querySelectorAll('.alert');
+            alerts.forEach(alert => alert.remove());
+            
+            // Set default values
+            document.querySelector('select[name="priority"]').value = 'medium';
+            if (document.querySelector('select[name="assigned_to"]').options.length > 1) {
+                document.querySelector('select[name="assigned_to"]').selectedIndex = 1;
+            }
+        });
+        
+        // Add form validation
+        createTaskForm.addEventListener('submit', function(event) {
+            if (!createTaskForm.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            createTaskForm.classList.add('was-validated');
         });
     }
     

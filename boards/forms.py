@@ -30,12 +30,48 @@ class TaskForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
             'labels': forms.CheckboxSelectMultiple(),
+            'column': forms.HiddenInput(),
         }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['column'].required = True
+        
+        # Get the column from either the instance or initial data
+        column = None
         if self.instance and self.instance.column:
-            self.fields['labels'].queryset = self.instance.column.board.labels.all()
+            column = self.instance.column
+        elif self.initial and 'column' in self.initial:
+            try:
+                column = Column.objects.get(id=self.initial['column'])
+            except Column.DoesNotExist:
+                pass
+        
+        # Set labels queryset based on the column's board
+        if column:
+            self.fields['labels'].queryset = column.board.labels.all()
+        else:
+            self.fields['labels'].queryset = Label.objects.none()
+    
+    def clean_column(self):
+        column = self.cleaned_data.get('column')
+        if not column:
+            raise forms.ValidationError('Column is required.')
+        return column
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        column = cleaned_data.get('column')
+        labels = cleaned_data.get('labels')
+        
+        # Validate that selected labels belong to the board
+        if column and labels:
+            valid_label_ids = set(column.board.labels.values_list('id', flat=True))
+            selected_label_ids = set(label.id for label in labels)
+            invalid_labels = selected_label_ids - valid_label_ids
+            
+            if invalid_labels:
+                raise forms.ValidationError('Some selected labels do not belong to this board.')
 
 class LabelForm(forms.ModelForm):
     class Meta:

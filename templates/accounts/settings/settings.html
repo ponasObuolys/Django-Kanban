@@ -34,7 +34,7 @@
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title mb-4">Profile Settings</h5>
-                            <form method="post" action="{% url 'update_profile' %}" enctype="multipart/form-data">
+                            <form method="post" action="{% url 'accounts:update_profile' %}" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="mb-3">
                                     <label class="form-label">Avatar</label>
@@ -78,7 +78,7 @@
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title mb-4">Change Password</h5>
-                            <form method="post" action="{% url 'update_password' %}">
+                            <form method="post" action="{% url 'accounts:update_password' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
                                     <label class="form-label">Current Password</label>
@@ -105,7 +105,7 @@
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title mb-4">Notification Preferences</h5>
-                            <form method="post" action="{% url 'update_notifications' %}">
+                            <form method="post" action="{% url 'accounts:update_notifications' %}">
                                 {% csrf_token %}
                                 <div class="form-check form-switch mb-3">
                                     <input type="checkbox" class="form-check-input" name="email_notifications" id="emailNotifications"
@@ -145,7 +145,7 @@
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title mb-4">Theme Settings</h5>
-                            <form method="post" action="{% url 'update_theme' %}">
+                            <form method="post" action="{% url 'accounts:update_theme' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
                                     <label class="form-label">Theme Mode</label>
