@@ -2,32 +2,37 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
-from ..models import Task, Column
+from ..models import Task, Column, Board
 from ..forms import TaskForm, TaskCommentForm, TaskAttachmentForm
 from ..services.task_service import TaskService
-from ..permissions import can_manage_task, can_manage_comment, can_manage_attachment
+from ..permissions import can_manage_task, can_manage_comment, can_manage_attachment, can_edit_board
 import json
 
 @login_required
 def task_create(request):
     if request.method == 'POST':
         column = get_object_or_404(Column, id=request.POST.get('column'))
+        board = column.board
         
-        if not can_manage_task(request.user, column.board):
+        if not can_edit_board(request.user, board):
             messages.error(request, "You don't have permission to create tasks.")
-            return redirect('boards:board_detail', board_id=column.board.id)
+            return redirect('boards:board_detail', board_id=board.id)
         
         form = TaskForm(request.POST)
         if form.is_valid():
             task = TaskService.create_task(column, form.cleaned_data, request.user)
             messages.success(request, 'Task created successfully.')
-            return redirect('boards:board_detail', board_id=column.board.id)
+            return redirect('boards:board_detail', board_id=board.id)
     else:
         form = TaskForm()
+        # Get board ID from query parameters for the initial form load
+        board_id = request.GET.get('board')
+        board = get_object_or_404(Board, id=board_id) if board_id else None
     
     return render(request, 'boards/task_form.html', {
         'form': form,
-        'title': 'Create Task'
+        'title': 'Create Task',
+        'board': board
     })
 
 @login_required

@@ -18,9 +18,11 @@ def team_members(request, team_id):
         return redirect('teams:team_list')
     
     members = TeamService.get_member_info(team)
+    users = User.objects.exclude(id__in=team.members.values_list('id', flat=True))
     return render(request, 'teams/team_members.html', {
         'team': team,
         'members': members,
+        'users': users,
         'is_admin': can_manage_team(request.user, team)
     })
 
@@ -33,9 +35,9 @@ def add_member(request, team_id):
         return redirect('teams:team_members', team_id=team.id)
     
     if request.method == 'POST':
-        username = request.POST.get('username')
+        user_id = request.POST.get('user_id')
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(id=user_id)
             if user == request.user:
                 messages.error(request, "You can't add yourself as a member.")
             elif team.members.filter(id=user.id).exists():
