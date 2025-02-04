@@ -136,4 +136,4 @@ class BoardTests(TestCase):
             due_date=due_date,
             position=0
         )
-        self.assertIsNotNone(task.due_date)
+        self.assertIsNotNone(task.due_date) 

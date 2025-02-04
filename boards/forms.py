@@ -3,6 +3,7 @@ from .models import Board, Column, Task, Label, TaskComment, TaskAttachment
 from django.db.models import Max, Q
 from accounts.models import CustomUser
 from django.contrib.auth.models import User
+from django.db import models
 
 class BoardForm(forms.ModelForm):
     class Meta:
@@ -23,12 +24,13 @@ class ColumnForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['title', 'description', 'column', 'assigned_to', 'due_date', 'priority', 'labels']
+        fields = ['title', 'description', 'column', 'assigned_to', 'due_date', 'priority', 'labels', 'position']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
             'due_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'labels': forms.CheckboxSelectMultiple(),
             'column': forms.HiddenInput(),
+            'position': forms.HiddenInput(),
         }
     
     def __init__(self, *args, board=None, user=None, **kwargs):
@@ -49,17 +51,25 @@ class TaskForm(forms.ModelForm):
                 self.fields['assigned_to'].queryset = CustomUser.objects.filter(
                     id__in=[board.owner.id, self.user.id] if self.user else [board.owner.id]
                 ).distinct()
-            
-            # Set initial position based on column's tasks
-            if self.instance and not self.instance.pk and 'column' in self.data:
-                try:
-                    column = board.columns.get(id=self.data['column'])
-                    self.instance.position = column.tasks.count()
-                except (Column.DoesNotExist, ValueError):
-                    pass
         
         self.fields['title'].required = True
         self.fields['priority'].required = True
+        self.fields['position'].required = True  # Make position required
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        
+        # Set position if this is a new task and position is not provided
+        if not instance.pk and not instance.position and instance.column:
+            # Get the highest position in the column and add 1
+            max_position = instance.column.tasks.aggregate(models.Max('position'))['position__max']
+            instance.position = (max_position or -1) + 1
+        
+        if commit:
+            instance.save()
+            self.save_m2m()
+        
+        return instance
 
 class LabelForm(forms.ModelForm):
     class Meta:

@@ -245,8 +245,17 @@ def task_create(request):
                 messages.error(request, "You don't have access to this board.")
                 return redirect('boards:board_list')
             
-            # Create form with POST data
-            form = TaskForm(request.POST)
+            # Get position from POST data or calculate next position
+            position = request.POST.get('position')
+            if not position:
+                max_position = Task.objects.filter(column=column).aggregate(Max('position'))['position__max']
+                position = (max_position or -1) + 1
+            
+            # Create form with POST data and include the position
+            post_data = request.POST.copy()
+            post_data['position'] = position
+            form = TaskForm(post_data)
+            
             print("\nForm initialization:")  # Debug logging
             print("Form created with data:", form.data)  # Debug logging
             print("Form is_bound:", form.is_bound)  # Debug logging
@@ -270,14 +279,7 @@ def task_create(request):
                 task = form.save(commit=False)
                 task.created_by = request.user
                 task.column = column
-                task.position = form.cleaned_data['position']
-                
-                print("\nTask creation:")  # Debug logging
-                print(f"Task before save - title: {task.title}, column: {task.column}, position: {task.position}")  # Debug logging
-                
-                # Save the task
                 task.save()
-                print(f"Task saved with ID: {task.id}")  # Debug logging
                 form.save_m2m()  # Save many-to-many relationships (like labels)
                 
                 # Send notification if task is assigned to someone else
@@ -731,12 +733,8 @@ def create_task(request, board_id):
             task = form.save(commit=False)
             task.board = board
             task.created_by = request.user
-            task.column = form.cleaned_data['column']
             
-            # Calculate position based on existing tasks in the column
-            task.position = task.column.tasks.count()
-            
-            # Save the task
+            # Save the task - position will be set in form's save method
             task.save()
             form.save_m2m()  # Save many-to-many relationships
             
