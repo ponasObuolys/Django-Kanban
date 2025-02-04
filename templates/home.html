@@ -18,8 +18,8 @@
                 </div>
             {% else %}
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <a href="{% url 'board_list' %}" class="btn btn-primary btn-lg px-4 me-md-2">{% trans "My Boards" %}</a>
-                    <a href="{% url 'team_list' %}" class="btn btn-outline-secondary btn-lg px-4">{% trans "My Teams" %}</a>
+                    <a href="{% url 'boards:board_list' %}" class="btn btn-primary btn-lg px-4 me-md-2">{% trans "My Boards" %}</a>
+                    <a href="{% url 'teams:team_list' %}" class="btn btn-outline-secondary btn-lg px-4">{% trans "My Teams" %}</a>
                 </div>
             {% endif %}
         </div>

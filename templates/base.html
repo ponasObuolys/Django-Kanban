@@ -36,12 +36,12 @@
                 <ul class="navbar-nav me-auto">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'board_list' %}">
+                            <a class="nav-link" href="{% url 'boards:board_list' %}">
                                 <i class="fas fa-clipboard-list me-1"></i>Boards
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'team_list' %}">
+                            <a class="nav-link" href="{% url 'teams:team_list' %}">
                                 <i class="fas fa-users me-1"></i>Teams
                             </a>
                         </li>
