@@ -69,9 +69,9 @@ def update_password(request):
 @login_required
 def update_notifications(request):
     if request.method == 'POST':
-        form = NotificationPreferencesForm(request.POST)
+        form = NotificationPreferencesForm(request.POST, instance=request.user)
         if form.is_valid():
-            form.save(request.user)
+            form.save()
             messages.success(request, 'Your notification preferences have been updated successfully.')
         else:
             messages.error(request, 'Please correct the errors below.')

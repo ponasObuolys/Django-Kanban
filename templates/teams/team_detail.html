@@ -134,7 +134,7 @@
                                     <td>{{ invitation.invited_by.username }}</td>
                                     <td>{{ invitation.created_at|date:"M d, Y" }}</td>
                                     <td>
-                                        <form method="post" action="{% url 'cancel_invitation' invitation_id=invitation.id %}" 
+                                        <form method="post" action="{% url 'teams:cancel_invitation' invitation_id=invitation.id %}" 
                                               class="d-inline">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-sm btn-danger">
