@@ -23,15 +23,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Initialize all tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
+    const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(tooltipTriggerEl => {
+        new bootstrap.Tooltip(tooltipTriggerEl);
     });
     
     // Initialize all popovers
-    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    popoverTriggerList.map(function (popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl);
+    const popoverTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    popoverTriggerList.forEach(popoverTriggerEl => {
+        new bootstrap.Popover(popoverTriggerEl);
     });
     
     // Auto-dismiss alerts
@@ -50,8 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeKanbanBoard() {
-    const tasks = document.querySelectorAll('.kanban-task');
-    const columns = document.querySelectorAll('.kanban-column');
+    const tasks = document.querySelectorAll('.task-card');
+    const columns = document.querySelectorAll('.task-list');
     
     tasks.forEach(task => {
         task.addEventListener('dragstart', handleDragStart);
@@ -66,7 +66,7 @@ function initializeKanbanBoard() {
 
 function handleDragStart(e) {
     e.target.classList.add('dragging');
-    e.dataTransfer.setData('text/plain', e.target.getAttribute('data-task-id'));
+    e.dataTransfer.setData('text/plain', e.target.dataset.taskId);
 }
 
 function handleDragEnd(e) {
@@ -81,72 +81,56 @@ async function handleDrop(e) {
     e.preventDefault();
     const taskId = e.dataTransfer.getData('text/plain');
     const task = document.querySelector(`[data-task-id="${taskId}"]`);
-    const column = e.target.closest('.kanban-column');
+    const column = e.target.closest('.task-list');
     
     if (task && column) {
-        const columnId = column.getAttribute('data-column-id');
-        const taskList = column.querySelector('.task-list');
+        const columnId = column.dataset.columnId;
         
         // Get the position in the column
-        const afterElement = getDragAfterElement(taskList, e.clientY);
-        const position = afterElement ? Array.from(taskList.children).indexOf(afterElement) : taskList.children.length;
+        const afterElement = getDragAfterElement(column, e.clientY);
+        const position = afterElement ? Array.from(column.children).indexOf(afterElement) : column.children.length;
         
         try {
             // Send update to server
-            const response = await fetch('/api/tasks/update-position/', {
+            const response = await fetch('/lt/boards/tasks/update-position/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify({
-                    taskId: taskId,
-                    columnId: columnId,
+                    task_id: parseInt(taskId),
+                    column_id: parseInt(columnId),
                     position: position
                 })
             });
             
-            const data = await response.json();
-            
             if (response.ok) {
                 // Update UI
                 if (afterElement) {
-                    taskList.insertBefore(task, afterElement);
+                    column.insertBefore(task, afterElement);
                 } else {
-                    taskList.appendChild(task);
+                    column.appendChild(task);
                 }
                 
                 // Update task count badges
-                const oldColumn = task.closest('.kanban-column');
+                const oldColumn = task.closest('.task-list');
                 if (oldColumn && oldColumn !== column) {
                     updateColumnTaskCount(oldColumn);
                 }
                 updateColumnTaskCount(column);
             } else {
-                console.error('Failed to update task position:', data.error);
-                alert(data.error || 'Failed to update task position');
-                // Revert the UI change
-                const originalColumn = task.closest('.kanban-column');
-                if (originalColumn) {
-                    const originalTaskList = originalColumn.querySelector('.task-list');
-                    originalTaskList.appendChild(task);
-                }
+                const errorData = await response.json();
+                console.error('Failed to update task position:', errorData.error);
             }
         } catch (error) {
             console.error('Error updating task position:', error);
-            alert('An error occurred while updating the task position');
-            // Revert the UI change
-            const originalColumn = task.closest('.kanban-column');
-            if (originalColumn) {
-                const originalTaskList = originalColumn.querySelector('.task-list');
-                originalTaskList.appendChild(task);
-            }
         }
     }
 }
 
 function getDragAfterElement(container, y) {
-    const draggableElements = [...container.querySelectorAll('.kanban-task:not(.dragging)')];
+    const draggableElements = [...container.querySelectorAll('.task-card:not(.dragging)')];
     
     return draggableElements.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
@@ -207,8 +191,8 @@ function updateUnreadCount() {
 }
 
 function updateColumnTaskCount(column) {
-    const taskCount = column.querySelector('.task-list').children.length;
-    const badge = column.querySelector('.badge');
+    const taskCount = column.children.length;
+    const badge = column.closest('.kanban-column').querySelector('.badge');
     if (badge) {
         badge.textContent = taskCount;
     }

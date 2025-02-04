@@ -356,10 +356,22 @@ def task_edit(request, task_id):
             return redirect('boards:task_detail', task_id=task.id)
     else:
         form = TaskForm(instance=task)
+        
+        # Set the queryset for labels to the board's labels
+        form.fields['labels'].queryset = board.labels.all()
+        
+        # Set the queryset for assigned_to based on board type
+        if board.team:
+            form.fields['assigned_to'].queryset = board.team.members.all()
+        else:
+            form.fields['assigned_to'].queryset = CustomUser.objects.filter(
+                id__in=[request.user.id, board.owner.id]
+            ).distinct()
     
     return render(request, 'boards/task_form.html', {
         'form': form,
         'task': task,
+        'board': board,
         'title': 'Edit Task'
     })
 
@@ -570,11 +582,13 @@ def update_task_position(request):
         import json
         try:
             data = json.loads(request.body)
-            task_id = data.get('taskId')
-            column_id = data.get('columnId')
+            print("Received data:", data)  # Debugging statement
+            task_id = data.get('task_id')
+            column_id = data.get('column_id')
             position = data.get('position')
             
-            if not all([task_id, column_id, position]):
+            if not all([task_id, column_id, position is not None]):
+                print("Missing required fields")  # Debugging statement
                 return JsonResponse({
                     'status': 'error',
                     'error': 'Missing required fields'
@@ -613,23 +627,10 @@ def update_task_position(request):
                     'error': 'Task not found'
                 }, status=404)
             except Column.DoesNotExist:
-                # Get all available columns for this board for better error message
-                available_columns = []
-                if task.column:
-                    available_columns = task.column.board.columns.all()
-                    columns_info = [
-                        f"{c.title} (ID: {c.id}) in {c.board.title}"
-                        for c in available_columns
-                    ]
-                    return JsonResponse({
-                        'status': 'error',
-                        'error': f'Invalid column specified (ID: {column_id}). Available columns: {columns_info}'
-                    }, status=400)
-                else:
-                    return JsonResponse({
-                        'status': 'error',
-                        'error': 'Column not found'
-                    }, status=404)
+                return JsonResponse({
+                    'status': 'error',
+                    'error': 'Column not found'
+                }, status=404)
                 
         except json.JSONDecodeError:
             return JsonResponse({

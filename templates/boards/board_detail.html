@@ -58,7 +58,7 @@
         padding: 0.5rem;
     }
     
-    .task-card {
+    .task {
         background: var(--bs-white);
         border-radius: 0.5rem;
         padding: 1rem;
@@ -68,17 +68,19 @@
         border: 1px solid var(--bs-gray-200);
     }
     
-    [data-bs-theme="dark"] .task-card {
+    [data-bs-theme="dark"] .task {
         background: var(--bs-gray-900);
         border-color: var(--bs-gray-700);
     }
     
-    .task-card:hover {
+    .task:hover {
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     
-    .task-card.dragging {
+    .task.dragging {
         opacity: 0.5;
+        transform: rotate(3deg);
+        transition: transform 0.1s ease-in-out;
     }
     
     .task-labels {
@@ -215,7 +217,7 @@
                 
                 <div class="task-list" data-column-id="{{ column.id }}">
                     {% for task in column.tasks.all %}
-                        <div class="task-card" draggable="true" data-task-id="{{ task.id }}">
+                        <div class="task" id="task-{{ task.id }}" draggable="true" data-task-id="{{ task.id }}">
                             <!-- Task Labels -->
                             <div class="task-labels">
                                 {% for label in task.labels.all %}
@@ -225,8 +227,12 @@
                                 {% endfor %}
                             </div>
                             
-                            <!-- Task Title -->
-                            <h6 class="mb-2">{{ task.title }}</h6>
+                            <!-- Task Title with Link -->
+                            <h6 class="mb-2">
+                                <a href="{% url 'boards:task_detail' task_id=task.id %}" class="text-decoration-none text-reset">
+                                    {{ task.title }}
+                                </a>
+                            </h6>
                             
                             <!-- Task Meta -->
                             <div class="task-meta">
@@ -561,7 +567,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Initialize task drag events
-    const tasks = document.querySelectorAll('.task-card');
+    const tasks = document.querySelectorAll('.task');
     const columns = document.querySelectorAll('.task-list');
     let draggedTask = null;
     
@@ -581,15 +587,16 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('mouseleave', () => button.classList.remove('hovered'));
     });
     
-    function handleDragStart(e) {
-        draggedTask = this;
-        this.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', this.dataset.taskId);
+    function handleDragStart(event) {
+        const taskElement = event.target.closest('.task');
+        event.dataTransfer.setData('text/plain', taskElement.id);
+        draggedTask = taskElement;
+        taskElement.classList.add('dragging');
+        event.dataTransfer.effectAllowed = 'move';
     }
     
     function handleDragEnd(e) {
-        this.classList.remove('dragging');
+        draggedTask.classList.remove('dragging');
         draggedTask = null;
     }
     
@@ -611,27 +618,36 @@ document.addEventListener('DOMContentLoaded', function() {
             targetColumn.children.length;
         
         try {
-            const response = await fetch('/boards/api/tasks/update-position/', {
+            // Extract the numeric task ID from the "task-{id}" format
+            const numericTaskId = parseInt(taskId.replace('task-', ''));
+            
+            const response = await fetch('{% url "boards:update_task_position" %}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify({
-                    taskId: taskId,
-                    columnId: columnId,
-                    position: position
+                    task_id: numericTaskId,
+                    column_id: parseInt(columnId),
+                    position: parseInt(position)
                 })
             });
             
             if (response.ok) {
+                const taskElement = document.getElementById(taskId);
+                if (!taskElement) {
+                    console.error('Task element not found:', taskId);
+                    return;
+                }
                 if (afterElement) {
-                    targetColumn.insertBefore(draggedTask, afterElement);
+                    targetColumn.insertBefore(taskElement, afterElement);
                 } else {
-                    targetColumn.appendChild(draggedTask);
+                    targetColumn.appendChild(taskElement);
                 }
             } else {
-                console.error('Failed to update task position');
+                const errorData = await response.json();
+                console.error('Failed to update task position:', errorData.error);
             }
         } catch (error) {
             console.error('Error updating task position:', error);
@@ -639,7 +655,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function getDragAfterElement(container, y) {
-        const draggableElements = [...container.querySelectorAll('.task-card:not(.dragging)')];
+        const draggableElements = [...container.querySelectorAll('.task:not(.dragging)')];
         
         return draggableElements.reduce((closest, child) => {
             const box = child.getBoundingClientRect();

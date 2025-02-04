@@ -36,6 +36,6 @@ urlpatterns = [
     path('labels/<int:label_id>/delete/', views.label_delete, name='label_delete'),
     
     # API endpoints for drag and drop
-    path('api/tasks/update-position/', views.update_task_position, name='update_task_position'),
-    path('api/columns/update-position/', views.update_column_position, name='update_column_position'),
+    path('tasks/update-position/', views.update_task_position, name='update_task_position'),
+    path('columns/update-position/', views.update_column_position, name='update_column_position'),
 ] 

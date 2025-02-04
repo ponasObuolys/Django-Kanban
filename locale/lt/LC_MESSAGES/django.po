@@ -215,3 +215,56 @@ msgstr "Atlikta"
 
 msgid "Rejected"
 msgstr "Atmesta"
+
+# Task Detail Page
+msgid "Task Details"
+msgstr "Užduoties informacija"
+
+msgid "Edit Task"
+msgstr "Redaguoti užduotį"
+
+msgid "Delete"
+msgstr "Ištrinti"
+
+msgid "Status"
+msgstr "Būsena"
+
+msgid "Created by"
+msgstr "Sukūrė"
+
+msgid "Created at"
+msgstr "Sukurta"
+
+msgid "Not set"
+msgstr "Nenustatyta"
+
+msgid "Comments"
+msgstr "Komentarai"
+
+msgid "No comments yet."
+msgstr "Kol kas komentarų nėra."
+
+msgid "Add Comment"
+msgstr "Pridėti komentarą"
+
+msgid "Task Information"
+msgstr "Užduoties informacija"
+
+msgid "Attachments"
+msgstr "Priedai"
+
+msgid "No attachments yet."
+msgstr "Kol kas priedų nėra."
+
+msgid "Add Attachment"
+msgstr "Pridėti priedą"
+
+# Task Edit Page
+msgid "Save Changes"
+msgstr "Išsaugoti pakeitimus"
+
+msgid "Edit Task"
+msgstr "Redaguoti užduotį"
+
+msgid "Create Task"
+msgstr "Sukurti užduotį"
