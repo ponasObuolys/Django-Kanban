@@ -57,16 +57,16 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-bell me-1"></i>
-                                <span class="badge bg-danger">{{ user.notifications.unread.count }}</span>
+                                <span id="notifications-badge" class="badge bg-danger">{{ user.notifications.unread.count }}</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 {% for notification in user.notifications.unread %}
                                     {% if notification.verb == 'invited you to join' %}
-                                        <a class="dropdown-item" href="{% url 'teams:invitation_list' %}">
+                                        <a class="dropdown-item" href="{% url 'teams:invitation_list' %}" data-notification-id="{{ notification.id }}">
                                             <i class="fas fa-user-plus me-2"></i>{{ notification.description }}
                                         </a>
                                     {% else %}
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="#" data-notification-id="{{ notification.id }}">
                                             <i class="fas fa-bell me-2"></i>{{ notification.description }}
                                         </a>
                                     {% endif %}
@@ -75,7 +75,7 @@
                                 {% endfor %}
                                 {% if user.notifications.unread.exists %}
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item text-center" href="#">
+                                    <a class="dropdown-item text-center" href="#" id="markAllAsRead">
                                         <small>Mark all as read</small>
                                     </a>
                                 {% endif %}

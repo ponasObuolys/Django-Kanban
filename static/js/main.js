@@ -47,6 +47,24 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.querySelector('.kanban-board')) {
         initializeKanbanBoard();
     }
+
+    // Add click handler for individual notifications
+    document.querySelectorAll('[data-notification-id]').forEach(notification => {
+        notification.addEventListener('click', function(e) {
+            e.preventDefault();
+            const notificationId = this.dataset.notificationId;
+            markNotificationAsRead(notificationId);
+        });
+    });
+
+    // Add click handler for mark all as read button
+    const markAllBtn = document.getElementById('markAllAsRead');
+    if (markAllBtn) {
+        markAllBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            markAllNotificationsAsRead();
+        });
+    }
 });
 
 function initializeKanbanBoard() {
@@ -172,6 +190,7 @@ function markNotificationAsRead(notificationId) {
             const notification = document.querySelector(`[data-notification-id="${notificationId}"]`);
             if (notification) {
                 notification.classList.add('read');
+                notification.style.display = 'none';
             }
             updateUnreadCount();
         }
@@ -179,8 +198,42 @@ function markNotificationAsRead(notificationId) {
     .catch(error => console.error('Error marking notification as read:', error));
 }
 
+function markAllNotificationsAsRead() {
+    fetch('/notifications/mark-all-as-read/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            const notifications = document.querySelectorAll('[data-notification-id]');
+            notifications.forEach(notification => {
+                notification.classList.add('read');
+                notification.style.display = 'none';
+            });
+            const badge = document.getElementById('notifications-badge');
+            if (badge) {
+                badge.style.display = 'none';
+                badge.textContent = '0';
+            }
+            // Hide the mark all as read button and show empty message
+            const markAllBtn = document.getElementById('markAllAsRead');
+            if (markAllBtn) {
+                markAllBtn.closest('.dropdown-divider')?.remove();
+                markAllBtn.remove();
+            }
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            if (dropdownMenu && !dropdownMenu.querySelector('.dropdown-item:not(.read)')) {
+                dropdownMenu.innerHTML = '<span class="dropdown-item">No new notifications</span>';
+            }
+        }
+    })
+    .catch(error => console.error('Error marking all notifications as read:', error));
+}
+
 function updateUnreadCount() {
-    const badge = document.querySelector('#notifications-badge');
+    const badge = document.getElementById('notifications-badge');
     if (badge) {
         const currentCount = parseInt(badge.textContent) - 1;
         badge.textContent = currentCount > 0 ? currentCount : '';
