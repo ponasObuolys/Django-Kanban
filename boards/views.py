@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.contrib import messages
-from django.db.models import Max, Count
+from django.db.models import Max, Count, Q
 from .models import Board, Column, Task, Label, TaskComment, TaskAttachment
 from accounts.models import CustomUser
 from .forms import (
@@ -96,7 +96,7 @@ def board_detail(request, board_id):
         'board': board,
         'progress': progress,
         'users': users,
-        'is_team_admin': is_team_admin,
+        'is_admin': is_team_admin,
         'pending_invitations': pending_invitations
     })
 
@@ -221,9 +221,13 @@ def column_delete(request, column_id):
 @login_required
 def task_create(request):
     if request.method == 'POST':
+        print("\n=== Task Creation Debug ===")  # Debug logging
+        print("POST request received")  # Debug logging
+        print("POST data:", request.POST)  # Debug logging
+        
         # Get the column ID from POST data
         column_id = request.POST.get('column')
-        print(f"Received POST data: {request.POST}")  # Debug print
+        print(f"Column ID: {column_id}")  # Debug logging
         
         if not column_id:
             messages.error(request, 'No column specified.')
@@ -233,15 +237,7 @@ def task_create(request):
             # Try to get the column and verify user has access
             column = Column.objects.select_related('board', 'board__team').get(id=column_id)
             board = column.board
-            
-            # Debug information
-            print(f"Column found: {column.title} (ID: {column.id})")
-            print(f"Board: {board.title} (ID: {board.id})")
-            print(f"Current user: {request.user.username} (ID: {request.user.id})")
-            print(f"Board owner: {board.owner.username} (ID: {board.owner.id})")
-            if board.team:
-                print(f"Team: {board.team.name}")
-                print(f"Team members: {[(m.user.username, m.role) for m in board.team.teammembership_set.select_related('user').all()]}")
+            print(f"Found column: {column}, board: {board}")  # Debug logging
             
             # Check if user has access to the board
             if not (board.owner == request.user or
@@ -251,6 +247,9 @@ def task_create(request):
             
             # Create form with POST data
             form = TaskForm(request.POST)
+            print("\nForm initialization:")  # Debug logging
+            print("Form created with data:", form.data)  # Debug logging
+            print("Form is_bound:", form.is_bound)  # Debug logging
             
             # Set the queryset for labels to the board's labels
             form.fields['labels'].queryset = board.labels.all()
@@ -263,60 +262,66 @@ def task_create(request):
                     id__in=[request.user.id, board.owner.id]
                 ).distinct()
             
+            print("\nForm validation:")  # Debug logging
             if form.is_valid():
-                try:
-                    task = form.save(commit=False)
-                    task.created_by = request.user
-                    task.column = column
-                    
-                    # Set the position for the new task
-                    max_position = task.column.tasks.aggregate(Max('position'))['position__max']
-                    task.position = 1 if max_position is None else max_position + 1
-                    
-                    print(f"About to save task with data: {task.__dict__}")  # Debug print
-                    
-                    # Save the task
-                    task.save()
-                    form.save_m2m()  # Save many-to-many relationships (like labels)
-                    
-                    print(f"Task saved successfully with ID: {task.id}")  # Debug print
-                    
-                    # Send notification if task is assigned to someone else
-                    if task.assigned_to and task.assigned_to != request.user:
-                        notify.send(
-                            request.user,
-                            recipient=task.assigned_to,
-                            verb='assigned you to',
-                            target=task,
-                            description=f'You have been assigned to task "{task.title}"'
-                        )
-                    
-                    messages.success(request, 'Task created successfully.')
-                    return redirect('boards:board_detail', board_id=board.id)
-                except Exception as e:
-                    print(f"Error saving task: {str(e)}")  # Debug print
-                    messages.error(request, f'Error saving task: {str(e)}')
-                    return redirect('boards:board_detail', board_id=board.id)
+                print("Form is valid")  # Debug logging
+                print("Cleaned data:", form.cleaned_data)  # Debug logging
+                
+                task = form.save(commit=False)
+                task.created_by = request.user
+                task.column = column
+                task.position = form.cleaned_data['position']
+                
+                print("\nTask creation:")  # Debug logging
+                print(f"Task before save - title: {task.title}, column: {task.column}, position: {task.position}")  # Debug logging
+                
+                # Save the task
+                task.save()
+                print(f"Task saved with ID: {task.id}")  # Debug logging
+                form.save_m2m()  # Save many-to-many relationships (like labels)
+                
+                # Send notification if task is assigned to someone else
+                if task.assigned_to and task.assigned_to != request.user:
+                    notify.send(
+                        request.user,
+                        recipient=task.assigned_to,
+                        verb='assigned you to',
+                        target=task,
+                        description=f'You have been assigned to task "{task.title}"'
+                    )
+                
+                messages.success(request, 'Task created successfully.')
+                return redirect('boards:board_detail', board_id=board.id)
             else:
-                print(f"Form errors: {form.errors}")  # Debug print
-                messages.error(request, 'Form validation failed. Errors:')
+                print("\nForm validation failed:")  # Debug logging
+                print("Form validation errors:", form.errors)  # Debug logging
+                print("Form non_field_errors:", form.non_field_errors())  # Debug logging
+                print("Form cleaned_data:", getattr(form, 'cleaned_data', None))  # Debug logging
+                print("Form fields:", form.fields)  # Debug logging
+                print("Form data:", form.data)  # Debug logging
                 for field, errors in form.errors.items():
                     for error in errors:
                         messages.error(request, f"{field}: {error}")
                 return redirect('boards:board_detail', board_id=board.id)
                 
         except Column.DoesNotExist:
-            # Get all available columns for debugging
-            available_columns = Column.objects.select_related('board').values('id', 'title', 'board__title')
-            print(f"Available columns: {list(available_columns)}")  # Debug print
+            # Get only the columns the user has access to
+            available_columns = Column.objects.select_related('board').filter(
+                board__in=Board.objects.filter(
+                    Q(owner=request.user) |
+                    Q(team__members=request.user)
+                )
+            ).values('id', 'title', 'board__title')
+            
             messages.error(request, 
                 f'Invalid column specified (ID: {column_id}). '
                 f'Available columns: {[f"{c["title"]} (ID: {c["id"]}) in {c["board__title"]}" for c in available_columns]}')
             return redirect('boards:board_list')
         except Exception as e:
-            print(f"Unexpected error: {str(e)}")  # Debug print
-            messages.error(request, f'Error creating task: {str(e)}')
-            return redirect('boards:board_detail', board_id=board.id)
+            print("\nException occurred:")  # Debug logging
+            print("Exception:", str(e))  # Debug logging
+            messages.error(request, f'An error occurred: {str(e)}')
+            return redirect('boards:board_list')
     else:
         messages.error(request, 'Invalid request method.')
         return redirect('boards:board_list')
@@ -328,7 +333,7 @@ def task_edit(request, task_id):
     
     if not (board.owner == request.user or task.created_by == request.user):
         messages.error(request, "You don't have permission to edit this task.")
-        return redirect('board_detail', board_id=board.id)
+        return redirect('boards:board_detail', board_id=board.id)
     
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
@@ -346,7 +351,7 @@ def task_edit(request, task_id):
                 )
             
             messages.success(request, 'Task updated successfully.')
-            return redirect('task_detail', task_id=task.id)
+            return redirect('boards:task_detail', task_id=task.id)
     else:
         form = TaskForm(instance=task)
     
@@ -363,12 +368,12 @@ def task_delete(request, task_id):
     
     if not (board.owner == request.user or task.created_by == request.user):
         messages.error(request, "You don't have permission to delete this task.")
-        return redirect('board_detail', board_id=board.id)
+        return redirect('boards:board_detail', board_id=board.id)
     
     if request.method == 'POST':
         task.delete()
         messages.success(request, 'Task deleted successfully.')
-        return redirect('board_detail', board_id=board.id)
+        return redirect('boards:board_detail', board_id=board.id)
     
     return render(request, 'boards/task_confirm_delete.html', {
         'task': task,
@@ -380,14 +385,29 @@ def task_assign(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     board = task.column.board
     
+    # Check if user has access to the board
+    if not (board.owner == request.user or
+            (board.team and request.user in board.team.members.all())):
+        messages.error(request, "You don't have permission to assign tasks on this board.")
+        return redirect('boards:board_detail', board_id=board.id)
+    
     if request.method == 'POST':
         user_id = request.POST.get('user_id')
-        if user_id:
-            task.assigned_to_id = user_id
-            task.save()
-            
-            # Send notification to the assigned user
-            if task.assigned_to:
+        try:
+            if user_id:
+                # Get the user and verify they can be assigned
+                if board.team:
+                    user = board.team.members.get(id=user_id)
+                else:
+                    user = CustomUser.objects.get(
+                        id=user_id,
+                        id__in=[request.user.id, board.owner.id]
+                    )
+                
+                task.assigned_to = user
+                task.save()
+                
+                # Send notification to the assigned user
                 notify.send(
                     request.user,
                     recipient=task.assigned_to,
@@ -395,14 +415,16 @@ def task_assign(request, task_id):
                     target=task,
                     description=f'You have been assigned to task "{task.title}"'
                 )
-            
-            messages.success(request, 'Task assigned successfully.')
-        else:
-            task.assigned_to = None
-            task.save()
-            messages.success(request, 'Task unassigned successfully.')
+                
+                messages.success(request, 'Task assigned successfully.')
+            else:
+                task.assigned_to = None
+                task.save()
+                messages.success(request, 'Task unassigned successfully.')
+        except (CustomUser.DoesNotExist, ValueError):
+            messages.error(request, 'Invalid user specified.')
     
-    return redirect('task_detail', task_id=task.id)
+    return redirect('boards:task_detail', task_id=task.id)
 
 @login_required
 def add_comment(request, task_id):
@@ -691,4 +713,49 @@ def task_detail(request, task_id):
         'comment_form': comment_form,
         'attachment_form': attachment_form,
         'can_edit': board.owner == request.user or task.created_by == request.user
+    })
+
+@login_required
+def create_task(request, board_id):
+    board = get_object_or_404(Board, id=board_id)
+    
+    # Check permissions
+    if not (board.owner == request.user or
+            (board.team and request.user in board.team.members.all())):
+        messages.error(request, "You don't have access to this board.")
+        return redirect('boards:board_list')
+
+    if request.method == 'POST':
+        form = TaskForm(request.POST, board=board, user=request.user)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.board = board
+            task.created_by = request.user
+            task.column = form.cleaned_data['column']
+            
+            # Calculate position based on existing tasks in the column
+            task.position = task.column.tasks.count()
+            
+            # Save the task
+            task.save()
+            form.save_m2m()  # Save many-to-many relationships
+            
+            # Send notifications if assigned
+            if task.assigned_to and task.assigned_to != request.user:
+                notify.send(
+                    request.user,
+                    recipient=task.assigned_to,
+                    verb='assigned you to',
+                    target=task,
+                    description=f'You have been assigned to task "{task.title}"'
+                )
+            
+            messages.success(request, 'Task created successfully.')
+            return redirect('boards:board_detail', board_id=board.id)
+    else:
+        form = TaskForm(board=board, user=request.user)
+    
+    return render(request, 'boards/task_form.html', {
+        'form': form,
+        'board': board
     })

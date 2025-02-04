@@ -180,19 +180,19 @@
                     {% if board.team %}
                         {% if is_admin %}
                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">
-                                <i class="fas fa-user-plus me-2"></i>Add Member
+                                <i class="fas fa-user-plus me-2"></i>{% trans "Add Member" %}
                             </button>
                         {% endif %}
                         <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#teamInfoModal">
-                            <i class="fas fa-users me-2"></i>Team Info
+                            <i class="fas fa-users me-2"></i>{% trans "Team Info" %}
                         </button>
                     {% endif %}
                     {% if board.owner == user %}
                         <a href="{% url 'boards:board_edit' board_id=board.id %}" class="btn btn-outline-secondary">
-                            <i class="fas fa-edit me-2"></i>Edit Board
+                            <i class="fas fa-edit me-2"></i>{% trans "Edit Board" %}
                         </a>
                         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBoardModal">
-                            <i class="fas fa-trash me-2"></i>Delete Board
+                            <i class="fas fa-trash me-2"></i>{% trans "Delete Board" %}
                         </button>
                     {% endif %}
                 </div>
@@ -439,6 +439,7 @@
 </div>
 
 <!-- Team Info Modal -->
+{% if board.team %}
 <div class="modal fade" id="teamInfoModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -506,6 +507,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 
 {% endblock %}
 

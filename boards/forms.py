@@ -1,5 +1,8 @@
 from django import forms
 from .models import Board, Column, Task, Label, TaskComment, TaskAttachment
+from django.db.models import Max, Q
+from accounts.models import CustomUser
+from django.contrib.auth.models import User
 
 class BoardForm(forms.ModelForm):
     class Meta:
@@ -18,60 +21,45 @@ class ColumnForm(forms.ModelForm):
         }
 
 class TaskForm(forms.ModelForm):
-    due_date = forms.DateTimeField(
-        required=False,
-        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
-    )
-    
     class Meta:
         model = Task
-        fields = ['title', 'description', 'column', 'assigned_to',
-                 'due_date', 'priority', 'labels']
+        fields = ['title', 'description', 'column', 'assigned_to', 'due_date', 'priority', 'labels']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
+            'due_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'labels': forms.CheckboxSelectMultiple(),
             'column': forms.HiddenInput(),
         }
     
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, board=None, user=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['column'].required = True
+        self.board = board
+        self.user = user
         
-        # Get the column from either the instance or initial data
-        column = None
-        if self.instance and self.instance.column:
-            column = self.instance.column
-        elif self.initial and 'column' in self.initial:
-            try:
-                column = Column.objects.get(id=self.initial['column'])
-            except Column.DoesNotExist:
-                pass
-        
-        # Set labels queryset based on the column's board
-        if column:
-            self.fields['labels'].queryset = column.board.labels.all()
-        else:
-            self.fields['labels'].queryset = Label.objects.none()
-    
-    def clean_column(self):
-        column = self.cleaned_data.get('column')
-        if not column:
-            raise forms.ValidationError('Column is required.')
-        return column
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        column = cleaned_data.get('column')
-        labels = cleaned_data.get('labels')
-        
-        # Validate that selected labels belong to the board
-        if column and labels:
-            valid_label_ids = set(column.board.labels.values_list('id', flat=True))
-            selected_label_ids = set(label.id for label in labels)
-            invalid_labels = selected_label_ids - valid_label_ids
+        if board:
+            # Filter columns to only those belonging to this board
+            self.fields['column'].queryset = board.columns.all()
+            # Filter labels to only those belonging to this board
+            self.fields['labels'].queryset = board.labels.all()
             
-            if invalid_labels:
-                raise forms.ValidationError('Some selected labels do not belong to this board.')
+            # Filter assigned_to based on board type
+            if board.team:
+                self.fields['assigned_to'].queryset = board.team.members.all()
+            else:
+                self.fields['assigned_to'].queryset = CustomUser.objects.filter(
+                    id__in=[board.owner.id, self.user.id] if self.user else [board.owner.id]
+                ).distinct()
+            
+            # Set initial position based on column's tasks
+            if self.instance and not self.instance.pk and 'column' in self.data:
+                try:
+                    column = board.columns.get(id=self.data['column'])
+                    self.instance.position = column.tasks.count()
+                except (Column.DoesNotExist, ValueError):
+                    pass
+        
+        self.fields['title'].required = True
+        self.fields['priority'].required = True
 
 class LabelForm(forms.ModelForm):
     class Meta:
