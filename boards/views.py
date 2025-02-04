@@ -58,7 +58,7 @@ def board_detail(request, board_id):
     if not (board.owner == request.user or
             (board.team and request.user in board.team.members.all())):
         messages.error(request, "You don't have access to this board.")
-        return redirect('board_list')
+        return redirect('boards:board_list')
     
     # Calculate progress
     total_tasks = board.columns.aggregate(
@@ -73,34 +73,59 @@ def board_detail(request, board_id):
     
     progress = int((completed_tasks / total_tasks * 100) if total_tasks > 0 else 0)
     
+    # Get team-related data if this is a team board
+    is_team_admin = False
+    pending_invitations = None
+    if board.team:
+        is_team_admin = board.team.teammembership_set.filter(
+            user=request.user,
+            role='admin'
+        ).exists()
+        if is_team_admin:
+            pending_invitations = board.team.invitations.filter(status='pending')
+    
     # Get all users for member selection
-    users = CustomUser.objects.filter(is_active=True)
+    if board.team:
+        users = board.team.members.filter(is_active=True)
+    else:
+        users = CustomUser.objects.filter(
+            id__in=[request.user.id, board.owner.id]
+        ).distinct()
     
     return render(request, 'boards/board_detail.html', {
         'board': board,
         'progress': progress,
-        'users': users
+        'users': users,
+        'is_team_admin': is_team_admin,
+        'pending_invitations': pending_invitations
     })
 
 @login_required
 def board_edit(request, board_id):
     board = get_object_or_404(Board, id=board_id)
     
-    if board.owner != request.user:
+    # Check if user is board owner or team admin
+    is_team_admin = board.team and board.team.teammembership_set.filter(
+        user=request.user,
+        role='admin'
+    ).exists()
+    
+    if not (board.owner == request.user or is_team_admin):
         messages.error(request, "You don't have permission to edit this board.")
-        return redirect('board_detail', board_id=board.id)
+        return redirect('boards:board_detail', board_id=board.id)
     
     if request.method == 'POST':
         form = BoardForm(request.POST, instance=board)
         if form.is_valid():
             form.save()
             messages.success(request, 'Board updated successfully.')
-            return redirect('board_detail', board_id=board.id)
+            return redirect('boards:board_detail', board_id=board.id)
     else:
         form = BoardForm(instance=board)
     
-    return render(request, 'boards/board_form.html', {
+    return render(request, 'boards/board_edit.html', {
         'form': form,
+        'board': board,
         'title': 'Edit Board'
     })
 
@@ -108,17 +133,24 @@ def board_edit(request, board_id):
 def board_delete(request, board_id):
     board = get_object_or_404(Board, id=board_id)
     
-    if board.owner != request.user:
+    # Check if user is board owner or team admin
+    is_team_admin = board.team and board.team.teammembership_set.filter(
+        user=request.user,
+        role='admin'
+    ).exists()
+    
+    if not (board.owner == request.user or is_team_admin):
         messages.error(request, "You don't have permission to delete this board.")
-        return redirect('board_detail', board_id=board.id)
+        return redirect('boards:board_detail', board_id=board.id)
     
     if request.method == 'POST':
         board.delete()
         messages.success(request, 'Board deleted successfully.')
-        return redirect('board_list')
+        return redirect('boards:board_list')
     
     return render(request, 'boards/board_confirm_delete.html', {
-        'board': board
+        'board': board,
+        'title': 'Delete Board'
     })
 
 @login_required
@@ -191,60 +223,103 @@ def task_create(request):
     if request.method == 'POST':
         # Get the column ID from POST data
         column_id = request.POST.get('column')
+        print(f"Received POST data: {request.POST}")  # Debug print
+        
+        if not column_id:
+            messages.error(request, 'No column specified.')
+            return redirect('boards:board_list')
         
         try:
             # Try to get the column and verify user has access
-            column = Column.objects.get(id=column_id)
+            column = Column.objects.select_related('board', 'board__team').get(id=column_id)
             board = column.board
+            
+            # Debug information
+            print(f"Column found: {column.title} (ID: {column.id})")
+            print(f"Board: {board.title} (ID: {board.id})")
+            print(f"Current user: {request.user.username} (ID: {request.user.id})")
+            print(f"Board owner: {board.owner.username} (ID: {board.owner.id})")
+            if board.team:
+                print(f"Team: {board.team.name}")
+                print(f"Team members: {[(m.user.username, m.role) for m in board.team.teammembership_set.select_related('user').all()]}")
             
             # Check if user has access to the board
             if not (board.owner == request.user or
                     (board.team and request.user in board.team.members.all())):
                 messages.error(request, "You don't have access to this board.")
-                return redirect('board_list')
+                return redirect('boards:board_list')
             
             # Create form with POST data
             form = TaskForm(request.POST)
+            
+            # Set the queryset for labels to the board's labels
             form.fields['labels'].queryset = board.labels.all()
             
-            if form.is_valid():
-                task = form.save(commit=False)
-                task.created_by = request.user
-                task.column = column  # Set the column explicitly
-                
-                # Set the position for the new task
-                max_position = task.column.tasks.aggregate(Max('position'))['position__max']
-                task.position = 1 if max_position is None else max_position + 1
-                
-                # Save the task
-                task.save()
-                form.save_m2m()  # Save many-to-many relationships
-                
-                # Send notification if task is assigned
-                if task.assigned_to:
-                    notify.send(
-                        request.user,
-                        recipient=task.assigned_to,
-                        verb='assigned you to',
-                        target=task,
-                        description=f'You have been assigned to task "{task.title}"'
-                    )
-                
-                messages.success(request, 'Task created successfully.')
-                return redirect('board_detail', board_id=board.id)
+            # Set the queryset for assigned_to based on board type
+            if board.team:
+                form.fields['assigned_to'].queryset = board.team.members.all()
             else:
-                # Return form errors as messages
+                form.fields['assigned_to'].queryset = CustomUser.objects.filter(
+                    id__in=[request.user.id, board.owner.id]
+                ).distinct()
+            
+            if form.is_valid():
+                try:
+                    task = form.save(commit=False)
+                    task.created_by = request.user
+                    task.column = column
+                    
+                    # Set the position for the new task
+                    max_position = task.column.tasks.aggregate(Max('position'))['position__max']
+                    task.position = 1 if max_position is None else max_position + 1
+                    
+                    print(f"About to save task with data: {task.__dict__}")  # Debug print
+                    
+                    # Save the task
+                    task.save()
+                    form.save_m2m()  # Save many-to-many relationships (like labels)
+                    
+                    print(f"Task saved successfully with ID: {task.id}")  # Debug print
+                    
+                    # Send notification if task is assigned to someone else
+                    if task.assigned_to and task.assigned_to != request.user:
+                        notify.send(
+                            request.user,
+                            recipient=task.assigned_to,
+                            verb='assigned you to',
+                            target=task,
+                            description=f'You have been assigned to task "{task.title}"'
+                        )
+                    
+                    messages.success(request, 'Task created successfully.')
+                    return redirect('boards:board_detail', board_id=board.id)
+                except Exception as e:
+                    print(f"Error saving task: {str(e)}")  # Debug print
+                    messages.error(request, f'Error saving task: {str(e)}')
+                    return redirect('boards:board_detail', board_id=board.id)
+            else:
+                print(f"Form errors: {form.errors}")  # Debug print
+                messages.error(request, 'Form validation failed. Errors:')
                 for field, errors in form.errors.items():
                     for error in errors:
-                        messages.error(request, f"{field.title()}: {error}")
-                return redirect('board_detail', board_id=board.id)
+                        messages.error(request, f"{field}: {error}")
+                return redirect('boards:board_detail', board_id=board.id)
                 
         except Column.DoesNotExist:
-            messages.error(request, 'Invalid column specified.')
-            return redirect('board_list')
+            # Get all available columns for debugging
+            available_columns = Column.objects.select_related('board').values('id', 'title', 'board__title')
+            print(f"Available columns: {list(available_columns)}")  # Debug print
+            messages.error(request, 
+                f'Invalid column specified (ID: {column_id}). '
+                f'Available columns: {[f"{c["title"]} (ID: {c["id"]}) in {c["board__title"]}" for c in available_columns]}')
+            return redirect('boards:board_list')
+        except Exception as e:
+            print(f"Unexpected error: {str(e)}")  # Debug print
+            messages.error(request, f'Error creating task: {str(e)}')
+            return redirect('boards:board_detail', board_id=board.id)
     else:
         messages.error(request, 'Invalid request method.')
-        return redirect('board_list')
+        return redirect('boards:board_list')
 
 @login_required
 def task_edit(request, task_id):
@@ -468,24 +543,80 @@ def label_delete(request, label_id):
 @login_required
 def update_task_position(request):
     if request.method == 'POST':
-        task_id = request.POST.get('taskId')
-        column_id = request.POST.get('columnId')
-        position = request.POST.get('position')
-        
+        import json
         try:
-            task = Task.objects.get(id=task_id)
-            new_column = Column.objects.get(id=column_id)
+            data = json.loads(request.body)
+            task_id = data.get('taskId')
+            column_id = data.get('columnId')
+            position = data.get('position')
             
-            # Update task position and column
-            task.column = new_column
-            task.position = position
-            task.save()
+            if not all([task_id, column_id, position]):
+                return JsonResponse({
+                    'status': 'error',
+                    'error': 'Missing required fields'
+                }, status=400)
             
-            return JsonResponse({'status': 'success'})
-        except (Task.DoesNotExist, Column.DoesNotExist):
-            return JsonResponse({'status': 'error'}, status=400)
-    
-    return JsonResponse({'status': 'error'}, status=405)
+            try:
+                task = Task.objects.select_related('column__board').get(id=task_id)
+                new_column = Column.objects.select_related('board').get(id=column_id)
+                
+                # Verify both columns belong to the same board
+                if task.column.board_id != new_column.board_id:
+                    return JsonResponse({
+                        'status': 'error',
+                        'error': 'Invalid column specified'
+                    }, status=400)
+                
+                # Verify user has access to the board
+                board = new_column.board
+                if not (board.owner == request.user or
+                        (board.team and request.user in board.team.members.all())):
+                    return JsonResponse({
+                        'status': 'error',
+                        'error': 'You don\'t have access to this board'
+                    }, status=403)
+                
+                # Update task position and column
+                task.column = new_column
+                task.position = position
+                task.save()
+                
+                return JsonResponse({'status': 'success'})
+                
+            except Task.DoesNotExist:
+                return JsonResponse({
+                    'status': 'error',
+                    'error': 'Task not found'
+                }, status=404)
+            except Column.DoesNotExist:
+                # Get all available columns for this board for better error message
+                available_columns = []
+                if task.column:
+                    available_columns = task.column.board.columns.all()
+                    columns_info = [
+                        f"{c.title} (ID: {c.id}) in {c.board.title}"
+                        for c in available_columns
+                    ]
+                    return JsonResponse({
+                        'status': 'error',
+                        'error': f'Invalid column specified (ID: {column_id}). Available columns: {columns_info}'
+                    }, status=400)
+                else:
+                    return JsonResponse({
+                        'status': 'error',
+                        'error': 'Column not found'
+                    }, status=404)
+                
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'status': 'error',
+                'error': 'Invalid JSON data'
+            }, status=400)
+            
+    return JsonResponse({
+        'status': 'error',
+        'error': 'Invalid request method'
+    }, status=405)
 
 @login_required
 def update_column_position(request):
@@ -513,7 +644,7 @@ def task_detail(request, task_id):
     if not (board.owner == request.user or
             (board.team and request.user in board.team.members.all())):
         messages.error(request, "You don't have access to this task.")
-        return redirect('board_list')
+        return redirect('boards:board_list')
     
     comments = task.comments.all().select_related('author')
     attachments = task.attachments.all().select_related('uploaded_by')

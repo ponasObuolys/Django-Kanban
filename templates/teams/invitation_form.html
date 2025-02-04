@@ -4,6 +4,51 @@
 
 {% block title %}Invite Member - {{ team.name }} - Gretvė Tasker{% endblock %}
 
+{% block extra_css %}
+<style>
+    .select2-container--bootstrap-5 {
+        width: 100% !important;
+    }
+
+    /* Style select2 dropdown to match theme */
+    .select2-container--default .select2-selection--single {
+        border: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+        height: 38px;
+        padding: 0.375rem 0.75rem;
+        background-color: var(--bs-body-bg);
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 24px;
+        color: var(--bs-body-color);
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: var(--bs-primary);
+    }
+
+    .select2-dropdown {
+        border-color: var(--bs-border-color);
+        background-color: var(--bs-body-bg);
+    }
+
+    .select2-search__field {
+        background-color: var(--bs-body-bg);
+        color: var(--bs-body-color);
+        border-color: var(--bs-border-color) !important;
+    }
+
+    .select2-results__option {
+        color: var(--bs-body-color);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
@@ -64,57 +109,19 @@
         </div>
     </div>
 </div>
-
-<style>
-    /* Style select2 dropdown to match theme */
-    .select2-container--default .select2-selection--single {
-        border: 1px solid var(--bs-border-color);
-        border-radius: var(--bs-border-radius);
-        height: 38px;
-        padding: 0.375rem 0.75rem;
-        background-color: var(--bs-body-bg);
-    }
-
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 24px;
-        color: var(--bs-body-color);
-    }
-
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 36px;
-    }
-
-    .select2-container--default .select2-results__option--highlighted[aria-selected] {
-        background-color: var(--bs-primary);
-    }
-
-    .select2-dropdown {
-        border-color: var(--bs-border-color);
-        background-color: var(--bs-body-bg);
-    }
-
-    .select2-search__field {
-        background-color: var(--bs-body-bg);
-        color: var(--bs-body-color);
-        border-color: var(--bs-border-color) !important;
-    }
-
-    .select2-results__option {
-        color: var(--bs-body-color);
-    }
-</style>
+{% endblock %}
 
 {% block extra_js %}
 <script>
     $(document).ready(function() {
-        // Initialize select2 for better user selection
+        // Initialize Select2
         $('.select2').select2({
             theme: 'bootstrap-5',
             width: '100%',
-            placeholder: 'Search for a user...',
-            allowClear: true
+            dropdownParent: $('form'),
+            placeholder: 'Select a user to invite',
+            allowClear: false
         });
     });
 </script>
-{% endblock %}
 {% endblock %} 

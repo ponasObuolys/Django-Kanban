@@ -66,7 +66,7 @@ function initializeKanbanBoard() {
 
 function handleDragStart(e) {
     e.target.classList.add('dragging');
-    e.dataTransfer.setData('text/plain', e.target.id);
+    e.dataTransfer.setData('text/plain', e.target.getAttribute('data-task-id'));
 }
 
 function handleDragEnd(e) {
@@ -80,12 +80,12 @@ function handleDragOver(e) {
 async function handleDrop(e) {
     e.preventDefault();
     const taskId = e.dataTransfer.getData('text/plain');
-    const task = document.getElementById(taskId);
+    const task = document.querySelector(`[data-task-id="${taskId}"]`);
     const column = e.target.closest('.kanban-column');
     
     if (task && column) {
-        const columnId = column.dataset.columnId;
-        const taskList = column.querySelector('.kanban-tasks');
+        const columnId = column.getAttribute('data-column-id');
+        const taskList = column.querySelector('.task-list');
         
         // Get the position in the column
         const afterElement = getDragAfterElement(taskList, e.clientY);
@@ -106,6 +106,8 @@ async function handleDrop(e) {
                 })
             });
             
+            const data = await response.json();
+            
             if (response.ok) {
                 // Update UI
                 if (afterElement) {
@@ -113,11 +115,32 @@ async function handleDrop(e) {
                 } else {
                     taskList.appendChild(task);
                 }
+                
+                // Update task count badges
+                const oldColumn = task.closest('.kanban-column');
+                if (oldColumn && oldColumn !== column) {
+                    updateColumnTaskCount(oldColumn);
+                }
+                updateColumnTaskCount(column);
             } else {
-                console.error('Failed to update task position');
+                console.error('Failed to update task position:', data.error);
+                alert(data.error || 'Failed to update task position');
+                // Revert the UI change
+                const originalColumn = task.closest('.kanban-column');
+                if (originalColumn) {
+                    const originalTaskList = originalColumn.querySelector('.task-list');
+                    originalTaskList.appendChild(task);
+                }
             }
         } catch (error) {
             console.error('Error updating task position:', error);
+            alert('An error occurred while updating the task position');
+            // Revert the UI change
+            const originalColumn = task.closest('.kanban-column');
+            if (originalColumn) {
+                const originalTaskList = originalColumn.querySelector('.task-list');
+                originalTaskList.appendChild(task);
+            }
         }
     }
 }
@@ -180,5 +203,13 @@ function updateUnreadCount() {
         if (currentCount <= 0) {
             badge.style.display = 'none';
         }
+    }
+}
+
+function updateColumnTaskCount(column) {
+    const taskCount = column.querySelector('.task-list').children.length;
+    const badge = column.querySelector('.badge');
+    if (badge) {
+        badge.textContent = taskCount;
     }
 } 

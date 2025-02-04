@@ -16,11 +16,32 @@ class TeamInvitationForm(forms.ModelForm):
     class Meta:
         model = TeamInvitation
         fields = ['invited_user']
+        widgets = {
+            'invited_user': forms.Select(attrs={
+                'class': 'form-select select2',
+                'data-placeholder': 'Select a user to invite'
+            })
+        }
     
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, team=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['invited_user'].queryset = User.objects.filter(is_active=True)
-        self.fields['invited_user'].widget.attrs.update({
-            'class': 'form-control select2',
-            'data-placeholder': 'Select a user to invite'
-        }) 
+        if team:
+            # Exclude team owner, existing members, and users with empty usernames
+            existing_members = team.members.all()
+            self.fields['invited_user'].queryset = User.objects.filter(
+                is_active=True
+            ).exclude(
+                id__in=existing_members.values_list('id', flat=True)
+            ).exclude(
+                id=team.owner.id
+            ).exclude(
+                username=''
+            ).order_by('username')
+        else:
+            self.fields['invited_user'].queryset = User.objects.filter(
+                is_active=True
+            ).exclude(
+                username=''
+            ).order_by('username')
+            
+        self.fields['invited_user'].empty_label = None 

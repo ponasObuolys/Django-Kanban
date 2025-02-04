@@ -153,7 +153,7 @@ def send_invitation(request, team_id):
         return redirect('teams:team_detail', team_id=team.id)
     
     if request.method == 'POST':
-        form = TeamInvitationForm(request.POST)
+        form = TeamInvitationForm(request.POST, team=team)
         if form.is_valid():
             invitation = form.save(commit=False)
             invitation.team = team
@@ -187,7 +187,7 @@ def send_invitation(request, team_id):
             messages.success(request, 'Invitation sent successfully.')
             return redirect('teams:team_detail', team_id=team.id)
     else:
-        form = TeamInvitationForm()
+        form = TeamInvitationForm(team=team)
     
     return render(request, 'teams/invitation_form.html', {
         'form': form,

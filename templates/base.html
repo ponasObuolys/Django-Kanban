@@ -15,6 +15,10 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet">
+    
     {% compress css %}
     <!-- Custom CSS -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
@@ -57,10 +61,24 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 {% for notification in user.notifications.unread %}
-                                    <a class="dropdown-item" href="#">{{ notification.description }}</a>
+                                    {% if notification.verb == 'invited you to join' %}
+                                        <a class="dropdown-item" href="{% url 'teams:invitation_list' %}">
+                                            <i class="fas fa-user-plus me-2"></i>{{ notification.description }}
+                                        </a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-bell me-2"></i>{{ notification.description }}
+                                        </a>
+                                    {% endif %}
                                 {% empty %}
                                     <span class="dropdown-item">No new notifications</span>
                                 {% endfor %}
+                                {% if user.notifications.unread.exists %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item text-center" href="#">
+                                        <small>Mark all as read</small>
+                                    </a>
+                                {% endif %}
                             </div>
                         </li>
                         
@@ -156,6 +174,12 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- jQuery (required for Select2) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     {% compress js %}
     <!-- Custom JavaScript -->

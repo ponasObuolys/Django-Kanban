@@ -138,3 +138,80 @@ msgstr "Sukurtos užduotys"
 #: templates/home.html:122
 msgid "Created by Aurimas Butvilauskas"
 msgstr "Sukūrė Aurimas Butvilauskas"
+
+msgid "Team Information"
+msgstr "Komandos informacija"
+
+msgid "Team Owner"
+msgstr "Komandos savininkas"
+
+msgid "Owner"
+msgstr "Savininkas"
+
+msgid "Team Members"
+msgstr "Komandos nariai"
+
+msgid "View Team Page"
+msgstr "Peržiūrėti komandos puslapį"
+
+msgid "Close"
+msgstr "Uždaryti"
+
+# Task Creation
+msgid "Add Task"
+msgstr "Pridėti užduotį"
+
+msgid "Create New Task"
+msgstr "Sukurti naują užduotį"
+
+msgid "Title"
+msgstr "Pavadinimas"
+
+msgid "Please provide a title for the task."
+msgstr "Prašome įvesti užduoties pavadinimą."
+
+msgid "Description"
+msgstr "Aprašymas"
+
+msgid "Assigned To"
+msgstr "Priskirta"
+
+msgid "Unassigned"
+msgstr "Nepriskirta"
+
+msgid "Due Date"
+msgstr "Terminas"
+
+msgid "Priority"
+msgstr "Prioritetas"
+
+msgid "Low"
+msgstr "Žemas"
+
+msgid "Medium"
+msgstr "Vidutinis"
+
+msgid "High"
+msgstr "Aukštas"
+
+msgid "Labels"
+msgstr "Žymos"
+
+msgid "Cancel"
+msgstr "Atšaukti"
+
+msgid "Create Task"
+msgstr "Sukurti užduotį"
+
+# Column Types
+msgid "To Do"
+msgstr "Padaryti"
+
+msgid "Doing"
+msgstr "Daroma"
+
+msgid "Done"
+msgstr "Atlikta"
+
+msgid "Rejected"
+msgstr "Atmesta"

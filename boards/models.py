@@ -26,10 +26,10 @@ class Board(models.Model):
 
 class Column(models.Model):
     COLUMN_TYPES = [
-        ('todo', 'To Do'),
-        ('doing', 'Doing'),
-        ('done', 'Done'),
-        ('rejected', 'Rejected'),
+        ('todo', 'Padaryti'),
+        ('doing', 'Daroma'),
+        ('done', 'Atlikta'),
+        ('rejected', 'Atmesta'),
     ]
     
     board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='columns')

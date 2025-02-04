@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}{{ board.title }} - Kanban Board{% endblock %}
 
@@ -207,7 +208,7 @@
             <div class="kanban-column" data-column-id="{{ column.id }}">
                 <div class="column-header {{ column.type }}" data-column-id="{{ column.id }}">
                     <div class="d-flex justify-content-between align-items-center">
-                        <span>{{ column.title }}</span>
+                        <span>{{ column.title }} (ID: {{ column.id }})</span>
                         <span class="badge bg-secondary">{{ column.tasks.count }}</span>
                     </div>
                 </div>
@@ -260,7 +261,7 @@
                 <!-- Add Task Button -->
                 <div class="p-2">
                     <button type="button" class="add-task-btn" data-bs-toggle="modal" data-bs-target="#createTaskModal" data-column-id="{{ column.id }}">
-                        <i class="fas fa-plus me-2"></i>Add Task
+                        <i class="fas fa-plus me-2"></i>{% trans "Add Task" %}
                     </button>
                 </div>
             </div>
@@ -273,7 +274,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create New Task</h5>
+                <h5 class="modal-title">{% trans "Create New Task" %}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="post" action="{% url 'boards:task_create' %}" id="createTaskForm">
@@ -289,18 +290,18 @@
                     {% endif %}
                     <input type="hidden" name="column" id="columnInput" value="" required>
                     <div class="mb-3">
-                        <label class="form-label">Title</label>
+                        <label class="form-label">{% trans "Title" %}</label>
                         <input type="text" name="title" class="form-control" required>
-                        <div class="invalid-feedback">Please provide a title for the task.</div>
+                        <div class="invalid-feedback">{% trans "Please provide a title for the task." %}</div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{% trans "Description" %}</label>
                         <textarea name="description" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Assigned To</label>
+                        <label class="form-label">{% trans "Assigned To" %}</label>
                         <select name="assigned_to" class="form-select">
-                            <option value="">Unassigned</option>
+                            <option value="">{% trans "Unassigned" %}</option>
                             {% if board.team %}
                                 {% for member in board.team.members.all %}
                                     <option value="{{ member.id }}" {% if member == user %}selected{% endif %}>
@@ -315,19 +316,19 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Due Date</label>
+                        <label class="form-label">{% trans "Due Date" %}</label>
                         <input type="datetime-local" name="due_date" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Priority</label>
+                        <label class="form-label">{% trans "Priority" %}</label>
                         <select name="priority" class="form-select" required>
-                            <option value="low">Low</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="high">High</option>
+                            <option value="low">{% trans "Low" %}</option>
+                            <option value="medium" selected>{% trans "Medium" %}</option>
+                            <option value="high">{% trans "High" %}</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Labels</label>
+                        <label class="form-label">{% trans "Labels" %}</label>
                         <div class="row g-2">
                             {% for label in board.labels.all %}
                                 <div class="col-auto">
@@ -343,8 +344,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Task</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary">{% trans "Create Task" %}</button>
                 </div>
             </form>
         </div>
@@ -436,6 +437,76 @@
         </div>
     </div>
 </div>
+
+<!-- Team Info Modal -->
+<div class="modal fade" id="teamInfoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-users me-2"></i>{{ board.team.name }} - {% trans "Team Information" %}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4">
+                    <h6 class="mb-2">{% trans "Team Owner" %}</h6>
+                    <div class="d-flex align-items-center">
+                        {% if board.team.owner.avatar %}
+                            <img src="{{ board.team.owner.avatar.url }}" alt="Avatar" 
+                                 class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+                                 style="width: 32px; height: 32px;">
+                                {{ board.team.owner.username|make_list|first|upper }}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <div>{{ board.team.owner.get_full_name|default:board.team.owner.username }}</div>
+                            <small class="text-muted">{% trans "Owner" %}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h6 class="mb-2">{% trans "Team Members" %}</h6>
+                    <div class="list-group">
+                        {% for membership in board.team.teammembership_set.all %}
+                            {% if membership.user != board.team.owner %}
+                                <div class="list-group-item">
+                                    <div class="d-flex align-items-center">
+                                        {% if membership.user.avatar %}
+                                            <img src="{{ membership.user.avatar.url }}" alt="Avatar" 
+                                                 class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+                                                 style="width: 32px; height: 32px;">
+                                                {{ membership.user.username|make_list|first|upper }}
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <div>{{ membership.user.get_full_name|default:membership.user.username }}</div>
+                                            <small class="text-muted">{{ membership.role|title }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'teams:team_detail' team_id=board.team.id %}" class="btn btn-primary">
+                    <i class="fas fa-external-link-alt me-2"></i>{% trans "View Team Page" %}
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    {% trans "Close" %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -447,61 +518,66 @@ document.addEventListener('DOMContentLoaded', function() {
         new bootstrap.Modal(modalEl);
     });
 
-    const tasks = document.querySelectorAll('.task-card');
-    const columns = document.querySelectorAll('.task-list');
-    let draggedTask = null;
-    
-    // Initialize task drag events
-    tasks.forEach(task => {
-        task.addEventListener('dragstart', handleDragStart);
-        task.addEventListener('dragend', handleDragEnd);
-    });
-    
-    // Initialize column drag events
-    columns.forEach(column => {
-        column.addEventListener('dragover', handleDragOver);
-        column.addEventListener('drop', handleDrop);
-    });
-    
     // Create Task Modal
     const createTaskModal = document.getElementById('createTaskModal');
     const createTaskForm = document.getElementById('createTaskForm');
+    const columnInput = document.getElementById('columnInput');
     const addTaskButtons = document.querySelectorAll('.add-task-btn');
     
-    // Add hover state class
-    addTaskButtons.forEach(button => {
-        button.addEventListener('mouseenter', () => button.classList.add('hovered'));
-        button.addEventListener('mouseleave', () => button.classList.remove('hovered'));
-    });
-
     if (createTaskModal) {
         createTaskModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
             const columnId = button.getAttribute('data-column-id');
-            document.getElementById('columnInput').value = columnId;
+            console.log('Column ID:', columnId); // Debug log
+            
+            if (!columnId) {
+                console.error('No column ID provided');
+                return;
+            }
+            
+            columnInput.value = columnId;
             
             // Reset form and clear any previous error messages
             createTaskForm.reset();
-            createTaskForm.classList.remove('was-validated');
             const alerts = createTaskForm.querySelectorAll('.alert');
             alerts.forEach(alert => alert.remove());
             
             // Set default values
             document.querySelector('select[name="priority"]').value = 'medium';
-            if (document.querySelector('select[name="assigned_to"]').options.length > 1) {
-                document.querySelector('select[name="assigned_to"]').selectedIndex = 1;
-            }
+            columnInput.value = columnId; // Set it again to ensure it's not cleared by reset
         });
         
         // Add form validation
         createTaskForm.addEventListener('submit', function(event) {
-            if (!createTaskForm.checkValidity()) {
+            if (!columnInput.value) {
                 event.preventDefault();
-                event.stopPropagation();
+                console.error('No column ID in form');
+                alert('Error: No column selected. Please try again.');
+                return false;
             }
-            createTaskForm.classList.add('was-validated');
         });
     }
+    
+    // Initialize task drag events
+    const tasks = document.querySelectorAll('.task-card');
+    const columns = document.querySelectorAll('.task-list');
+    let draggedTask = null;
+    
+    tasks.forEach(task => {
+        task.addEventListener('dragstart', handleDragStart);
+        task.addEventListener('dragend', handleDragEnd);
+    });
+    
+    columns.forEach(column => {
+        column.addEventListener('dragover', handleDragOver);
+        column.addEventListener('drop', handleDrop);
+    });
+    
+    // Add hover state class for add task buttons
+    addTaskButtons.forEach(button => {
+        button.addEventListener('mouseenter', () => button.classList.add('hovered'));
+        button.addEventListener('mouseleave', () => button.classList.remove('hovered'));
+    });
     
     function handleDragStart(e) {
         draggedTask = this;
