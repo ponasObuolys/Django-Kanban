@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'compressor',
     'django_browser_reload',
     'corsheaders',
+    'django_extensions',
     
     # Local apps
     'accounts',

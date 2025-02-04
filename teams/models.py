@@ -20,6 +20,12 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
+    def is_admin(self, user):
+        """Check if user is an admin or owner of the team."""
+        if self.owner == user:
+            return True
+        return self.teammembership_set.filter(user=user, role='admin').exists()
+
 class TeamMembership(models.Model):
     ROLE_CHOICES = [
         ('member', 'Member'),
