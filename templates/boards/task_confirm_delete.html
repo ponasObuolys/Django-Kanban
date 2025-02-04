@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Delete Task" %} - {{ task.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>{% trans "Delete Task" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <p class="mb-0">
+                            {% blocktrans with task_title=task.title %}
+                            Are you sure you want to delete the task "{{ task_title }}"? This action cannot be undone.
+                            {% endblocktrans %}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6>{% trans "Task Details" %}:</h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-tasks me-2"></i>
+                                <strong>{% trans "Title" %}:</strong> {{ task.title }}
+                            </li>
+                            {% if task.description %}
+                            <li class="mb-2">
+                                <i class="fas fa-align-left me-2"></i>
+                                <strong>{% trans "Description" %}:</strong> {{ task.description }}
+                            </li>
+                            {% endif %}
+                            <li class="mb-2">
+                                <i class="fas fa-columns me-2"></i>
+                                <strong>{% trans "Column" %}:</strong> {{ task.column.title }}
+                            </li>
+                            {% if task.assigned_to %}
+                            <li class="mb-2">
+                                <i class="fas fa-user me-2"></i>
+                                <strong>{% trans "Assigned To" %}:</strong> {{ task.assigned_to.get_full_name|default:task.assigned_to.username }}
+                            </li>
+                            {% endif %}
+                            {% if task.due_date %}
+                            <li class="mb-2">
+                                <i class="fas fa-calendar me-2"></i>
+                                <strong>{% trans "Due Date" %}:</strong> {{ task.due_date|date:"M d, Y" }}
+                            </li>
+                            {% endif %}
+                            <li class="mb-2">
+                                <i class="fas fa-flag me-2"></i>
+                                <strong>{% trans "Priority" %}:</strong> {{ task.priority|title }}
+                            </li>
+                            {% if task.labels.exists %}
+                            <li class="mb-2">
+                                <i class="fas fa-tags me-2"></i>
+                                <strong>{% trans "Labels" %}:</strong>
+                                {% for label in task.labels.all %}
+                                    <span class="badge" style="background-color: {{ label.color }}20; color: {{ label.color }}">
+                                        {{ label.name }}
+                                    </span>
+                                {% endfor %}
+                            </li>
+                            {% endif %}
+                            {% if task.comments.exists %}
+                            <li class="mb-2">
+                                <i class="fas fa-comments me-2"></i>
+                                <strong>{% trans "Comments" %}:</strong> {{ task.comments.count }}
+                            </li>
+                            {% endif %}
+                            {% if task.attachments.exists %}
+                            <li>
+                                <i class="fas fa-paperclip me-2"></i>
+                                <strong>{% trans "Attachments" %}:</strong> {{ task.attachments.count }}
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'boards:board_detail' board_id=task.column.board.id %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>{% trans "Cancel" %}
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt me-2"></i>{% trans "Delete Task" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

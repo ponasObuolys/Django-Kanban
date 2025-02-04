@@ -56,6 +56,16 @@
     .task-list {
         min-height: 100px;
         padding: 0.5rem;
+        transition: background-color 0.2s ease;
+    }
+    
+    .task-list.drag-over {
+        background-color: var(--bs-gray-200);
+        border-radius: 0.5rem;
+    }
+    
+    [data-bs-theme="dark"] .task-list.drag-over {
+        background-color: var(--bs-gray-700);
     }
     
     .task {
@@ -66,6 +76,7 @@
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         cursor: grab;
         border: 1px solid var(--bs-gray-200);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
     [data-bs-theme="dark"] .task {
@@ -75,12 +86,13 @@
     
     .task:hover {
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        transform: translateY(-1px);
     }
     
     .task.dragging {
         opacity: 0.5;
-        transform: rotate(3deg);
-        transition: transform 0.1s ease-in-out;
+        transform: scale(1.02) rotate(1deg);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
     
     .task-labels {
@@ -185,9 +197,11 @@
                                 <i class="fas fa-user-plus me-2"></i>{% trans "Add Member" %}
                             </button>
                         {% endif %}
-                        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#teamInfoModal">
-                            <i class="fas fa-users me-2"></i>{% trans "Team Info" %}
-                        </button>
+                        {% if is_team_member %}
+                            <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#teamInfoModal">
+                                <i class="fas fa-users me-2"></i>{% trans "Team Info" %}
+                            </button>
+                        {% endif %}
                     {% endif %}
                     {% if board.owner == user %}
                         <a href="{% url 'boards:board_edit' board_id=board.id %}" class="btn btn-outline-secondary">
@@ -207,10 +221,10 @@
 <div class="kanban-container">
     <div class="column-container">
         {% for column in board.columns.all %}
-            <div class="kanban-column" data-column-id="{{ column.id }}">
+            <div class="kanban-column">
                 <div class="column-header {{ column.type }}" data-column-id="{{ column.id }}">
                     <div class="d-flex justify-content-between align-items-center">
-                        <span>{{ column.title }} (ID: {{ column.id }})</span>
+                        <span>{{ column.title }}</span>
                         <span class="badge bg-secondary">{{ column.tasks.count }}</span>
                     </div>
                 </div>
@@ -579,6 +593,8 @@ document.addEventListener('DOMContentLoaded', function() {
     columns.forEach(column => {
         column.addEventListener('dragover', handleDragOver);
         column.addEventListener('drop', handleDrop);
+        column.addEventListener('dragenter', handleDragEnter);
+        column.addEventListener('dragleave', handleDragLeave);
     });
     
     // Add hover state class for add task buttons
@@ -588,31 +604,52 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     function handleDragStart(event) {
-        const taskElement = event.target.closest('.task');
-        event.dataTransfer.setData('text/plain', taskElement.id);
-        draggedTask = taskElement;
-        taskElement.classList.add('dragging');
+        draggedTask = event.target.closest('.task');
+        event.dataTransfer.setData('text/plain', draggedTask.id);
+        draggedTask.classList.add('dragging');
         event.dataTransfer.effectAllowed = 'move';
     }
     
-    function handleDragEnd(e) {
-        draggedTask.classList.remove('dragging');
+    function handleDragEnd(event) {
+        event.target.closest('.task').classList.remove('dragging');
         draggedTask = null;
+        
+        // Remove any drag-over styling from columns
+        columns.forEach(column => {
+            column.classList.remove('drag-over');
+        });
     }
     
-    function handleDragOver(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
+    function handleDragEnter(event) {
+        event.preventDefault();
+        event.target.closest('.task-list').classList.add('drag-over');
     }
     
-    async function handleDrop(e) {
-        e.preventDefault();
-        const taskId = e.dataTransfer.getData('text/plain');
-        const targetColumn = this;
+    function handleDragLeave(event) {
+        event.preventDefault();
+        event.target.closest('.task-list').classList.remove('drag-over');
+    }
+    
+    function handleDragOver(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }
+    
+    async function handleDrop(event) {
+        event.preventDefault();
+        event.target.closest('.task-list').classList.remove('drag-over');
+        
+        const taskId = event.dataTransfer.getData('text/plain');
+        const targetColumn = event.target.closest('.task-list');
         const columnId = targetColumn.dataset.columnId;
         
+        if (!taskId || !columnId) {
+            console.error('Missing task ID or column ID');
+            return;
+        }
+        
         // Get the position in the column
-        const afterElement = getDragAfterElement(targetColumn, e.clientY);
+        const afterElement = getDragAfterElement(targetColumn, event.clientY);
         const position = afterElement ? 
             Array.from(targetColumn.children).indexOf(afterElement) :
             targetColumn.children.length;
@@ -630,27 +667,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({
                     task_id: numericTaskId,
                     column_id: parseInt(columnId),
-                    position: parseInt(position)
+                    position: position
                 })
             });
             
-            if (response.ok) {
-                const taskElement = document.getElementById(taskId);
-                if (!taskElement) {
-                    console.error('Task element not found:', taskId);
-                    return;
-                }
-                if (afterElement) {
-                    targetColumn.insertBefore(taskElement, afterElement);
+            if (!response.ok) {
+                const contentType = response.headers.get('content-type');
+                let errorMessage;
+                
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error;
                 } else {
-                    targetColumn.appendChild(taskElement);
+                    const text = await response.text();
+                    errorMessage = 'Server error occurred';
+                    console.error('Server response:', text);
                 }
-            } else {
-                const errorData = await response.json();
-                console.error('Failed to update task position:', errorData.error);
+                
+                console.error('Failed to update task position:', errorMessage);
+                alert('Failed to move task: ' + errorMessage);
+                return;
             }
+            
+            const taskElement = document.getElementById(taskId);
+            if (!taskElement) {
+                console.error('Task element not found:', taskId);
+                return;
+            }
+            
+            // Update the UI
+            if (afterElement) {
+                targetColumn.insertBefore(taskElement, afterElement);
+            } else {
+                targetColumn.appendChild(taskElement);
+            }
+            
+            // Update task counts
+            updateColumnTaskCounts();
+            
         } catch (error) {
             console.error('Error updating task position:', error);
+            alert('Error moving task. Please try again.');
         }
     }
     
@@ -682,6 +739,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         return cookieValue;
+    }
+
+    function updateColumnTaskCounts() {
+        document.querySelectorAll('.kanban-column').forEach(column => {
+            const taskCount = column.querySelector('.task-list').children.length;
+            column.querySelector('.badge').textContent = taskCount;
+        });
     }
 
     // Set progress bar width
