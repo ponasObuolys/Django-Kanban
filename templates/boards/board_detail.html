@@ -297,7 +297,7 @@
                 <h5 class="modal-title">{% trans "Create New Task" %}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="post" action="{% url 'boards:task_create' %}" id="createTaskForm">
+            <form method="post" action="{% url 'boards:task_create' %}?board={{ board.id }}" id="createTaskForm">
                 {% csrf_token %}
                 <div class="modal-body">
                     {% if messages %}
