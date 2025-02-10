@@ -38,6 +38,7 @@ def task_create(request):
 @login_required
 def task_edit(request, task_id):
     task = get_object_or_404(Task, id=task_id)
+    board = task.column.board
     
     if not can_manage_task(request.user, task):
         messages.error(request, "You don't have permission to edit this task.")
@@ -55,6 +56,7 @@ def task_edit(request, task_id):
     return render(request, 'boards/task_form.html', {
         'form': form,
         'task': task,
+        'board': board,
         'title': 'Edit Task'
     })
 
