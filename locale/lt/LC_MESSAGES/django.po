@@ -200,9 +200,6 @@ msgstr "Žymos"
 msgid "Cancel"
 msgstr "Atšaukti"
 
-msgid "Create Task"
-msgstr "Sukurti užduotį"
-
 # Column Types
 msgid "To Do"
 msgstr "Padaryti"
@@ -259,12 +256,179 @@ msgstr "Kol kas priedų nėra."
 msgid "Add Attachment"
 msgstr "Pridėti priedą"
 
-# Task Edit Page
+# Navigation and Common Elements
+msgid "Boards"
+msgstr "Lentos"
+
+msgid "Teams"
+msgstr "Komandos"
+
+msgid "Mark all as read"
+msgstr "Pažymėti visus kaip perskaitytus"
+
+msgid "Profile"
+msgstr "Profilis"
+
+msgid "Settings"
+msgstr "Nustatymai"
+
+msgid "Logout"
+msgstr "Atsijungti"
+
+msgid "Login"
+msgstr "Prisijungti"
+
+msgid "Password"
+msgstr "Slaptažodis"
+
+msgid "Notifications"
+msgstr "Pranešimai"
+
+msgid "Theme"
+msgstr "Tema"
+
+# Profile and Settings
+msgid "Profile Settings"
+msgstr "Profilio nustatymai"
+
+msgid "First Name"
+msgstr "Vardas"
+
+msgid "Last Name"
+msgstr "Pavardė"
+
+msgid "Email"
+msgstr "El. paštas"
+
+msgid "Bio"
+msgstr "Biografija"
+
 msgid "Save Changes"
 msgstr "Išsaugoti pakeitimus"
 
-msgid "Edit Task"
-msgstr "Redaguoti užduotį"
+msgid "Change Password"
+msgstr "Keisti slaptažodį"
 
-msgid "Create Task"
-msgstr "Sukurti užduotį"
+msgid "Current Password"
+msgstr "Dabartinis slaptažodis"
+
+msgid "New Password"
+msgstr "Naujas slaptažodis"
+
+msgid "Confirm New Password"
+msgstr "Patvirtinti naują slaptažodį"
+
+msgid "Notification Preferences"
+msgstr "Pranešimų nustatymai"
+
+msgid "Email Notifications"
+msgstr "El. pašto pranešimai"
+
+msgid "Task Assignments"
+msgstr "Užduočių priskyrimas"
+
+msgid "Task Updates"
+msgstr "Užduočių atnaujinimai"
+
+msgid "Team Invitations"
+msgstr "Komandos kvietimai"
+
+msgid "Board Updates"
+msgstr "Lentos atnaujinimai"
+
+msgid "Save Preferences"
+msgstr "Išsaugoti nustatymus"
+
+msgid "Theme Settings"
+msgstr "Temos nustatymai"
+
+msgid "Theme Mode"
+msgstr "Temos režimas"
+
+msgid "Light"
+msgstr "Šviesi"
+
+msgid "Dark"
+msgstr "Tamsi"
+
+msgid "Save Theme"
+msgstr "Išsaugoti temą"
+
+msgid "No new notifications"
+msgstr "Nėra naujų pranešimų"
+
+msgid "My Boards - Gretvėja Tasker"
+msgstr "Mano lentos - Gretvėja Tasker"
+
+msgid "Create New Board"
+msgstr "Sukurti naują lentą"
+
+msgid "Personal Boards"
+msgstr "Asmeninės lentos"
+
+msgid "Team Boards"
+msgstr "Komandų lentos"
+
+msgid "Created"
+msgstr "Sukurta"
+
+msgid "ago"
+msgstr "prieš"
+
+msgid "You don't have any personal boards yet."
+msgstr "Kol kas neturite asmeninių lentų."
+
+msgid "You don't have any team boards yet."
+msgstr "Kol kas neturite komandų lentų."
+
+msgid "year"
+msgid_plural "years"
+msgstr[0] "metus"
+msgstr[1] "metus"
+msgstr[2] "metų"
+msgstr[3] "metų"
+
+msgid "month"
+msgid_plural "months"
+msgstr[0] "mėnesį"
+msgstr[1] "mėnesius"
+msgstr[2] "mėnesių"
+msgstr[3] "mėnesių"
+
+msgid "week"
+msgid_plural "weeks"
+msgstr[0] "savaitę"
+msgstr[1] "savaites"
+msgstr[2] "savaičių"
+msgstr[3] "savaičių"
+
+msgid "day"
+msgid_plural "days"
+msgstr[0] "diena"
+msgstr[1] "dienos"
+msgstr[2] "dienų"
+msgstr[3] "dienų"
+
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "valanda"
+msgstr[1] "valandos"
+msgstr[2] "valandų"
+msgstr[3] "valandų"
+
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "minutė"
+msgstr[1] "minutės"
+msgstr[2] "minučių"
+msgstr[3] "minučių"
+
+msgid "second"
+msgid_plural "seconds"
+msgstr[0] "sekundė"
+msgstr[1] "sekundės"
+msgstr[2] "sekundžių"
+msgstr[3] "sekundžių"
+
+msgid ","
+msgstr " ir"

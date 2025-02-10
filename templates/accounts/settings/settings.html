@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Settings{% endblock %}
+{% block title %}{% trans "Settings" %}{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -11,16 +12,16 @@
             <div class="card border-0 shadow-sm">
                 <div class="list-group list-group-flush">
                     <a href="#profile" class="list-group-item list-group-item-action active" data-bs-toggle="list">
-                        <i class="fas fa-user me-2"></i>Profile
+                        <i class="fas fa-user me-2"></i>{% trans "Profile" %}
                     </a>
                     <a href="#password" class="list-group-item list-group-item-action" data-bs-toggle="list">
-                        <i class="fas fa-key me-2"></i>Password
+                        <i class="fas fa-key me-2"></i>{% trans "Password" %}
                     </a>
                     <a href="#notifications" class="list-group-item list-group-item-action" data-bs-toggle="list">
-                        <i class="fas fa-bell me-2"></i>Notifications
+                        <i class="fas fa-bell me-2"></i>{% trans "Notifications" %}
                     </a>
                     <a href="#theme" class="list-group-item list-group-item-action" data-bs-toggle="list">
-                        <i class="fas fa-palette me-2"></i>Theme
+                        <i class="fas fa-palette me-2"></i>{% trans "Theme" %}
                     </a>
                 </div>
             </div>
@@ -33,14 +34,14 @@
                 <div class="tab-pane fade show active" id="profile">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title mb-4">Profile Settings</h5>
+                            <h5 class="card-title mb-4">{% trans "Profile Settings" %}</h5>
                             <form method="post" action="{% url 'accounts:update_profile' %}" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label class="form-label">Avatar</label>
+                                    <label class="form-label">{% trans "Avatar" %}</label>
                                     <div class="d-flex align-items-center">
                                         {% if user.avatar %}
-                                            <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar me-3">
+                                            <img src="{{ user.avatar.url }}" alt="{% trans 'Avatar' %}" class="avatar me-3">
                                         {% else %}
                                             <div class="avatar bg-primary text-white d-flex align-items-center justify-content-center me-3">
                                                 <i class="fas fa-user"></i>
@@ -50,23 +51,23 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">First Name</label>
+                                    <label class="form-label">{% trans "First Name" %}</label>
                                     <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Last Name</label>
+                                    <label class="form-label">{% trans "Last Name" %}</label>
                                     <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Email</label>
+                                    <label class="form-label">{% trans "Email" %}</label>
                                     <input type="email" name="email" class="form-control" value="{{ user.email }}">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Bio</label>
+                                    <label class="form-label">{% trans "Bio" %}</label>
                                     <textarea name="bio" class="form-control" rows="3">{{ user.bio }}</textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-2"></i>Save Changes
+                                    <i class="fas fa-save me-2"></i>{% trans "Save Changes" %}
                                 </button>
                             </form>
                         </div>
@@ -77,23 +78,23 @@
                 <div class="tab-pane fade" id="password">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title mb-4">Change Password</h5>
+                            <h5 class="card-title mb-4">{% trans "Change Password" %}</h5>
                             <form method="post" action="{% url 'accounts:update_password' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label class="form-label">Current Password</label>
+                                    <label class="form-label">{% trans "Current Password" %}</label>
                                     <input type="password" name="old_password" class="form-control" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">New Password</label>
+                                    <label class="form-label">{% trans "New Password" %}</label>
                                     <input type="password" name="new_password1" class="form-control" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Confirm New Password</label>
+                                    <label class="form-label">{% trans "Confirm New Password" %}</label>
                                     <input type="password" name="new_password2" class="form-control" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-key me-2"></i>Change Password
+                                    <i class="fas fa-key me-2"></i>{% trans "Change Password" %}
                                 </button>
                             </form>
                         </div>
@@ -104,36 +105,36 @@
                 <div class="tab-pane fade" id="notifications">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title mb-4">Notification Preferences</h5>
+                            <h5 class="card-title mb-4">{% trans "Notification Preferences" %}</h5>
                             <form method="post" action="{% url 'accounts:update_notifications' %}">
                                 {% csrf_token %}
                                 <div class="form-check form-switch mb-3">
                                     <input type="checkbox" class="form-check-input" name="email_notifications" id="emailNotifications"
                                            {% if user.notification_preferences.email_notifications %}checked{% endif %}>
-                                    <label class="form-check-label" for="emailNotifications">Email Notifications</label>
+                                    <label class="form-check-label" for="emailNotifications">{% trans "Email Notifications" %}</label>
                                 </div>
                                 <div class="form-check form-switch mb-3">
                                     <input type="checkbox" class="form-check-input" name="task_assignments" id="taskAssignments"
                                            {% if user.notification_preferences.task_assignments %}checked{% endif %}>
-                                    <label class="form-check-label" for="taskAssignments">Task Assignments</label>
+                                    <label class="form-check-label" for="taskAssignments">{% trans "Task Assignments" %}</label>
                                 </div>
                                 <div class="form-check form-switch mb-3">
                                     <input type="checkbox" class="form-check-input" name="task_updates" id="taskUpdates"
                                            {% if user.notification_preferences.task_updates %}checked{% endif %}>
-                                    <label class="form-check-label" for="taskUpdates">Task Updates</label>
+                                    <label class="form-check-label" for="taskUpdates">{% trans "Task Updates" %}</label>
                                 </div>
                                 <div class="form-check form-switch mb-3">
                                     <input type="checkbox" class="form-check-input" name="team_invitations" id="teamInvitations"
                                            {% if user.notification_preferences.team_invitations %}checked{% endif %}>
-                                    <label class="form-check-label" for="teamInvitations">Team Invitations</label>
+                                    <label class="form-check-label" for="teamInvitations">{% trans "Team Invitations" %}</label>
                                 </div>
                                 <div class="form-check form-switch mb-3">
                                     <input type="checkbox" class="form-check-input" name="board_updates" id="boardUpdates"
                                            {% if user.notification_preferences.board_updates %}checked{% endif %}>
-                                    <label class="form-check-label" for="boardUpdates">Board Updates</label>
+                                    <label class="form-check-label" for="boardUpdates">{% trans "Board Updates" %}</label>
                                 </div>
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-2"></i>Save Preferences
+                                    <i class="fas fa-save me-2"></i>{% trans "Save Preferences" %}
                                 </button>
                             </form>
                         </div>
@@ -144,30 +145,30 @@
                 <div class="tab-pane fade" id="theme">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title mb-4">Theme Settings</h5>
+                            <h5 class="card-title mb-4">{% trans "Theme Settings" %}</h5>
                             <form method="post" action="{% url 'accounts:update_theme' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label class="form-label">Theme Mode</label>
+                                    <label class="form-label">{% trans "Theme Mode" %}</label>
                                     <div class="d-flex gap-3">
                                         <div class="form-check">
                                             <input type="radio" class="form-check-input" name="theme" value="light" id="lightTheme"
                                                    {% if user.theme_preference == 'light' %}checked{% endif %}>
                                             <label class="form-check-label" for="lightTheme">
-                                                <i class="fas fa-sun me-2"></i>Light
+                                                <i class="fas fa-sun me-2"></i>{% trans "Light" %}
                                             </label>
                                         </div>
                                         <div class="form-check">
                                             <input type="radio" class="form-check-input" name="theme" value="dark" id="darkTheme"
                                                    {% if user.theme_preference == 'dark' %}checked{% endif %}>
                                             <label class="form-check-label" for="darkTheme">
-                                                <i class="fas fa-moon me-2"></i>Dark
+                                                <i class="fas fa-moon me-2"></i>{% trans "Dark" %}
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-2"></i>Save Theme
+                                    <i class="fas fa-save me-2"></i>{% trans "Save Theme" %}
                                 </button>
                             </form>
                         </div>
