@@ -1,0 +1,1 @@
+from boards.templatetags.task_tags import * 

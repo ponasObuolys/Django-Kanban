@@ -1,45 +1,25 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+{% load task_tags %}
 
-{% block title %}{{ board.title }} - Kanban Board{% endblock %}
+{% block title %}{{ board.title }} - {% trans "Board" %}{% endblock %}
 
 {% block extra_css %}
 <style>
-    .kanban-container {
-        min-height: calc(100vh - 180px);
-        padding: 1rem;
-        background: var(--bs-gray-100);
-    }
-    
-    [data-bs-theme="dark"] .kanban-container {
-        background: var(--bs-gray-900);
-    }
-    
-    .board-header {
-        padding: 1rem;
-        background: var(--bs-white);
-        border-bottom: 1px solid var(--bs-gray-200);
-    }
-    
-    [data-bs-theme="dark"] .board-header {
-        background: var(--bs-gray-800);
-        border-color: var(--bs-gray-700);
-    }
-    
-    .column-container {
+    .kanban-board {
         display: flex;
         gap: 1rem;
-        overflow-x: auto;
         padding: 1rem;
-        align-items: flex-start;
+        overflow-x: auto;
     }
     
     .kanban-column {
         flex: 0 0 300px;
         background: var(--bs-gray-100);
         border-radius: 0.5rem;
-        border: 1px solid var(--bs-gray-200);
+        border: 1px solid;
+        border-color: var(--bs-gray-200);
     }
     
     [data-bs-theme="dark"] .kanban-column {
@@ -140,6 +120,22 @@
     .task-meta i {
         margin-right: 0.25rem;
     }
+
+    .task-meta .due-date {
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+    }
+
+    .task-meta .due-date.due-tomorrow {
+        background-color: #FFAC1C;
+        color: #000;
+    }
+
+    .task-meta .due-date.due-today,
+    .task-meta .due-date.overdue {
+        background-color: #C70039;
+        color: #fff;
+    }
     
     .add-task-btn {
         width: 100%;
@@ -217,76 +213,72 @@
     </div>
 </div>
 
-<!-- Kanban Board -->
-<div class="kanban-container">
-    <div class="column-container">
-        {% for column in board.columns.all %}
-            <div class="kanban-column">
-                <div class="column-header {{ column.type }}" data-column-id="{{ column.id }}">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span>{{ column.title }}</span>
-                        <span class="badge bg-secondary">{{ column.tasks.count }}</span>
-                    </div>
-                </div>
-                
-                <div class="task-list" data-column-id="{{ column.id }}">
-                    {% for task in column.tasks.all %}
-                        <div class="task" id="task-{{ task.id }}" draggable="true" data-task-id="{{ task.id }}">
-                            <!-- Task Labels -->
-                            <div class="task-labels">
-                                {% for label in task.labels.all %}
-                                    <span class="task-label" style="--label-color: {{ label.color }}; --label-bg-color: {{ label.color }}20">
-                                        {{ label.name }}
-                                    </span>
-                                {% endfor %}
-                            </div>
-                            
-                            <!-- Task Title with Link -->
-                            <h6 class="mb-2">
-                                <a href="{% url 'boards:task_detail' task_id=task.id %}" class="text-decoration-none text-reset">
-                                    {{ task.title }}
-                                </a>
-                            </h6>
-                            
-                            <!-- Task Meta -->
-                            <div class="task-meta">
-                                {% if task.due_date %}
-                                    <span><i class="fas fa-calendar"></i>{{ task.due_date|date:"M d" }}</span>
-                                {% endif %}
-                                
-                                {% if task.comments.exists %}
-                                    <span><i class="fas fa-comment"></i>{{ task.comments.count }}</span>
-                                {% endif %}
-                                
-                                {% if task.attachments.exists %}
-                                    <span><i class="fas fa-paperclip"></i>{{ task.attachments.count }}</span>
-                                {% endif %}
-                                
-                                {% if task.assigned_to %}
-                                    <div class="member-avatar ms-auto" title="{{ task.assigned_to.get_full_name|default:task.assigned_to.username }}">
-                                        {% if task.assigned_to.avatar %}
-                                            <img src="{{ task.assigned_to.avatar.url }}" alt="{{ task.assigned_to.username }}" class="img-fluid">
-                                        {% else %}
-                                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary text-white">
-                                                {{ task.assigned_to.username|make_list|first|upper }}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-                
-                <!-- Add Task Button -->
-                <div class="p-2">
-                    <button type="button" class="add-task-btn" data-bs-toggle="modal" data-bs-target="#createTaskModal" data-column-id="{{ column.id }}">
-                        <i class="fas fa-plus me-2"></i>{% trans "Add Task" %}
-                    </button>
-                </div>
+<div class="kanban-board">
+    {% for column in board.columns.all %}
+        <div class="kanban-column">
+            <div class="column-header d-flex justify-content-between align-items-center">
+                <span>{{ column.title }}</span>
+                <span class="badge bg-secondary">{{ column.tasks.count }}</span>
             </div>
-        {% endfor %}
-    </div>
+            <div class="task-list" data-column-id="{{ column.id }}">
+                {% for task in column.tasks.all %}
+                    <div class="task" id="task-{{ task.id }}" draggable="true" data-task-id="{{ task.id }}">
+                        <!-- Task Labels -->
+                        <div class="task-labels">
+                            {% for label in task.labels.all %}
+                                <span class="task-label" style="--label-color: {{ label.color }}; --label-bg-color: {{ label.color }}20">
+                                    {{ label.name }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Task Title with Link -->
+                        <h6 class="mb-2">
+                            <a href="{% url 'boards:task_detail' task_id=task.id %}" class="text-decoration-none text-reset">
+                                {{ task.title }}
+                            </a>
+                        </h6>
+                        
+                        <!-- Task Meta -->
+                        <div class="task-meta">
+                            {% if task.due_date %}
+                                <span class="due-date {% get_due_date_class task %}">
+                                    <i class="fas fa-calendar"></i>{{ task.due_date|date:"M d" }}
+                                </span>
+                            {% endif %}
+                            
+                            {% if task.comments.exists %}
+                                <span><i class="fas fa-comment"></i>{{ task.comments.count }}</span>
+                            {% endif %}
+                            
+                            {% if task.attachments.exists %}
+                                <span><i class="fas fa-paperclip"></i>{{ task.attachments.count }}</span>
+                            {% endif %}
+                            
+                            {% if task.assigned_to %}
+                                <div class="member-avatar ms-auto" title="{{ task.assigned_to.get_full_name|default:task.assigned_to.username }}">
+                                    {% if task.assigned_to.avatar %}
+                                        <img src="{{ task.assigned_to.avatar.url }}" alt="{{ task.assigned_to.username }}" class="img-fluid">
+                                    {% else %}
+                                        <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary text-white">
+                                            {{ task.assigned_to.username|make_list|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Add Task Button -->
+            <div class="p-2">
+                <button type="button" class="add-task-btn" data-bs-toggle="modal" data-bs-target="#createTaskModal" data-column-id="{{ column.id }}">
+                    <i class="fas fa-plus me-2"></i>{% trans "Add Task" %}
+                </button>
+            </div>
+        </div>
+    {% endfor %}
 </div>
 
 <!-- Create Task Modal -->
@@ -346,21 +338,6 @@
                             <option value="medium" selected>{% trans "Medium" %}</option>
                             <option value="high">{% trans "High" %}</option>
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">{% trans "Labels" %}</label>
-                        <div class="row g-2">
-                            {% for label in board.labels.all %}
-                                <div class="col-auto">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="labels" value="{{ label.id }}" class="form-check-input" id="label{{ label.id }}">
-                                        <label class="form-check-label label-color" for="label{{ label.id }}" style="--label-color: {{ label.color }}">
-                                            {{ label.name }}
-                                        </label>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -533,199 +510,7 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Bootstrap modals
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modalEl => {
-        new bootstrap.Modal(modalEl);
-    });
-
-    // Create Task Modal
-    const createTaskModal = document.getElementById('createTaskModal');
-    const createTaskForm = document.getElementById('createTaskForm');
-    const columnInput = document.getElementById('columnInput');
-    const addTaskButtons = document.querySelectorAll('.add-task-btn');
-    
-    if (createTaskModal) {
-        createTaskModal.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
-            const columnId = button.getAttribute('data-column-id');
-            console.log('Column ID:', columnId); // Debug log
-            
-            if (!columnId) {
-                console.error('No column ID provided');
-                return;
-            }
-            
-            columnInput.value = columnId;
-            
-            // Reset form and clear any previous error messages
-            createTaskForm.reset();
-            const alerts = createTaskForm.querySelectorAll('.alert');
-            alerts.forEach(alert => alert.remove());
-            
-            // Set default values
-            document.querySelector('select[name="priority"]').value = 'medium';
-            columnInput.value = columnId; // Set it again to ensure it's not cleared by reset
-        });
-        
-        // Add form validation
-        createTaskForm.addEventListener('submit', function(event) {
-            if (!columnInput.value) {
-                event.preventDefault();
-                console.error('No column ID in form');
-                alert('Error: No column selected. Please try again.');
-                return false;
-            }
-        });
-    }
-    
-    // Initialize task drag events
-    const tasks = document.querySelectorAll('.task');
-    const columns = document.querySelectorAll('.task-list');
-    let draggedTask = null;
-    
-    tasks.forEach(task => {
-        task.addEventListener('dragstart', handleDragStart);
-        task.addEventListener('dragend', handleDragEnd);
-    });
-    
-    columns.forEach(column => {
-        column.addEventListener('dragover', handleDragOver);
-        column.addEventListener('drop', handleDrop);
-        column.addEventListener('dragenter', handleDragEnter);
-        column.addEventListener('dragleave', handleDragLeave);
-    });
-    
-    // Add hover state class for add task buttons
-    addTaskButtons.forEach(button => {
-        button.addEventListener('mouseenter', () => button.classList.add('hovered'));
-        button.addEventListener('mouseleave', () => button.classList.remove('hovered'));
-    });
-    
-    function handleDragStart(event) {
-        draggedTask = event.target.closest('.task');
-        event.dataTransfer.setData('text/plain', draggedTask.id);
-        draggedTask.classList.add('dragging');
-        event.dataTransfer.effectAllowed = 'move';
-    }
-    
-    function handleDragEnd(event) {
-        event.target.closest('.task').classList.remove('dragging');
-        draggedTask = null;
-        
-        // Remove any drag-over styling from columns
-        columns.forEach(column => {
-            column.classList.remove('drag-over');
-        });
-    }
-    
-    function handleDragEnter(event) {
-        event.preventDefault();
-        event.target.closest('.task-list').classList.add('drag-over');
-    }
-    
-    function handleDragLeave(event) {
-        event.preventDefault();
-        event.target.closest('.task-list').classList.remove('drag-over');
-    }
-    
-    function handleDragOver(event) {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-    }
-    
-    async function handleDrop(event) {
-        event.preventDefault();
-        event.target.closest('.task-list').classList.remove('drag-over');
-        
-        const taskId = event.dataTransfer.getData('text/plain');
-        const targetColumn = event.target.closest('.task-list');
-        const columnId = targetColumn.dataset.columnId;
-        
-        if (!taskId || !columnId) {
-            console.error('Missing task ID or column ID');
-            return;
-        }
-        
-        // Get the position in the column
-        const afterElement = getDragAfterElement(targetColumn, event.clientY);
-        const position = afterElement ? 
-            Array.from(targetColumn.children).indexOf(afterElement) :
-            targetColumn.children.length;
-        
-        try {
-            // Extract the numeric task ID from the "task-{id}" format
-            const numericTaskId = parseInt(taskId.replace('task-', ''));
-            
-            const response = await fetch('{% url "boards:update_task_position" %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({
-                    task_id: numericTaskId,
-                    column_id: parseInt(columnId),
-                    position: position
-                })
-            });
-            
-            if (!response.ok) {
-                const contentType = response.headers.get('content-type');
-                let errorMessage;
-                
-                if (contentType && contentType.includes('application/json')) {
-                    const errorData = await response.json();
-                    errorMessage = errorData.error;
-                } else {
-                    const text = await response.text();
-                    errorMessage = 'Server error occurred';
-                    console.error('Server response:', text);
-                }
-                
-                console.error('Failed to update task position:', errorMessage);
-                alert('Failed to move task: ' + errorMessage);
-                return;
-            }
-            
-            const taskElement = document.getElementById(taskId);
-            if (!taskElement) {
-                console.error('Task element not found:', taskId);
-                return;
-            }
-            
-            // Update the UI
-            if (afterElement) {
-                targetColumn.insertBefore(taskElement, afterElement);
-            } else {
-                targetColumn.appendChild(taskElement);
-            }
-            
-            // Update task counts
-            updateColumnTaskCounts();
-            
-        } catch (error) {
-            console.error('Error updating task position:', error);
-            alert('Error moving task. Please try again.');
-        }
-    }
-    
-    function getDragAfterElement(container, y) {
-        const draggableElements = [...container.querySelectorAll('.task:not(.dragging)')];
-        
-        return draggableElements.reduce((closest, child) => {
-            const box = child.getBoundingClientRect();
-            const offset = y - box.top - box.height / 2;
-            
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
-            } else {
-                return closest;
-            }
-        }, { offset: Number.NEGATIVE_INFINITY }).element;
-    }
-    
+    // Set CSRF token for AJAX requests
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -764,8 +549,80 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Set label checkbox colors
     document.querySelectorAll('.label-color').forEach(label => {
-        label.style.setProperty('--label-color', label.dataset.color);
+        const color = label.dataset.color;
+        label.style.color = color;
     });
-});
+
+    // Drag and Drop functionality
+    let draggedTask = null;
+
+    document.addEventListener('dragstart', (e) => {
+        if (e.target.classList.contains('task')) {
+            draggedTask = e.target;
+            e.target.classList.add('dragging');
+        }
+    });
+
+    document.addEventListener('dragend', (e) => {
+        if (e.target.classList.contains('task')) {
+            e.target.classList.remove('dragging');
+            draggedTask = null;
+        }
+    });
+
+    document.querySelectorAll('.task-list').forEach(list => {
+        list.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            list.classList.add('drag-over');
+        });
+
+        list.addEventListener('dragleave', (e) => {
+            list.classList.remove('drag-over');
+        });
+
+        list.addEventListener('drop', (e) => {
+            e.preventDefault();
+            list.classList.remove('drag-over');
+            
+            if (draggedTask) {
+                const newColumnId = list.dataset.columnId;
+                const taskId = draggedTask.dataset.taskId;
+                
+                // Send AJAX request to update task column
+                fetch('/boards/task/move/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        task_id: taskId,
+                        column_id: newColumnId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        list.appendChild(draggedTask);
+                        updateColumnTaskCounts();
+                    } else {
+                        alert(data.message || 'Failed to move task');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to move task');
+                });
+            }
+        });
+    });
+
+    // Create Task Modal
+    document.querySelectorAll('.add-task-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const columnId = btn.dataset.columnId;
+            document.getElementById('columnInput').value = columnId;
+        });
+    });
 </script>
 {% endblock %} 
