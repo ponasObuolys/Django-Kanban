@@ -369,9 +369,6 @@ msgstr "Asmeninės lentos"
 msgid "Team Boards"
 msgstr "Komandų lentos"
 
-msgid "Created"
-msgstr "Sukurta"
-
 msgid "ago"
 msgstr "prieš"
 
@@ -432,3 +429,66 @@ msgstr[3] "sekundžių"
 
 msgid ","
 msgstr " ir"
+
+msgid "Edit Team"
+msgstr "Redaguoti komandą"
+
+msgid "Invite Member"
+msgstr "Pakviesti narį"
+
+msgid "Delete Team"
+msgstr "Ištrinti komandą"
+
+msgid "Member"
+msgstr "Narys"
+
+msgid "Role"
+msgstr "Rolė"
+
+msgid "Joined"
+msgstr "Prisijungė"
+
+msgid "Manage Members"
+msgstr "Valdyti narius"
+
+msgid "Pending Invitations"
+msgstr "Laukiantys pakvietimai"
+
+msgid "User"
+msgstr "Vartotojas"
+
+msgid "Invited By"
+msgstr "Pakvietė"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Actions"
+msgstr "Veiksmai"
+
+msgid "You are about to delete the team"
+msgstr "Jūs ruošiatės ištrinti komandą"
+
+msgid "This action cannot be undone. All team members will lose access to this team and its resources."
+msgstr "Šio veiksmo negalima atšaukti. Visi komandos nariai praras prieigą prie šios komandos ir jos resursų."
+
+msgid "Members"
+msgstr "Nariai"
+
+msgid "Admin"
+msgstr "Administratorius"
+
+msgid "All team members"
+msgstr "Visi komandos nariai"
+
+msgid "Manage team members"
+msgstr "Valdyti komandos narius"
+
+msgid "Team members"
+msgstr "Komandos nariai"
+
+msgid "Invite new member"
+msgstr "Pakviesti naują narį"
+
+msgid "Cancel invitation"
+msgstr "Atšaukti pakvietimą"

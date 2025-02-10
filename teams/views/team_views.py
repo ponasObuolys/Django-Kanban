@@ -39,9 +39,14 @@ def team_detail(request, team_id):
         messages.error(request, "You don't have access to this team.")
         return redirect('teams:team_list')
     
+    members = TeamService.get_member_info(team)
+    pending_invitations = team.invitations.filter(status='pending') if can_manage_team(request.user, team) else None
+    
     return render(request, 'teams/team_detail.html', {
         'team': team,
-        'is_admin': team.is_admin(request.user)
+        'members': members,
+        'pending_invitations': pending_invitations,
+        'is_admin': can_manage_team(request.user, team)
     })
 
 @login_required
