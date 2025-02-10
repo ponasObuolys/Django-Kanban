@@ -553,69 +553,145 @@
         label.style.color = color;
     });
 
-    // Drag and Drop functionality
+    // Initialize task drag events
+    const tasks = document.querySelectorAll('.task');
+    const columns = document.querySelectorAll('.task-list');
     let draggedTask = null;
 
-    document.addEventListener('dragstart', (e) => {
-        if (e.target.classList.contains('task')) {
-            draggedTask = e.target;
-            e.target.classList.add('dragging');
-        }
+    tasks.forEach(task => {
+        task.addEventListener('dragstart', handleDragStart);
+        task.addEventListener('dragend', handleDragEnd);
     });
 
-    document.addEventListener('dragend', (e) => {
-        if (e.target.classList.contains('task')) {
-            e.target.classList.remove('dragging');
-            draggedTask = null;
-        }
+    columns.forEach(column => {
+        column.addEventListener('dragover', handleDragOver);
+        column.addEventListener('drop', handleDrop);
+        column.addEventListener('dragenter', handleDragEnter);
+        column.addEventListener('dragleave', handleDragLeave);
     });
 
-    document.querySelectorAll('.task-list').forEach(list => {
-        list.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            list.classList.add('drag-over');
-        });
+    function handleDragStart(event) {
+        draggedTask = event.target.closest('.task');
+        event.dataTransfer.setData('text/plain', draggedTask.id);
+        draggedTask.classList.add('dragging');
+        event.dataTransfer.effectAllowed = 'move';
+    }
 
-        list.addEventListener('dragleave', (e) => {
-            list.classList.remove('drag-over');
+    function handleDragEnd(event) {
+        event.target.closest('.task').classList.remove('dragging');
+        draggedTask = null;
+        
+        // Remove any drag-over styling from columns
+        columns.forEach(column => {
+            column.classList.remove('drag-over');
         });
+    }
 
-        list.addEventListener('drop', (e) => {
-            e.preventDefault();
-            list.classList.remove('drag-over');
+    function handleDragEnter(event) {
+        event.preventDefault();
+        event.target.closest('.task-list').classList.add('drag-over');
+    }
+
+    function handleDragLeave(event) {
+        event.preventDefault();
+        event.target.closest('.task-list').classList.remove('drag-over');
+    }
+
+    function handleDragOver(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }
+
+    async function handleDrop(event) {
+        event.preventDefault();
+        event.target.closest('.task-list').classList.remove('drag-over');
+        
+        const taskId = event.dataTransfer.getData('text/plain');
+        const targetColumn = event.target.closest('.task-list');
+        const columnId = targetColumn.dataset.columnId;
+        
+        if (!taskId || !columnId) {
+            console.error('Missing task ID or column ID');
+            return;
+        }
+        
+        // Get the position in the column
+        const afterElement = getDragAfterElement(targetColumn, event.clientY);
+        const position = afterElement ? 
+            Array.from(targetColumn.children).indexOf(afterElement) :
+            targetColumn.children.length;
+        
+        try {
+            // Extract the numeric task ID from the "task-{id}" format
+            const numericTaskId = parseInt(taskId.replace('task-', ''));
             
-            if (draggedTask) {
-                const newColumnId = list.dataset.columnId;
-                const taskId = draggedTask.dataset.taskId;
+            const response = await fetch('{% url "boards:update_task_position" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    task_id: numericTaskId,
+                    column_id: parseInt(columnId),
+                    position: position
+                })
+            });
+            
+            if (!response.ok) {
+                const contentType = response.headers.get('content-type');
+                let errorMessage;
                 
-                // Send AJAX request to update task column
-                fetch('/boards/task/move/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: JSON.stringify({
-                        task_id: taskId,
-                        column_id: newColumnId
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        list.appendChild(draggedTask);
-                        updateColumnTaskCounts();
-                    } else {
-                        alert(data.message || 'Failed to move task');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to move task');
-                });
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error;
+                } else {
+                    const text = await response.text();
+                    errorMessage = 'Server error occurred';
+                    console.error('Server response:', text);
+                }
+                
+                console.error('Failed to update task position:', errorMessage);
+                alert('Failed to move task: ' + errorMessage);
+                return;
             }
-        });
-    });
+            
+            const taskElement = document.getElementById(taskId);
+            if (!taskElement) {
+                console.error('Task element not found:', taskId);
+                return;
+            }
+            
+            // Update the UI
+            if (afterElement) {
+                targetColumn.insertBefore(taskElement, afterElement);
+            } else {
+                targetColumn.appendChild(taskElement);
+            }
+            
+            // Update task counts
+            updateColumnTaskCounts();
+            
+        } catch (error) {
+            console.error('Error updating task position:', error);
+            alert('Error moving task. Please try again.');
+        }
+    }
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.task:not(.dragging)')];
+        
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
 
     // Create Task Modal
     document.querySelectorAll('.add-task-btn').forEach(btn => {
