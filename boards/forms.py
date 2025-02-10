@@ -4,6 +4,9 @@ from django.db.models import Max, Q
 from accounts.models import CustomUser
 from django.contrib.auth.models import User
 from django.db import models
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.template.defaultfilters import filesizeformat
 
 class BoardForm(forms.ModelForm):
     class Meta:
@@ -87,10 +90,27 @@ class TaskCommentForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Add a comment...'}),
         }
 
+def validate_file_type(value):
+    if value.content_type not in settings.ALLOWED_UPLOAD_TYPES:
+        raise ValidationError('File type not supported. Allowed types are: ' + 
+                            ', '.join(settings.ALLOWED_UPLOAD_TYPES))
+
+def validate_file_size(value):
+    if value.size > settings.MAX_UPLOAD_SIZE:
+        raise ValidationError(f'Please keep filesize under {filesizeformat(settings.MAX_UPLOAD_SIZE)}. ' +
+                            f'Current filesize {filesizeformat(value.size)}')
+
 class TaskAttachmentForm(forms.ModelForm):
     class Meta:
         model = TaskAttachment
         fields = ['file']
         widgets = {
             'file': forms.FileInput(attrs={'class': 'form-control'}),
-        } 
+        }
+    
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        if file:
+            validate_file_type(file)
+            validate_file_size(file)
+        return file 

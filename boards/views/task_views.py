@@ -189,6 +189,42 @@ def task_detail(request, task_id):
         messages.error(request, "You don't have permission to view this task.")
         return redirect('boards:board_detail', board_id=task.column.board.id)
     
+    if request.method == 'POST':
+        if 'file' in request.FILES:  # Handle file upload
+            form = TaskAttachmentForm(request.POST, request.FILES)
+            try:
+                if form.is_valid():
+                    TaskService.add_attachment(task, request.user, form.cleaned_data['file'])
+                    if request.is_ajax():
+                        return JsonResponse({'status': 'success'})
+                    messages.success(request, 'Attachment added successfully.')
+                    return redirect('boards:task_detail', task_id=task.id)
+                else:
+                    if request.is_ajax():
+                        return JsonResponse({
+                            'status': 'error',
+                            'errors': form.errors
+                        }, status=400)
+                    messages.error(request, 'Failed to upload attachment. ' + ' '.join([error for errors in form.errors.values() for error in errors]))
+            except Exception as e:
+                if request.is_ajax():
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': str(e)
+                    }, status=500)
+                messages.error(request, f'An error occurred while uploading the attachment: {str(e)}')
+        else:  # Handle comment
+            form = TaskCommentForm(request.POST)
+            try:
+                if form.is_valid():
+                    TaskService.add_comment(task, request.user, form.cleaned_data['content'])
+                    messages.success(request, 'Comment added successfully.')
+                    return redirect('boards:task_detail', task_id=task.id)
+                else:
+                    messages.error(request, 'Failed to add comment. ' + ' '.join([error for errors in form.errors.values() for error in errors]))
+            except Exception as e:
+                messages.error(request, f'An error occurred while adding the comment: {str(e)}')
+    
     comment_form = TaskCommentForm()
     attachment_form = TaskAttachmentForm()
     

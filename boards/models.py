@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from colorfield.fields import ColorField
 from teams.models import Team
+import os
 
 class Board(models.Model):
     title = models.CharField(max_length=200)
@@ -109,6 +110,10 @@ class TaskAttachment(models.Model):
     file = models.FileField(upload_to='task_attachments/')
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    
+    @property
+    def filename(self):
+        return os.path.basename(self.file.name)
     
     def __str__(self):
         return f"Attachment for {self.task.title}"
