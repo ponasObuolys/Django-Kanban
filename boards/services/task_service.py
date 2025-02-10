@@ -24,9 +24,18 @@ class TaskService:
     @staticmethod
     def update_task(task, data):
         """Update task with provided data"""
+        # Išsaugome žymes atskirai
+        labels = data.pop('labels', None)
+        
+        # Atnaujiname kitus laukus
         for key, value in data.items():
             setattr(task, key, value)
         task.save()
+        
+        # Jei yra žymių, atnaujiname jas naudodami set() metodą
+        if labels is not None:
+            task.labels.set(labels)
+        
         return task
 
     @staticmethod
