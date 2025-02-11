@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Team Members - {{ team.name }} - Gretvė Tasker{% endblock %}
+{% block title %}Komandos nariai - {{ team.name }} - Gretvė Tasker{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="mb-2">{{ team.name }} - Members</h1>
-            <p class="text-muted">Manage team members and their roles</p>
+            <h1 class="mb-2">{{ team.name }} - Nariai</h1>
+            <p class="text-muted">Valdykite komandos narius ir jų roles</p>
         </div>
         <a href="{% url 'teams:team_detail' team_id=team.id %}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Back to Team
+            <i class="fas fa-arrow-left me-2"></i>Grįžti į komandą
         </a>
     </div>
 
@@ -20,17 +20,17 @@
         <div class="col-lg-8">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title mb-4">Current Members</h5>
+                    <h5 class="card-title mb-4">Dabartiniai nariai</h5>
                     
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
-                                    <th>Member</th>
-                                    <th>Role</th>
-                                    <th>Joined</th>
+                                    <th>Narys</th>
+                                    <th>Rolė</th>
+                                    <th>Prisijungė</th>
                                     {% if is_admin %}
-                                    <th>Actions</th>
+                                    <th>Veiksmai</th>
                                     {% endif %}
                                 </tr>
                             </thead>
@@ -53,7 +53,7 @@
                                                 <small class="text-muted">{{ membership.user.email }}</small>
                                             </div>
                                             {% if membership.user == team.owner %}
-                                            <span class="badge bg-warning ms-2">Owner</span>
+                                            <span class="badge bg-warning ms-2">Savininkas</span>
                                             {% endif %}
                                         </div>
                                     </td>
@@ -65,22 +65,22 @@
                                             <select name="role" class="form-select form-select-sm" 
                                                     onchange="this.form.submit()" style="width: auto;">
                                                 <option value="member" {% if membership.role == 'member' %}selected{% endif %}>
-                                                    Member
+                                                    Narys
                                                 </option>
                                                 <option value="admin" {% if membership.role == 'admin' %}selected{% endif %}>
-                                                    Admin
+                                                    Administratorius
                                                 </option>
                                             </select>
                                         </form>
                                         {% else %}
                                         <span class="badge {% if membership.role == 'admin' %}bg-primary{% else %}bg-secondary{% endif %}">
-                                            {{ membership.role|title }}
+                                            {% if membership.role == 'admin' %}Administratorius{% else %}Narys{% endif %}
                                         </span>
                                         {% endif %}
                                     </td>
                                     <td>
                                         <small class="text-muted">
-                                            {{ membership.joined_at|date:"M d, Y" }}
+                                            {{ membership.joined_at|date:"Y m. d" }}
                                         </small>
                                     </td>
                                     {% if is_admin %}
@@ -107,13 +107,13 @@
         <div class="col-lg-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title mb-4">Add Member</h5>
+                    <h5 class="card-title mb-4">Pridėti narį</h5>
                     <form method="post" action="{% url 'teams:add_member' team_id=team.id %}">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label class="form-label">Select User</label>
+                            <label class="form-label">Pasirinkite vartotoją</label>
                             <select name="user_id" class="form-select" required>
-                                <option value="">Choose a user...</option>
+                                <option value="">Pasirinkite vartotoją...</option>
                                 {% for user in users %}
                                     {% if user not in team.members.all %}
                                         <option value="{{ user.id }}">{{ user.get_full_name|default:user.username }}</option>
@@ -123,7 +123,7 @@
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-user-plus me-2"></i>Add Member
+                                <i class="fas fa-user-plus me-2"></i>Pridėti narį
                             </button>
                         </div>
                     </form>
@@ -178,16 +178,33 @@
 </style>
 
 <script>
-function showRemoveMemberModal(userId, username) {
-    const modal = document.getElementById('removeMemberModal');
-    const form = document.getElementById('removeMemberForm');
+document.addEventListener('DOMContentLoaded', function() {
+    const removeMemberModal = document.getElementById('removeMemberModal');
+    const removeMemberForm = document.getElementById('removeMemberForm');
     const memberUsernameSpan = document.getElementById('memberUsername');
-    
-    form.action = `{% url 'teams:remove_member' team_id=team.id user_id=0 %}`.replace('0', userId);
-    memberUsernameSpan.textContent = username;
-    
-    const bsModal = new bootstrap.Modal(modal);
-    bsModal.show();
-}
+    let bsModal = null;
+
+    if (removeMemberModal) {
+        bsModal = new bootstrap.Modal(removeMemberModal);
+    }
+
+    window.showRemoveMemberModal = function(userId, username) {
+        if (removeMemberForm && memberUsernameSpan && bsModal) {
+            removeMemberForm.action = `{% url 'teams:remove_member' team_id=team.id user_id=0 %}`.replace('0', userId);
+            memberUsernameSpan.textContent = username;
+            
+            try {
+                bsModal.show();
+            } catch (error) {
+                console.error('Klaida atidarant modalinį langą:', error);
+            }
+        }
+    };
+
+    // Išvalome modalinio lango būseną kai jis užsidaro
+    removeMemberModal?.addEventListener('hidden.bs.modal', function () {
+        memberUsernameSpan.textContent = '';
+    });
+});
 </script>
 {% endblock %} 
