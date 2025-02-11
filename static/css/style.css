@@ -27,6 +27,15 @@
     --light-color: #212529;
     --dark-color: #f8f9fa;
     
+    /* Pridedame papildomas spalvas tamsiajam režimui */
+    --text-color: #ffffff;
+    --border-color: #6c757d;
+    --card-bg: #2c3034;
+    --task-bg: var(--bs-gray-800);
+    --hover-text-color: #ffffff;
+    --hover-bg-color: rgba(13, 110, 253, 0.8);
+    --navbar-hover-color: #ffc107;
+    
     color-scheme: dark;
 }
 
@@ -71,16 +80,15 @@ main {
 .kanban-board {
     display: flex;
     gap: 1rem;
-    overflow-x: auto;
     padding: 1rem;
-    min-height: 70vh;
-    margin: -1rem;
+    overflow-x: auto;
 }
 
 .kanban-column {
     min-width: 300px;
     background: var(--bs-white);
     border-radius: 0.5rem;
+    border: 1px solid var(--bs-gray-200);
     box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
     display: flex;
     flex-direction: column;
@@ -88,6 +96,8 @@ main {
 
 [data-bs-theme="dark"] .kanban-column {
     background: var(--bs-gray-800);
+    border: 2px solid var(--bs-gray-600);
+    box-shadow: 0 2px 4px rgba(255,255,255,0.1);
 }
 
 .column-header {
@@ -122,7 +132,16 @@ main {
     overflow-y: auto;
 }
 
-.task-card {
+.task-list.drag-over {
+    background-color: var(--bs-gray-200);
+    border-radius: 0.5rem;
+}
+
+[data-bs-theme="dark"] .task-list.drag-over {
+    background-color: var(--bs-gray-700);
+}
+
+.task {
     background: var(--bs-white);
     border-radius: 0.5rem;
     padding: 1rem;
@@ -133,23 +152,134 @@ main {
     transition: all 0.2s ease;
 }
 
-[data-bs-theme="dark"] .task-card {
-    background: var(--bs-gray-900);
-    border-color: var(--bs-gray-700);
+[data-bs-theme="dark"] .task {
+    background: var(--bs-gray-800) !important;
+    border: 2px solid var(--bs-gray-600) !important;
+    color: var(--bs-white) !important;
 }
 
-.task-card:hover {
+.task:hover {
     transform: translateY(-2px);
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.task-card:active {
-    cursor: grabbing;
+[data-bs-theme="dark"] .task:hover {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 4px 8px rgba(255,255,255,0.2) !important;
 }
 
-.task-card.dragging {
+.task.dragging {
     opacity: 0.5;
     transform: scale(0.95);
+}
+
+/* Task Elements */
+.task h6 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+[data-bs-theme="dark"] .task h6 {
+    color: var(--bs-white) !important;
+}
+
+.task a {
+    text-decoration: none;
+    color: inherit;
+}
+
+[data-bs-theme="dark"] .task a {
+    color: var(--bs-white) !important;
+}
+
+.task-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    color: var(--bs-gray-600);
+    font-size: 0.875rem;
+}
+
+[data-bs-theme="dark"] .task-meta {
+    color: var(--bs-gray-300) !important;
+}
+
+.task-meta i {
+    margin-right: 0.25rem;
+}
+
+.task-meta .due-date {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.task-meta .due-date.due-tomorrow {
+    background-color: #FFAC1C;
+    color: #000;
+}
+
+.task-meta .due-date.due-today,
+.task-meta .due-date.overdue {
+    background-color: #C70039;
+    color: #fff;
+}
+
+/* Task Labels */
+.task-labels {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.task-label {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    margin-right: 0.25rem;
+    display: inline-block;
+    color: var(--label-color);
+    background-color: var(--label-bg-color);
+}
+
+[data-bs-theme="dark"] .task-label {
+    border: 1px solid var(--bs-gray-600);
+    background-color: var(--bs-gray-800);
+    color: var(--bs-white);
+}
+
+/* Add Task Button */
+.add-task-btn {
+    width: 100%;
+    padding: 0.75rem;
+    text-align: left;
+    color: var(--bs-gray-600);
+    background: transparent;
+    border: 2px dashed var(--bs-gray-400);
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+[data-bs-theme="dark"] .add-task-btn {
+    border-color: var(--bs-gray-600);
+    color: var(--bs-gray-400);
+}
+
+.add-task-btn:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+[data-bs-theme="dark"] .add-task-btn:hover {
+    background-color: var(--bs-gray-800);
+}
+
+/* Dark Theme Text Overrides */
+[data-bs-theme="dark"] .text-reset,
+[data-bs-theme="dark"] .text-decoration-none {
+    color: var(--bs-white) !important;
 }
 
 /* Task Priority Colors */
@@ -354,29 +484,6 @@ main {
     z-index: 1;
 }
 
-/* Add Task Button */
-.add-task-btn {
-    width: 100%;
-    padding: 0.75rem;
-    text-align: left;
-    color: var(--bs-gray-600);
-    background: transparent;
-    border: 2px dashed var(--bs-gray-300);
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
-}
-
-[data-bs-theme="dark"] .add-task-btn {
-    border-color: var(--bs-gray-700);
-    color: var(--bs-gray-400);
-}
-
-.add-task-btn:hover {
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-    background-color: rgba(13, 110, 253, 0.1);
-}
-
 /* Column Header Styles */
 .column-header {
     padding: 1rem;
@@ -403,4 +510,378 @@ main {
 
 .task-label-text {
     color: inherit;
+}
+
+[data-bs-theme="dark"] .task-label {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+[data-bs-theme="dark"] .task-title {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+[data-bs-theme="dark"] .task-description {
+    color: #e9ecef;
+}
+
+[data-bs-theme="dark"] a {
+    color: var(--text-color);
+}
+
+[data-bs-theme="dark"] a:hover {
+    color: var(--primary-color);
+}
+
+/* Pagerintas kontrastas prioritetų spalvoms */
+[data-bs-theme="dark"] .priority-high {
+    border-left: 4px solid #ff6666;
+    background-color: rgba(255, 102, 102, 0.1);
+}
+
+[data-bs-theme="dark"] .priority-medium {
+    border-left: 4px solid #ffd700;
+    background-color: rgba(255, 215, 0, 0.1);
+}
+
+[data-bs-theme="dark"] .priority-low {
+    border-left: 4px solid #66ff66;
+    background-color: rgba(102, 255, 102, 0.1);
+}
+
+[data-bs-theme="dark"] .task {
+    background: var(--task-bg) !important;
+    border: 2px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-bs-theme="dark"] .task:hover {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 4px 8px rgba(255,255,255,0.2) !important;
+}
+
+[data-bs-theme="dark"] .task h6 {
+    color: var(--text-color) !important;
+}
+
+[data-bs-theme="dark"] .task a {
+    color: var(--text-color) !important;
+}
+
+[data-bs-theme="dark"] .task a:hover {
+    color: var(--primary-color) !important;
+}
+
+[data-bs-theme="dark"] .task-meta {
+    color: var(--text-color) !important;
+}
+
+[data-bs-theme="dark"] .column-header {
+    color: var(--text-color) !important;
+    border-bottom: 3px solid var(--border-color) !important;
+}
+
+[data-bs-theme="dark"] .badge {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Pagerintas kontrastas prioritetų spalvoms */
+[data-bs-theme="dark"] .task.border-danger {
+    border: 2px solid #ff6666 !important;
+    background-color: rgba(255, 102, 102, 0.2) !important;
+}
+
+[data-bs-theme="dark"] .task.border-warning {
+    border: 2px solid #ffd700 !important;
+    background-color: rgba(255, 215, 0, 0.2) !important;
+}
+
+/* Užduočių etiketės */
+[data-bs-theme="dark"] .task-label {
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    background-color: var(--task-bg) !important;
+}
+
+/* Papildomi stiliai */
+[data-bs-theme="dark"] .text-muted,
+[data-bs-theme="dark"] .text-reset {
+    color: var(--text-color) !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary,
+[data-bs-theme="dark"] .btn-outline-secondary,
+[data-bs-theme="dark"] .btn-outline-danger,
+[data-bs-theme="dark"] .btn-outline-info {
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary:hover,
+[data-bs-theme="dark"] .btn-outline-secondary:hover,
+[data-bs-theme="dark"] .btn-outline-danger:hover,
+[data-bs-theme="dark"] .btn-outline-info:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Team Card Styles */
+.team-card {
+    transition: transform 0.2s ease-in-out;
+    border: 1px solid var(--bs-gray-200);
+}
+
+[data-bs-theme="dark"] .team-card {
+    background: var(--bs-gray-800);
+    border-color: var(--bs-gray-600);
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+}
+
+.team-card .card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+[data-bs-theme="dark"] .team-card .card-title a {
+    color: var(--bs-white) !important;
+}
+
+.team-card .card-text {
+    font-size: 0.875rem;
+}
+
+.team-card .card-footer {
+    font-size: 0.75rem;
+}
+
+[data-bs-theme="dark"] .team-card .text-dark {
+    color: var(--bs-white) !important;
+}
+
+[data-bs-theme="dark"] .team-card .text-muted {
+    color: var(--bs-gray-400) !important;
+}
+
+[data-bs-theme="dark"] .team-card.border-warning {
+    border-color: var(--warning-color) !important;
+}
+
+[data-bs-theme="dark"] .team-card .text-warning {
+    color: var(--warning-color) !important;
+}
+
+/* Alert Styles */
+[data-bs-theme="dark"] .alert-info {
+    background-color: rgba(13, 202, 240, 0.1);
+    border-color: rgba(13, 202, 240, 0.2);
+    color: var(--bs-white);
+}
+
+[data-bs-theme="dark"] .alert-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.2);
+    color: var(--bs-white);
+}
+
+[data-bs-theme="dark"] .alert-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.2);
+    color: var(--bs-white);
+}
+
+/* Modal Styles */
+[data-bs-theme="dark"] .modal-content {
+    background-color: var(--bs-gray-800);
+    border-color: var(--bs-gray-700);
+}
+
+[data-bs-theme="dark"] .modal-header {
+    border-bottom-color: var(--bs-gray-700);
+}
+
+[data-bs-theme="dark"] .modal-footer {
+    border-top-color: var(--bs-gray-700);
+}
+
+/* Text Colors */
+[data-bs-theme="dark"] .text-dark {
+    color: var(--bs-white) !important;
+}
+
+[data-bs-theme="dark"] .text-muted {
+    color: var(--bs-gray-400) !important;
+}
+
+/* List Styles */
+[data-bs-theme="dark"] .list-group-item {
+    background-color: var(--bs-gray-800);
+    border-color: var(--bs-gray-700);
+    color: var(--bs-white);
+}
+
+/* Button Styles */
+[data-bs-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Task Detail Styles */
+[data-bs-theme="dark"] .breadcrumb-item a {
+    color: var(--bs-white);
+}
+
+[data-bs-theme="dark"] .breadcrumb-item.active {
+    color: var(--bs-gray-400);
+}
+
+[data-bs-theme="dark"] .card {
+    background-color: var(--bs-gray-800);
+    border-color: var(--bs-gray-700);
+}
+
+[data-bs-theme="dark"] .card-header {
+    background-color: var(--bs-gray-900);
+    border-bottom-color: var(--bs-gray-700);
+}
+
+[data-bs-theme="dark"] .card-body {
+    color: var(--bs-white);
+}
+
+/* Attachment Styles */
+.attachment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.attachment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--bs-gray-200);
+}
+
+[data-bs-theme="dark"] .attachment-item {
+    border-bottom-color: var(--bs-gray-700);
+}
+
+.attachment-link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+[data-bs-theme="dark"] .attachment-link {
+    color: var(--bs-white);
+}
+
+.delete-attachment {
+    color: var(--danger-color);
+    text-decoration: none;
+}
+
+[data-bs-theme="dark"] .delete-attachment {
+    color: var(--bs-danger);
+}
+
+/* Comment Styles */
+[data-bs-theme="dark"] .comment-card {
+    background-color: var(--bs-gray-900);
+    border-color: var(--bs-gray-700);
+}
+
+[data-bs-theme="dark"] .comment-author {
+    color: var(--bs-gray-400);
+}
+
+/* Badge Styles */
+[data-bs-theme="dark"] .badge {
+    color: var(--bs-white);
+}
+
+[data-bs-theme="dark"] .badge.bg-danger {
+    background-color: var(--danger-color) !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-warning {
+    background-color: var(--warning-color) !important;
+    color: var(--bs-dark) !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-info {
+    background-color: var(--info-color) !important;
+    color: var(--bs-dark) !important;
+}
+
+/* Progress Bar Styles */
+[data-bs-theme="dark"] .progress {
+    background-color: var(--bs-gray-700);
+}
+
+[data-bs-theme="dark"] .progress-bar {
+    background-color: var(--primary-color);
+}
+
+/* Mygtukų hover efektai tamsiame režime */
+[data-bs-theme="dark"] .btn:hover {
+    color: var(--hover-text-color) !important;
+    background-color: var(--hover-bg-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary:hover,
+[data-bs-theme="dark"] .btn-outline-secondary:hover,
+[data-bs-theme="dark"] .btn-outline-info:hover,
+[data-bs-theme="dark"] .btn-outline-danger:hover {
+    color: var(--hover-text-color) !important;
+    background-color: var(--hover-bg-color) !important;
+}
+
+[data-bs-theme="dark"] .btn-danger:hover {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: var(--hover-text-color) !important;
+}
+
+[data-bs-theme="dark"] .btn-success:hover {
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+    color: var(--hover-text-color) !important;
+}
+
+[data-bs-theme="dark"] .btn-warning:hover {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #000000 !important;
+}
+
+[data-bs-theme="dark"] .btn-info:hover {
+    background-color: #0dcaf0 !important;
+    border-color: #0dcaf0 !important;
+    color: #000000 !important;
+}
+
+/* Navbar nuorodų hover efektai tamsiame režime */
+[data-bs-theme="dark"] .navbar .nav-link:hover {
+    color: var(--navbar-hover-color) !important;
+    background-color: transparent !important;
+}
+
+[data-bs-theme="dark"] .navbar .dropdown-item:hover {
+    color: var(--navbar-hover-color) !important;
+    background-color: var(--bs-gray-800) !important;
+}
+
+[data-bs-theme="dark"] .navbar .nav-link.active {
+    color: var(--navbar-hover-color) !important;
+}
+
+[data-bs-theme="dark"] .navbar .navbar-brand:hover {
+    color: var(--navbar-hover-color) !important;
 }
