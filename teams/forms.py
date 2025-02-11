@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 from .models import Team, TeamInvitation
 
 User = get_user_model()
@@ -8,6 +9,14 @@ class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ['name', 'description']
+        labels = {
+            'name': _('Pavadinimas'),
+            'description': _('Aprašymas'),
+        }
+        help_texts = {
+            'name': _('Įveskite komandos pavadinimą'),
+            'description': _('Trumpai aprašykite komandą (neprivaloma)'),
+        }
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
         }
