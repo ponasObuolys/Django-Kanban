@@ -7,14 +7,35 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import filesizeformat
+from django.utils.translation import gettext_lazy as _
 
 class BoardForm(forms.ModelForm):
+    title = forms.CharField(
+        label=_('Title'),
+        required=True,
+    )
+    description = forms.CharField(
+        label=_('Description'),
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 3}),
+    )
+    team = forms.ModelChoiceField(
+        label=_('Team (Optional)'),
+        required=False,
+        queryset=None,
+    )
+
     class Meta:
         model = Board
         fields = ['title', 'description', 'team']
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': 3}),
-        }
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user:
+            self.fields['team'].queryset = user.teams.all()
+        else:
+            self.fields['team'].queryset = None
 
 class ColumnForm(forms.ModelForm):
     class Meta:

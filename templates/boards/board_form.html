@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 
-{% block title %}{{ title }} - Gretvė Tasker{% endblock %}
+{% block title %}{% trans "Create Board" %} - {% trans "Gretvėja Tasker" %}{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -10,38 +16,35 @@
         <div class="col-md-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h2 class="card-title mb-4">{{ title }}</h2>
+                    <h2 class="card-title mb-4">{% trans "Create Board" %}</h2>
                     
                     <form method="post">
                         {% csrf_token %}
                         
                         <div class="mb-3">
-                            <label class="form-label">Title</label>
                             {{ form.title|as_crispy_field }}
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Description</label>
                             {{ form.description|as_crispy_field }}
                             <div class="form-text text-muted">
-                                Briefly describe the purpose of this board.
+                                {% trans "Briefly describe the purpose of this board." %}
                             </div>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Team (Optional)</label>
                             {{ form.team|as_crispy_field }}
                             <div class="form-text text-muted">
-                                Select a team if you want to share this board with team members.
+                                {% trans "Select a team if you want to share this board with team members." %}
                             </div>
                         </div>
                         
                         <div class="d-flex justify-content-between">
                             <a href="{% url 'boards:board_list' %}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Back
+                                <i class="fas fa-arrow-left me-2"></i>{% trans "Back" %}
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>{{ title }}
+                                <i class="fas fa-save me-2"></i>{% trans "Create Board" %}
                             </button>
                         </div>
                     </form>
@@ -65,12 +68,13 @@
 </style>
 
 {% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-    // Initialize Select2 for team selection
     $(document).ready(function() {
         $('#id_team').select2({
             theme: 'bootstrap-5',
-            placeholder: 'Select a team (optional)',
+            placeholder: '{% trans "Select a team (optional)" %}',
             allowClear: true
         });
     });

@@ -17,13 +17,13 @@ def board_list(request):
 @login_required
 def board_create(request):
     if request.method == 'POST':
-        form = BoardForm(request.POST)
+        form = BoardForm(request.POST, user=request.user)
         if form.is_valid():
             board = BoardService.create_board(request.user, form.cleaned_data)
             messages.success(request, 'Board created successfully.')
             return redirect('boards:board_detail', board_id=board.id)
     else:
-        form = BoardForm()
+        form = BoardForm(user=request.user)
     
     return render(request, 'boards/board_form.html', {
         'form': form,
@@ -75,13 +75,13 @@ def board_edit(request, board_id):
         return redirect('boards:board_detail', board_id=board.id)
     
     if request.method == 'POST':
-        form = BoardForm(request.POST, instance=board)
+        form = BoardForm(request.POST, instance=board, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Board updated successfully.')
             return redirect('boards:board_detail', board_id=board.id)
     else:
-        form = BoardForm(instance=board)
+        form = BoardForm(instance=board, user=request.user)
     
     return render(request, 'boards/board_form.html', {
         'form': form,

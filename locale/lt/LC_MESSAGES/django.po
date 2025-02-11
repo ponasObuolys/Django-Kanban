@@ -164,14 +164,18 @@ msgstr "Pridėti užduotį"
 msgid "Create New Task"
 msgstr "Sukurti naują užduotį"
 
+# Common Fields
 msgid "Title"
 msgstr "Pavadinimas"
 
-msgid "Please provide a title for the task."
-msgstr "Prašome įvesti užduoties pavadinimą."
-
 msgid "Description"
 msgstr "Aprašymas"
+
+msgid "Team (Optional)"
+msgstr "Komanda (neprivaloma)"
+
+msgid "Please provide a title for the task."
+msgstr "Prašome įvesti užduoties pavadinimą."
 
 msgid "Assigned To"
 msgstr "Priskirta"
@@ -492,3 +496,28 @@ msgstr "Pakviesti naują narį"
 
 msgid "Cancel invitation"
 msgstr "Atšaukti pakvietimą"
+
+msgid "Edit Board"
+msgstr "Redaguoti lentą"
+
+msgid "Back"
+msgstr "Grįžti"
+
+msgid "Briefly describe the purpose of this board."
+msgstr "Trumpai aprašykite šios lentos paskirtį."
+
+msgid "Select a team if you want to share this board with team members."
+msgstr "Pasirinkite komandą, jei norite dalintis šia lenta su komandos nariais."
+
+msgid "Select a team (optional)"
+msgstr "Pasirinkite komandą (neprivaloma)"
+
+msgid "Required field"
+msgstr "Privalomas laukas"
+
+msgid "Create Board"
+msgstr "Sukurti lentą"
+
+# System Name
+msgid "Gretvėja Tasker"
+msgstr "Gretvėja Tasker"
