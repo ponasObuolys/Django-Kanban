@@ -62,7 +62,8 @@ def remove_member(request, team_id, user_id):
     if user == team.owner:
         messages.error(request, "You can't remove the team owner.")
     else:
-        TeamService.remove_member(team, user)
+        membership = get_object_or_404(TeamMembership, team=team, user=user)
+        TeamService.remove_member(membership, request.user)
         messages.success(request, f'{user.username} removed from the team.')
     
     return redirect('teams:team_members', team_id=team.id)

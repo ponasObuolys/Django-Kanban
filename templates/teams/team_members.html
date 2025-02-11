@@ -86,13 +86,10 @@
                                     {% if is_admin %}
                                     <td>
                                         {% if membership.user != team.owner %}
-                                        <form method="post" action="{% url 'teams:remove_member' team_id=team.id user_id=membership.user.id %}" 
-                                              class="d-inline" onsubmit="return confirm('Are you sure you want to remove this member?');">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                <i class="fas fa-user-minus"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-danger" 
+                                                onclick="showRemoveMemberModal('{{ membership.user.id }}', '{{ membership.user.username }}')">
+                                            <i class="fas fa-user-minus"></i>
+                                        </button>
                                         {% endif %}
                                     </td>
                                     {% endif %}
@@ -137,6 +134,35 @@
     </div>
 </div>
 
+<!-- Remove Member Modal -->
+<div class="modal fade" id="removeMemberModal" tabindex="-1" aria-labelledby="removeMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Ištrinti narį
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 class="mb-3">Komandos informacija:</h6>
+                <ul class="list-unstyled">
+                    <li><strong>Narys:</strong> <span id="memberUsername"></span></li>
+                </ul>
+                <p class="text-muted">Ar tikrai norite pašalinti šį narį iš komandos?</p>
+            </div>
+            <div class="modal-footer">
+                <form id="removeMemberForm" method="post">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Atšaukti</button>
+                    <button type="submit" class="btn btn-danger">Ištrinti narį</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     .table td {
         padding: 1rem 0.75rem;
@@ -150,4 +176,18 @@
         font-weight: 500;
     }
 </style>
+
+<script>
+function showRemoveMemberModal(userId, username) {
+    const modal = document.getElementById('removeMemberModal');
+    const form = document.getElementById('removeMemberForm');
+    const memberUsernameSpan = document.getElementById('memberUsername');
+    
+    form.action = `{% url 'teams:remove_member' team_id=team.id user_id=0 %}`.replace('0', userId);
+    memberUsernameSpan.textContent = username;
+    
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+}
+</script>
 {% endblock %} 
