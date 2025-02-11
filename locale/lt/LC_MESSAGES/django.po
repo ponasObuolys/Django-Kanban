@@ -554,3 +554,99 @@ msgstr "Turinys"
 
 msgid "Add a comment..."
 msgstr "Pridėkite komentarą..."
+
+msgid "Teams I Own"
+msgstr "Mano komandos"
+
+msgid "Teams I'm In"
+msgstr "Komandos, kuriose esu"
+
+msgid "Create New Team"
+msgstr "Sukurti naują komandą"
+
+msgid "Created"
+msgstr "Sukurta"
+
+msgid "Created {} ago"
+msgstr "Sukurta prieš {}"
+
+msgid "Joined"
+msgstr "Prisijungta"
+
+msgid "Role"
+msgstr "Rolė"
+
+msgid "Admin"
+msgstr "Administratorius"
+
+msgid "Member"
+msgstr "Narys"
+
+msgid "Actions"
+msgstr "Veiksmai"
+
+msgid "Pending Invitations"
+msgstr "Laukiantys pakvietimai"
+
+msgid "Invited by"
+msgstr "Pakvietė"
+
+msgid "Accept"
+msgstr "Priimti"
+
+msgid "Reject"
+msgstr "Atmesti"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "members"
+msgstr "nariai"
+
+msgid "week ago"
+msgstr "savaitė"
+
+msgid "weeks ago"
+msgstr "savaitės"
+
+msgid "month ago"
+msgstr "mėnesis"
+
+msgid "months ago"
+msgstr "mėnesiai"
+
+msgid "year ago"
+msgstr "metai"
+
+msgid "years ago"
+msgstr "metai"
+
+msgid "day ago"
+msgstr "diena"
+
+msgid "days ago"
+msgstr "dienos"
+
+msgid "hour ago"
+msgstr "valanda"
+
+msgid "hours ago"
+msgstr "valandos"
+
+msgid "minute ago"
+msgstr "minutė"
+
+msgid "minutes ago"
+msgstr "minutės"
+
+msgid "second ago"
+msgstr "sekundė"
+
+msgid "seconds ago"
+msgstr "sekundės"
+
+msgid "just now"
+msgstr "ką tik"
+
+msgid "You're not a member of any teams yet."
+msgstr "Kol kas nesate jokios komandos narys."
