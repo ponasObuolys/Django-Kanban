@@ -209,13 +209,13 @@ msgid "To Do"
 msgstr "Padaryti"
 
 msgid "Doing"
-msgstr "Daroma"
+msgstr "Vykdoma"
 
 msgid "Done"
 msgstr "Atlikta"
 
 msgid "Rejected"
-msgstr "Atmesta"
+msgstr "Nukelta"
 
 # Task Detail Page
 msgid "Task Details"
@@ -521,3 +521,15 @@ msgstr "Sukurti lentą"
 # System Name
 msgid "Gretvėja Tasker"
 msgstr "Gretvėja Tasker"
+
+msgid "Delete Board"
+msgstr "Ištrinti lentą"
+
+msgid "Board Information"
+msgstr "Lentos informacija"
+
+msgid "Columns"
+msgstr "Stulpeliai"
+
+msgid "Tasks"
+msgstr "Užduotys"

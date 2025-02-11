@@ -16,7 +16,7 @@ class BoardService:
         board = Board.objects.create(owner=user, **data)
         
         # Create default columns
-        columns = ['To Do', 'Doing', 'Done', 'Rejected']
+        columns = ['Padaryti', 'Vykdoma', 'Atlikta', 'Nukelta']
         for i, title in enumerate(columns):
             Column.objects.create(
                 board=board,
