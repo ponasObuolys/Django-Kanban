@@ -140,6 +140,25 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# Date and time formats
+DATE_FORMAT = 'Y m. F d d.'
+DATE_INPUT_FORMATS = ['%Y-%m-%d', '%Y.%m.%d', '%Y/%m/%d']
+DATETIME_FORMAT = 'Y m. F d d. H:i'
+DATETIME_INPUT_FORMATS = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M', '%Y.%m.%d %H:%M', '%Y/%m/%d %H:%M']
+SHORT_DATE_FORMAT = 'Y-m-d'
+SHORT_DATETIME_FORMAT = 'Y-m-d H:i'
+
+# First day of week, Monday
+FIRST_DAY_OF_WEEK = 1
+
+# Date/time input formats
+TIME_FORMAT = 'H:i'
+TIME_INPUT_FORMATS = ['%H:%M:%S', '%H:%M']
+
+# Month/year translations
+MONTH_DAY_FORMAT = 'F j'
+YEAR_MONTH_FORMAT = 'Y m. F'
+
 # Available languages
 LANGUAGES = [
     ('lt', 'Lietuvių'),

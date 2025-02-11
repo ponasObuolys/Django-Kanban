@@ -177,13 +177,13 @@ msgstr "Komanda (neprivaloma)"
 msgid "Please provide a title for the task."
 msgstr "Prašome įvesti užduoties pavadinimą."
 
-msgid "Assigned To"
+msgid "Assigned to"
 msgstr "Priskirta"
 
 msgid "Unassigned"
 msgstr "Nepriskirta"
 
-msgid "Due Date"
+msgid "Due date"
 msgstr "Terminas"
 
 msgid "Priority"
@@ -533,3 +533,15 @@ msgstr "Stulpeliai"
 
 msgid "Tasks"
 msgstr "Užduotys"
+
+msgid "Create Task"
+msgstr "Sukurti užduotį"
+
+msgid "Column"
+msgstr "Stulpelis"
+
+msgid "Position"
+msgstr "Pozicija"
+
+msgid "This field is required."
+msgstr "Šis laukas yra privalomas."

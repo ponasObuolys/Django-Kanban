@@ -46,6 +46,61 @@ class ColumnForm(forms.ModelForm):
         }
 
 class TaskForm(forms.ModelForm):
+    title = forms.CharField(
+        label=_('Title'),
+        required=True,
+    )
+    description = forms.CharField(
+        label=_('Description'),
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 3}),
+    )
+    column = forms.ModelChoiceField(
+        label=_('Column'),
+        required=True,
+        widget=forms.HiddenInput(),
+        queryset=Column.objects.all(),
+    )
+    assigned_to = forms.ModelChoiceField(
+        label=_('Assigned to'),
+        required=False,
+        queryset=CustomUser.objects.all(),
+    )
+    due_date = forms.DateTimeField(
+        label=_('Due date'),
+        required=False,
+        input_formats=['%Y-%m-%d %H:%M', '%Y.%m.%d %H:%M', '%Y/%m/%d %H:%M'],
+        widget=forms.DateTimeInput(
+            attrs={
+                'type': 'datetime-local',
+                'class': 'form-control',
+                'data-date-format': 'Y-m-d H:i',
+                'data-first-day': '1',
+                'data-locale': 'lt',
+            }
+        ),
+    )
+    priority = forms.ChoiceField(
+        label=_('Priority'),
+        required=True,
+        choices=[
+            ('low', _('Low')),
+            ('medium', _('Medium')),
+            ('high', _('High')),
+        ],
+    )
+    labels = forms.ModelMultipleChoiceField(
+        label=_('Labels'),
+        required=False,
+        widget=forms.CheckboxSelectMultiple(),
+        queryset=Label.objects.all(),
+    )
+    position = forms.IntegerField(
+        label=_('Position'),
+        required=True,
+        widget=forms.HiddenInput(),
+    )
+
     class Meta:
         model = Task
         fields = ['title', 'description', 'column', 'assigned_to', 'due_date', 'priority', 'labels', 'position']
