@@ -217,7 +217,7 @@
             </div>
             <div class="task-list" data-column-id="{{ column.id }}">
                 {% for task in column.tasks.all %}
-                    <div class="task {% if task.priority == 'high' %}border border-danger bg-danger bg-opacity-10{% endif %}" 
+                    <div class="task {% if task.priority == 'high' %}border border-danger bg-danger bg-opacity-10{% elif task.priority == 'medium' %}border border-warning bg-warning bg-opacity-10{% endif %}" 
                          id="task-{{ task.id }}" draggable="true" data-task-id="{{ task.id }}">
                         <!-- Task Labels -->
                         <div class="task-labels">
@@ -239,7 +239,7 @@
                         <div class="task-meta">
                             {% if task.due_date %}
                                 <span class="due-date {% get_due_date_class task %}">
-                                    <i class="fas fa-calendar"></i>{{ task.due_date|date:"M d" }}
+                                    <i class="fas fa-calendar"></i>{{ task.due_date|lt_date }}
                                 </span>
                             {% endif %}
                             
