@@ -545,3 +545,12 @@ msgstr "Pozicija"
 
 msgid "This field is required."
 msgstr "Šis laukas yra privalomas."
+
+msgid "Edit"
+msgstr "Redaguoti"
+
+msgid "Content"
+msgstr "Turinys"
+
+msgid "Add a comment..."
+msgstr "Pridėkite komentarą..."

@@ -11,6 +11,9 @@ class TaskService:
         max_position = column.tasks.aggregate(Max('position'))['position__max']
         position = (max_position or 0) + 1
         
+        # Išsaugome žymes atskirai
+        labels = data.pop('labels', None)
+        
         # Create the task
         task = Task.objects.create(
             column=column,
@@ -18,6 +21,10 @@ class TaskService:
             created_by=user,
             **data
         )
+        
+        # Jei yra žymių, priskiriame jas
+        if labels is not None:
+            task.labels.set(labels)
         
         return task
 

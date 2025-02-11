@@ -65,6 +65,18 @@ document.addEventListener('DOMContentLoaded', function() {
             markAllNotificationsAsRead();
         });
     }
+
+    // Užduoties kūrimo mygtuko paspaudimo apdorojimas
+    document.querySelectorAll('.add-task-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const columnId = this.dataset.columnId;
+            const boardId = this.dataset.boardId;
+            
+            // Nukreipiame į užduoties kūrimo formą su stulpelio ID
+            window.location.href = `/lt/boards/tasks/create/?column=${columnId}`;
+        });
+    });
 });
 
 function initializeKanbanBoard() {

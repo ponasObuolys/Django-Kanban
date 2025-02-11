@@ -145,22 +145,17 @@
         background: transparent;
         border: 1px dashed var(--bs-gray-400);
         border-radius: 0.5rem;
-        margin-top: 0.5rem;
         transition: all 0.2s ease-in-out;
-        position: relative;
-        z-index: 1;
+        cursor: pointer;
     }
     
-    .add-task-btn:hover,
-    .add-task-btn.hovered {
+    .add-task-btn:hover {
         background: var(--bs-gray-100);
         color: var(--bs-primary);
         border-color: var(--bs-primary);
-        z-index: 2;
     }
     
-    [data-bs-theme="dark"] .add-task-btn:hover,
-    [data-bs-theme="dark"] .add-task-btn.hovered {
+    [data-bs-theme="dark"] .add-task-btn:hover {
         background: var(--bs-gray-800);
     }
     
@@ -222,7 +217,8 @@
             </div>
             <div class="task-list" data-column-id="{{ column.id }}">
                 {% for task in column.tasks.all %}
-                    <div class="task" id="task-{{ task.id }}" draggable="true" data-task-id="{{ task.id }}">
+                    <div class="task {% if task.priority == 'high' %}border border-danger bg-danger bg-opacity-10{% endif %}" 
+                         id="task-{{ task.id }}" draggable="true" data-task-id="{{ task.id }}">
                         <!-- Task Labels -->
                         <div class="task-labels">
                             {% for label in task.labels.all %}
@@ -270,13 +266,13 @@
                     </div>
                 {% endfor %}
             </div>
-            
-            <!-- Add Task Button -->
-            <div class="p-2">
-                <button type="button" class="add-task-btn" data-bs-toggle="modal" data-bs-target="#createTaskModal" data-column-id="{{ column.id }}">
-                    <i class="fas fa-plus me-2"></i>{% trans "Add Task" %}
-                </button>
-            </div>
+            {% if can_edit %}
+                <div class="p-2">
+                    <button class="add-task-btn" data-column-id="{{ column.id }}" data-board-id="{{ board.id }}">
+                        <i class="fas fa-plus me-2"></i>{% trans "Add Task" %}
+                    </button>
+                </div>
+            {% endif %}
         </div>
     {% endfor %}
 </div>

@@ -1,5 +1,16 @@
 from .models import Board, Column, Task, TaskComment, TaskAttachment
 
+def is_team_admin(user, team):
+    """Check if user is team admin"""
+    return team.teammembership_set.filter(
+        user=user,
+        role='admin'
+    ).exists()
+
+def is_team_member(user, team):
+    """Check if user is team member"""
+    return user in team.members.all()
+
 def can_view_board(user, board):
     """Check if user can view the board"""
     return (board.owner == user or
@@ -7,11 +18,8 @@ def can_view_board(user, board):
 
 def can_edit_board(user, board):
     """Check if user can edit the board"""
-    is_team_admin = board.team and board.team.teammembership_set.filter(
-        user=user,
-        role='admin'
-    ).exists()
-    return board.owner == user or is_team_admin
+    is_admin = board.team and is_team_admin(user, board.team)
+    return board.owner == user or is_admin
 
 def can_delete_board(user, board):
     """Check if user can delete the board"""

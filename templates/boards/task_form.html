@@ -48,7 +48,7 @@
                 </div>
                 {% endif %}
 
-                {% for field in form %}
+                {% for field in form.visible_fields %}
                 <div class="mb-3">
                     <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
                     {{ field }}
@@ -63,6 +63,11 @@
                         </div>
                     {% endif %}
                 </div>
+                {% endfor %}
+
+                {# Paslėpti laukai #}
+                {% for field in form.hidden_fields %}
+                    {{ field }}
                 {% endfor %}
 
                 <div class="d-flex justify-content-between">
@@ -116,6 +121,23 @@
 
     form textarea {
         min-height: 100px;
+    }
+
+    [data-bs-theme="dark"] form input[type="text"],
+    [data-bs-theme="dark"] form input[type="date"],
+    [data-bs-theme="dark"] form textarea,
+    [data-bs-theme="dark"] form select {
+        background-color: var(--bs-gray-800);
+        border-color: var(--bs-gray-700);
+        color: var(--bs-gray-200);
+    }
+
+    [data-bs-theme="dark"] form input[type="text"]:focus,
+    [data-bs-theme="dark"] form input[type="date"]:focus,
+    [data-bs-theme="dark"] form textarea:focus,
+    [data-bs-theme="dark"] form select:focus {
+        border-color: var(--bs-primary);
+        box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
     }
 </style>
 {% endblock %} 

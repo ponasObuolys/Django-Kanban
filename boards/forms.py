@@ -58,8 +58,8 @@ class TaskForm(forms.ModelForm):
     column = forms.ModelChoiceField(
         label=_('Column'),
         required=True,
-        widget=forms.HiddenInput(),
         queryset=Column.objects.all(),
+        widget=forms.HiddenInput(),
     )
     assigned_to = forms.ModelChoiceField(
         label=_('Assigned to'),
@@ -95,21 +95,15 @@ class TaskForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple(),
         queryset=Label.objects.all(),
     )
-    position = forms.IntegerField(
-        label=_('Position'),
-        required=True,
-        widget=forms.HiddenInput(),
-    )
 
     class Meta:
         model = Task
-        fields = ['title', 'description', 'column', 'assigned_to', 'due_date', 'priority', 'labels', 'position']
+        fields = ['title', 'description', 'column', 'assigned_to', 'due_date', 'priority', 'labels']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
             'due_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'labels': forms.CheckboxSelectMultiple(),
             'column': forms.HiddenInput(),
-            'position': forms.HiddenInput(),
         }
     
     def __init__(self, *args, board=None, user=None, **kwargs):
@@ -133,7 +127,6 @@ class TaskForm(forms.ModelForm):
         
         self.fields['title'].required = True
         self.fields['priority'].required = True
-        self.fields['position'].required = True  # Make position required
 
     def save(self, commit=True):
         instance = super().save(commit=False)

@@ -8,27 +8,52 @@ from ..forms import TaskForm, TaskCommentForm, TaskAttachmentForm
 from ..services.task_service import TaskService
 from ..permissions import can_manage_task, can_manage_comment, can_manage_attachment, can_edit_board
 import json
+from django.db.models import Max
 
 @login_required
 def task_create(request):
-    if request.method == 'POST':
-        column = get_object_or_404(Column, id=request.POST.get('column'))
+    # Gauname stulpelio ID iš URL parametrų
+    column_id = request.GET.get('column')
+    column = None
+    board = None
+    
+    if column_id:
+        column = get_object_or_404(Column, id=column_id)
         board = column.board
+    else:
+        # Jei nėra stulpelio ID, bandome gauti lentos ID
+        board_id = request.GET.get('board')
+        if board_id:
+            board = get_object_or_404(Board, id=board_id)
+    
+    if not board or not can_edit_board(request.user, board):
+        messages.error(request, "You don't have permission to create tasks.")
+        return redirect('boards:board_list')
+    
+    if request.method == 'POST':
+        # Jei nėra stulpelio POST duomenyse, naudojame stulpelį iš URL
+        if not request.POST.get('column') and column:
+            post_data = request.POST.copy()
+            post_data['column'] = column.id
+            form = TaskForm(post_data, board=board, user=request.user)
+        else:
+            form = TaskForm(request.POST, board=board, user=request.user)
         
-        if not can_edit_board(request.user, board):
-            messages.error(request, "You don't have permission to create tasks.")
-            return redirect('boards:board_detail', board_id=board.id)
-        
-        form = TaskForm(request.POST)
         if form.is_valid():
-            task = TaskService.create_task(column, form.cleaned_data, request.user)
+            # Gauname stulpelį iš formos
+            column = form.cleaned_data['column']
+            # Pašaliname column iš cleaned_data, nes jis bus perduotas atskirai
+            task_data = form.cleaned_data.copy()
+            task_data.pop('column')
+            
+            task = TaskService.create_task(column, task_data, request.user)
             messages.success(request, 'Task created successfully.')
             return redirect('boards:board_detail', board_id=board.id)
     else:
-        form = TaskForm()
-        # Get board ID from query parameters for the initial form load
-        board_id = request.GET.get('board')
-        board = get_object_or_404(Board, id=board_id) if board_id else None
+        initial_data = {}
+        if column:
+            initial_data['column'] = column.id
+        form = TaskForm(initial=initial_data, board=board, user=request.user)
     
     return render(request, 'boards/task_form.html', {
         'form': form,

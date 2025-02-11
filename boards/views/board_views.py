@@ -4,7 +4,7 @@ from django.contrib import messages
 from ..models import Board
 from ..forms import BoardForm
 from ..services.board_service import BoardService
-from ..permissions import can_view_board, can_edit_board, can_delete_board
+from ..permissions import can_view_board, can_edit_board, can_delete_board, is_team_admin, is_team_member
 
 @login_required
 def board_list(request):
@@ -35,7 +35,7 @@ def board_detail(request, board_id):
     board = get_object_or_404(Board, id=board_id)
     
     if not can_view_board(request.user, board):
-        messages.error(request, "You don't have access to this board.")
+        messages.error(request, "You don't have permission to view this board.")
         return redirect('boards:board_list')
     
     # Get board statistics
@@ -45,25 +45,22 @@ def board_detail(request, board_id):
     users = BoardService.get_board_members(board)
     
     # Get team information if applicable
-    is_team_admin = False
+    is_admin = False
     pending_invitations = None
     
     if board.team:
-        is_team_admin = board.team.teammembership_set.filter(
-            user=request.user,
-            role='admin'
-        ).exists()
-        
-        if is_team_admin:
+        is_admin = is_team_admin(request.user, board.team)
+        if is_admin:
             pending_invitations = board.team.invitations.filter(status='pending')
     
     return render(request, 'boards/board_detail.html', {
         'board': board,
         'progress': stats['progress'],
         'users': users,
-        'is_admin': is_team_admin,
+        'can_edit': can_edit_board(request.user, board),
+        'is_admin': is_admin,
         'pending_invitations': pending_invitations,
-        'is_team_member': board.team and request.user in board.team.members.all()
+        'is_team_member': board.team and is_team_member(request.user, board.team)
     })
 
 @login_required

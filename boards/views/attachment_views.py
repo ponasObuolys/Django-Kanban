@@ -9,7 +9,7 @@ def delete_attachment(request, attachment_id):
     attachment = get_object_or_404(TaskAttachment, id=attachment_id)
     task = attachment.task
     
-    if not can_manage_attachment(request.user, task):
+    if not can_manage_attachment(request.user, attachment):
         messages.error(request, "You don't have permission to delete this attachment.")
         return redirect('boards:task_detail', task_id=task.id)
     
