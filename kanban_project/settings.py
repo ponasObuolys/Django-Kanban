@@ -267,6 +267,9 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
 SECURE_CONTENT_TYPE_NOSNIFF = False
 
+# Disable COOP policy to prevent page refresh issues
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
 # CSRF Settings
 CSRF_COOKIE_NAME = 'csrftoken'
 CSRF_COOKIE_SECURE = False
