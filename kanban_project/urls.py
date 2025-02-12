@@ -36,7 +36,6 @@ urlpatterns += i18n_patterns(
     path('boards/', include('boards.urls')),
     path('teams/', include('teams.urls')),
     path('notifications/', include('notifications.urls', namespace='notifications')),
-    path("__reload__/", include("django_browser_reload.urls")),  # Browser reload URLs
     prefix_default_language=True
 )
 
