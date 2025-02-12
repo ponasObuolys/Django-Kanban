@@ -14,3 +14,4 @@ django-extensions==3.1.5
 setuptools
 wheel
 gunicorn
+humanize
