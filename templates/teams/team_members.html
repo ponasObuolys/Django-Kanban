@@ -111,13 +111,10 @@
                     <form method="post" action="{% url 'teams:add_member' team_id=team.id %}">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label class="form-label">Pasirinkite vartotoją</label>
-                            <select name="user_id" class="form-select" required>
-                                <option value="">Pasirinkite vartotoją...</option>
-                                {% for user in users %}
-                                    {% if user not in team.members.all %}
-                                        <option value="{{ user.id }}">{{ user.get_full_name|default:user.username }}</option>
-                                    {% endif %}
+                            <label class="form-label" for="selectTeamMember">Pasirinkite vartotoją</label>
+                            <select name="user_id" id="selectTeamMember" class="form-control">
+                                {% for user in available_users %}
+                                    <option value="{{ user.id }}">{{ user.get_full_name|default:user.username }}</option>
                                 {% endfor %}
                             </select>
                         </div>

@@ -38,7 +38,7 @@
                             <form method="post" action="{% url 'accounts:update_profile' %}" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label class="form-label">{% trans "Avatar" %}</label>
+                                    <label class="form-label" for="userAvatar">{% trans "Avatar" %}</label>
                                     <div class="d-flex align-items-center">
                                         {% if user.avatar %}
                                             <img src="{{ user.avatar.url }}" alt="{% trans 'Avatar' %}" class="avatar me-3">
@@ -47,24 +47,24 @@
                                                 <i class="fas fa-user"></i>
                                             </div>
                                         {% endif %}
-                                        <input type="file" name="avatar" class="form-control" accept="image/*">
+                                        <input type="file" name="avatar" id="userAvatar" class="form-control" accept="image/*">
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">{% trans "First Name" %}</label>
-                                    <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+                                    <label class="form-label" for="userFirstName">{% trans "First Name" %}</label>
+                                    <input type="text" name="first_name" id="userFirstName" class="form-control" value="{{ user.first_name }}">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">{% trans "Last Name" %}</label>
-                                    <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+                                    <label class="form-label" for="userLastName">{% trans "Last Name" %}</label>
+                                    <input type="text" name="last_name" id="userLastName" class="form-control" value="{{ user.last_name }}">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">{% trans "Email" %}</label>
-                                    <input type="email" name="email" class="form-control" value="{{ user.email }}">
+                                    <label class="form-label" for="userEmail">{% trans "Email" %}</label>
+                                    <input type="email" name="email" id="userEmail" class="form-control" value="{{ user.email }}">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">{% trans "Bio" %}</label>
-                                    <textarea name="bio" class="form-control" rows="3">{{ user.bio }}</textarea>
+                                    <label class="form-label" for="userBio">{% trans "Bio" %}</label>
+                                    <textarea name="bio" id="userBio" class="form-control" rows="3">{{ user.bio }}</textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-2"></i>{% trans "Save Changes" %}
@@ -82,16 +82,16 @@
                             <form method="post" action="{% url 'accounts:update_password' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label class="form-label">{% trans "Current Password" %}</label>
-                                    <input type="password" name="old_password" class="form-control" required>
+                                    <label class="form-label" for="currentPassword">{% trans "Current Password" %}</label>
+                                    <input type="password" name="current_password" id="currentPassword" class="form-control">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">{% trans "New Password" %}</label>
-                                    <input type="password" name="new_password1" class="form-control" required>
+                                    <label class="form-label" for="newPassword">{% trans "New Password" %}</label>
+                                    <input type="password" name="new_password" id="newPassword" class="form-control">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">{% trans "Confirm New Password" %}</label>
-                                    <input type="password" name="new_password2" class="form-control" required>
+                                    <label class="form-label" for="confirmPassword">{% trans "Confirm New Password" %}</label>
+                                    <input type="password" name="confirm_password" id="confirmPassword" class="form-control">
                                 </div>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-key me-2"></i>{% trans "Change Password" %}
@@ -149,7 +149,7 @@
                             <form method="post" action="{% url 'accounts:update_theme' %}">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <label class="form-label">{% trans "Theme Mode" %}</label>
+                                    <label class="form-label" for="themeMode">{% trans "Theme Mode" %}</label>
                                     <div class="d-flex gap-3">
                                         <div class="form-check">
                                             <input type="radio" class="form-check-input" name="theme" value="light" id="lightTheme"

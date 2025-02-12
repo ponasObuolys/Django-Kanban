@@ -133,40 +133,32 @@
                     {% endif %}
                     <input type="hidden" name="column" id="columnInput" value="" required>
                     <div class="mb-3">
-                        <label class="form-label">{% trans "Title" %}</label>
-                        <input type="text" name="title" class="form-control" required>
+                        <label class="form-label" for="taskTitle">{% trans "Title" %}</label>
+                        <input type="text" name="title" id="taskTitle" class="form-control" required>
                         <div class="invalid-feedback">{% trans "Please provide a title for the task." %}</div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">{% trans "Description" %}</label>
-                        <textarea name="description" class="form-control" rows="3"></textarea>
+                        <label class="form-label" for="taskDescription">{% trans "Description" %}</label>
+                        <textarea name="description" id="taskDescription" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">{% trans "Assigned To" %}</label>
-                        <select name="assigned_to" class="form-select">
-                            <option value="">{% trans "Unassigned" %}</option>
-                            {% if board.team %}
-                                {% for member in board.team.members.all %}
-                                    <option value="{{ member.id }}" {% if member == user %}selected{% endif %}>
-                                        {{ member.get_full_name|default:member.username }}
-                                    </option>
-                                {% endfor %}
-                            {% else %}
-                                <option value="{{ board.owner.id }}" {% if board.owner == user %}selected{% endif %}>
-                                    {{ board.owner.get_full_name|default:board.owner.username }}
-                                </option>
-                            {% endif %}
+                        <label class="form-label" for="taskAssignee">{% trans "Assigned To" %}</label>
+                        <select name="assigned_to" id="taskAssignee" class="form-control">
+                            <option value="">{% trans "No one" %}</option>
+                            {% for member in board.team.members.all %}
+                                <option value="{{ member.id }}">{{ member.get_full_name|default:member.username }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">{% trans "Due Date" %}</label>
-                        <input type="datetime-local" name="due_date" class="form-control">
+                        <label class="form-label" for="taskDueDate">{% trans "Due Date" %}</label>
+                        <input type="date" name="due_date" id="taskDueDate" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">{% trans "Priority" %}</label>
-                        <select name="priority" class="form-select" required>
+                        <label class="form-label" for="taskPriority">{% trans "Priority" %}</label>
+                        <select name="priority" id="taskPriority" class="form-control">
                             <option value="low">{% trans "Low" %}</option>
-                            <option value="medium" selected>{% trans "Medium" %}</option>
+                            <option value="medium">{% trans "Medium" %}</option>
                             <option value="high">{% trans "High" %}</option>
                         </select>
                     </div>
@@ -193,13 +185,10 @@
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Select User</label>
-                        <select name="user_id" class="form-select" required>
-                            <option value="">Choose a user...</option>
+                        <label class="form-label" for="selectUser">Select User</label>
+                        <select name="user" id="selectUser" class="form-control">
                             {% for user in users %}
-                                {% if user not in board.team.members.all %}
-                                    <option value="{{ user.id }}">{{ user.get_full_name|default:user.username }}</option>
-                                {% endif %}
+                                <option value="{{ user.id }}">{{ user.get_full_name|default:user.username }}</option>
                             {% endfor %}
                         </select>
                     </div>
