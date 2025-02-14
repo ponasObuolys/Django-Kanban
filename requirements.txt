@@ -12,3 +12,13 @@ django-compressor==4.4
 django-browser-reload==1.12.1
 django-cors-headers==4.0.0
 django-extensions==3.1.5
+
+# Development Tools
+setuptools==69.0.3
+pytest==8.0.0
+django-debug-toolbar==4.3.0
+django-environ==0.11.2
+
+# Production Dependencies
+gunicorn==21.2.0
+psycopg2-binary==2.9.9
