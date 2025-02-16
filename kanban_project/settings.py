@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.humanize',
     
     # Third party apps
     'crispy_forms',
@@ -252,6 +253,7 @@ NOTIFICATIONS_MODEL = 'notifications.Notification'
 
 # Django Compressor
 COMPRESS_ENABLED = True
+COMPRESS_ROOT = STATIC_ROOT
 COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter',  'compressor.filters.cssmin.rCSSMinFilter']
 
 # Custom User Model
@@ -276,7 +278,7 @@ CSRF_COOKIE_PATH = '/'
 CSRF_COOKIE_DOMAIN = None
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8080', 'http://localhost:8080', 'http://192.168.11.123:8080', 'http://192.168.11.124:8080']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8080', 'http://localhost:8080', 'http://185.170.196.21']
 CSRF_USE_SESSIONS = False
 CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
 
@@ -295,7 +297,6 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 CORS_ALLOW_ALL_ORIGINS = True  # Only for development
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://192.168.11.124:8080",
-    "http://192.168.11.123:8080",
+    "http://185.170.196.21"
     "http://localhost:8080",
 ]
