@@ -53,7 +53,9 @@
             <div class="task-list" data-column-id="{{ column.id }}">
                 {% for task in column.tasks.all %}
                     <div class="task {% if task.priority == 'high' %}border border-danger bg-danger bg-opacity-10{% elif task.priority == 'medium' %}border border-warning bg-warning bg-opacity-10{% endif %}" 
-                         id="task-{{ task.id }}" draggable="true" data-task-id="{{ task.id }}">
+                         id="task-{{ task.id }}" 
+                         draggable="{% if task.created_by == user or task.assigned_to == user %}true{% else %}false{% endif %}" 
+                         data-task-id="{{ task.id }}">
                         <!-- Task Labels -->
                         <div class="task-labels">
                             {% for label in task.labels.all %}
@@ -521,4 +523,4 @@
         });
     });
 </script>
-{% endblock %} 
+{% endblock %}

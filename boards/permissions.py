@@ -31,7 +31,9 @@ def can_manage_column(user, column):
 
 def can_manage_task(user, task):
     """Check if user can manage (create/edit/delete) task"""
-    return can_view_board(user, task.column.board)
+    return (task.created_by == user or
+            task.assigned_to == user or
+            can_edit_board(user, task.column.board))
 
 def can_manage_comment(user, comment):
     """Check if user can manage (create/edit/delete) comment"""
