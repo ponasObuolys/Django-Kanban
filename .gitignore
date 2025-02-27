@@ -5,3 +5,6 @@ db.sqlite3
 logs/
 media/
 venv/
+logs/
+media/
+venv/
