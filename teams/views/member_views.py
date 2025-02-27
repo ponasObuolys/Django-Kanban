@@ -32,7 +32,7 @@ def team_members(request, team_id):
         'team': team,
         'members': members,
         'users': users,
-        'available_users': users,  # Add this to match the template variable
+        'available_users': users,  # Add this to match the template variables
         'is_admin': can_manage_team(request.user, team)
     })
 
