@@ -116,3 +116,9 @@ class TeamService:
                 join_dates[membership.team_id] = f'{days} days ago'
         
         return join_dates
+
+    @staticmethod
+    def delete_team(team):
+        """Delete a team and all related data"""
+        # This will cascade delete all related memberships and invitations
+        team.delete()

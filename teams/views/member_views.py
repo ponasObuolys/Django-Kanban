@@ -19,10 +19,20 @@ def team_members(request, team_id):
     
     members = TeamService.get_member_info(team)
     users = User.objects.exclude(id__in=team.members.values_list('id', flat=True))
+    
+    # Debug: Print all users who aren't team members
+    print("Users not in team:")
+    for user in users:
+        print(f"- {user.username} (ID: {user.id})")
+    
+    # Debug: Check if there's a mismatch between template and view
+    print(f"Total non-member users: {users.count()}")
+    
     return render(request, 'teams/team_members.html', {
         'team': team,
         'members': members,
         'users': users,
+        'available_users': users,  # Add this to match the template variable
         'is_admin': can_manage_team(request.user, team)
     })
 
