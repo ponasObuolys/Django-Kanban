@@ -10783,3 +10783,4 @@ venv/Lib/site-packages/django_cors_headers-4.6.0.dist-info/WHEEL
 db.sqlite3
 db.sqlite3
 *.sqlite3
+db.sqlite3
