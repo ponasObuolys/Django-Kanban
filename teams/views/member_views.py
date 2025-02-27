@@ -92,7 +92,8 @@ def change_member_role(request, team_id, user_id):
     else:
         new_role = request.POST.get('role')
         if new_role in [role[0] for role in TeamMembership.ROLE_CHOICES]:
-            TeamService.change_member_role(team, user, new_role)
+            membership = get_object_or_404(TeamMembership, team=team, user=user)
+            TeamService.change_member_role(membership, new_role, request.user)
             messages.success(request, f"{user.username}'s role updated to {new_role}.")
         else:
             messages.error(request, "Invalid role specified.")
