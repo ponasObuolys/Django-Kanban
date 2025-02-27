@@ -22,6 +22,17 @@ document.addEventListener('DOMContentLoaded', function() {
         themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
     }
     
+    // Language selection form handling
+    const languageForms = document.querySelectorAll('.language-form');
+    languageForms.forEach(form => {
+        const buttons = form.querySelectorAll('button[name="language"]');
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                localStorage.setItem('preferredLanguage', this.value);
+            });
+        });
+    });
+    
     // Initialize all tooltips
     const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.forEach(tooltipTriggerEl => {

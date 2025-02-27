@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load static %}
+
+<div class="language-switcher">
+    <form action="{% url 'set_language' %}" method="post" class="language-form">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        {% get_current_language as CURRENT_LANGUAGE %}
+        {% get_available_languages as LANGUAGES %}
+        <div class="btn-group" role="group">
+            {% for lang_code, lang_name in LANGUAGES %}
+                <button type="submit" name="language" value="{{ lang_code }}" 
+                        class="btn {% if lang_code == CURRENT_LANGUAGE %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm">
+                    {% if lang_code == 'lt' %}
+                        <img src="{% static 'img/flags/lt.png' %}" alt="LT" width="20" class="me-1" onerror="this.style.display='none'">
+                    {% elif lang_code == 'en' %}
+                        <img src="{% static 'img/flags/en.png' %}" alt="EN" width="20" class="me-1" onerror="this.style.display='none'">
+                    {% endif %}
+                    {{ lang_name }}
+                </button>
+            {% endfor %}
+        </div>
+    </form>
+</div> 

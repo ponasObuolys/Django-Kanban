@@ -885,3 +885,107 @@ main {
 [data-bs-theme="dark"] .navbar .navbar-brand:hover {
     color: var(--navbar-hover-color) !important;
 }
+
+/* Language Switcher Styles */
+.language-switcher {
+    margin: 10px 0;
+}
+
+.language-form .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.language-form button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.language-form button img {
+    margin-right: 5px;
+}
+
+.language-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu .language-form button {
+    width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+}
+
+/* Navbar language dropdown */
+.navbar .dropdown-menu.language-dropdown {
+    min-width: 150px;
+}
+
+.navbar .language-form button.dropdown-item {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .language-form button.dropdown-item.active {
+    background-color: var(--bs-primary);
+    color: white;
+}
+
+/* Mobile optimization */
+@media (max-width: 576px) {
+    .language-form .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .language-form button {
+        width: 100%;
+        margin: 2px 0;
+    }
+}
+
+/* Language Dropdown Styles */
+.language-dropdown {
+    min-width: 200px;
+}
+
+.language-dropdown .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+}
+
+.language-dropdown .dropdown-item.active {
+    background-color: var(--bs-primary);
+    color: white;
+}
+
+.language-dropdown .dropdown-item img {
+    margin-right: 0.5rem;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effect for language items */
+.language-dropdown .dropdown-item:hover:not(.active) {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+/* Flag icon in navbar */
+#languageDropdown img {
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .language-dropdown {
+        min-width: 160px;
+    }
+}
