@@ -19,10 +19,20 @@ def team_members(request, team_id):
     
     members = TeamService.get_member_info(team)
     users = User.objects.exclude(id__in=team.members.values_list('id', flat=True))
+    
+    # Debug: Print all users who aren't team members
+    print("Users not in team:")
+    for user in users:
+        print(f"- {user.username} (ID: {user.id})")
+    
+    # Debug: Check if there's a mismatch between template and view
+    print(f"Total non-member users: {users.count()}")
+    
     return render(request, 'teams/team_members.html', {
         'team': team,
         'members': members,
         'users': users,
+        'available_users': users,  # Add this to match the template variable
         'is_admin': can_manage_team(request.user, team)
     })
 
@@ -82,7 +92,8 @@ def change_member_role(request, team_id, user_id):
     else:
         new_role = request.POST.get('role')
         if new_role in [role[0] for role in TeamMembership.ROLE_CHOICES]:
-            TeamService.change_member_role(team, user, new_role)
+            membership = get_object_or_404(TeamMembership, team=team, user=user)
+            TeamService.change_member_role(membership, new_role, request.user)
             messages.success(request, f"{user.username}'s role updated to {new_role}.")
         else:
             messages.error(request, "Invalid role specified.")

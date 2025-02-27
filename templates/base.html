@@ -133,17 +133,32 @@
                     <!-- Language Selection -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-globe me-1"></i>{% trans "Language" %}
+                            <i class="fas fa-globe me-1"></i>
+                            {% get_current_language as CURRENT_LANGUAGE %}
+                            {% for lang_code, lang_name in LANGUAGES %}
+                                {% if lang_code == CURRENT_LANGUAGE %}
+                                    {% if lang_code == 'lt' %}
+                                        <img src="{% static 'img/flags/lt.png' %}" alt="LT" width="20" class="me-1" onerror="this.style.display='none'">
+                                    {% elif lang_code == 'en' %}
+                                        <img src="{% static 'img/flags/en.png' %}" alt="EN" width="20" class="me-1" onerror="this.style.display='none'">
+                                    {% endif %}
+                                    {{ lang_name }}
+                                {% endif %}
+                            {% endfor %}
                         </a>
-                        <div class="dropdown-menu dropdown-menu-end">
+                        <div class="dropdown-menu dropdown-menu-end language-dropdown">
                             <form action="{% url 'set_language' %}" method="post" class="language-form">
                                 {% csrf_token %}
                                 <input name="next" type="hidden" value="{{ request.path }}">
-                                {% get_current_language as CURRENT_LANGUAGE %}
                                 {% get_available_languages as LANGUAGES %}
                                 {% for lang_code, lang_name in LANGUAGES %}
                                     <button type="submit" name="language" value="{{ lang_code }}" 
                                             class="dropdown-item {% if lang_code == CURRENT_LANGUAGE %}active{% endif %}">
+                                        {% if lang_code == 'lt' %}
+                                            <img src="{% static 'img/flags/lt.png' %}" alt="LT" width="20" class="me-2" onerror="this.style.display='none'">
+                                        {% elif lang_code == 'en' %}
+                                            <img src="{% static 'img/flags/en.png' %}" alt="EN" width="20" class="me-2" onerror="this.style.display='none'">
+                                        {% endif %}
                                         {{ lang_name }}
                                     </button>
                                 {% endfor %}
