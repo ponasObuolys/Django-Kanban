@@ -246,7 +246,7 @@ CSRF_COOKIE_PATH = '/'
 CSRF_COOKIE_DOMAIN = None
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8080', 'http://localhost:8080', 'http://185.170.196.21']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8080', 'http://localhost:8080', 'http://185.170.196.21', 'https://185.170.196.21']
 CSRF_USE_SESSIONS = False
 CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
 

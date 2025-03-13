@@ -21,6 +21,8 @@ from .invitation_views import (
     cancel_invitation
 )
 
+from .test_views import *
+
 __all__ = [
     'team_list',
     'team_create',

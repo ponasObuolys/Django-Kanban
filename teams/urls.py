@@ -22,4 +22,7 @@ urlpatterns = [
     path('invitations/<int:invitation_id>/accept/', views.accept_invitation, name='accept_invitation'),
     path('invitations/<int:invitation_id>/reject/', views.reject_invitation, name='reject_invitation'),
     path('invitations/<int:invitation_id>/cancel/', views.cancel_invitation, name='cancel_invitation'),
+    
+    # Test views
+    path('test-form/', views.test_form, name='test_form'),
 ] 

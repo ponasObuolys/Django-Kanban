@@ -44,22 +44,33 @@ class TeamService:
     @staticmethod
     def add_member(team, user, role='member'):
         """Add a new member to the team"""
-        membership = TeamMembership.objects.create(
-            team=team,
-            user=user,
-            role=role
-        )
+        print(f"DEBUG SERVICE: Pridedamas narys {user.username} (ID: {user.id}) į komandą {team.name} (ID: {team.id})")
         
-        # Notify the user
-        notify.send(
-            team.owner,
-            recipient=user,
-            verb='added you to',
-            target=team,
-            description=f'You have been added to team "{team.name}"'
-        )
-        
-        return membership
+        try:
+            membership = TeamMembership.objects.create(
+                team=team,
+                user=user,
+                role=role
+            )
+            
+            # Notify the user
+            try:
+                notify.send(
+                    team.owner,
+                    recipient=user,
+                    verb='added you to',
+                    target=team,
+                    description=f'You have been added to team "{team.name}"'
+                )
+                print(f"DEBUG SERVICE: Pranešimas išsiųstas vartotojui {user.username}")
+            except Exception as e:
+                print(f"DEBUG SERVICE: Klaida siunčiant pranešimą: {str(e)}")
+            
+            print(f"DEBUG SERVICE: Narys {user.username} sėkmingai pridėtas")
+            return membership
+        except Exception as e:
+            print(f"DEBUG SERVICE: Klaida pridedant narį: {str(e)}")
+            raise
 
     @staticmethod
     def change_member_role(membership, new_role, changed_by):
