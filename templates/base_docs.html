@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% block subtitle %}{% endblock %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="docs-container">
+    <div class="row g-0">
+        <!-- Kairysis sidebar'as su navigacija -->
+        <div class="col-md-3 col-lg-2 docs-sidebar">
+            <div class="docs-sidebar-content">
+                <div class="docs-search mb-3">
+                    <form action="{% url 'docs:search' %}" method="get" class="search-form">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="{% trans 'Search documentation...' %}" value="{{ request.GET.q }}">
+                            <button type="submit" class="btn btn-outline-secondary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="docs-nav">
+                    <ul class="nav flex-column">
+                        {% for category in categories %}
+                            <li class="nav-item">
+                                <div class="category-header" data-bs-toggle="collapse" data-bs-target="#category-{{ category.slug }}" aria-expanded="false">
+                                    <i class="fas fa-chevron-right me-2"></i>
+                                    {{ category.name }}
+                                </div>
+                                <div class="collapse {% if current_category == category %}show{% endif %}" id="category-{{ category.slug }}">
+                                    <ul class="nav flex-column ms-3">
+                                        {% for article in category.articles.all %}
+                                            {% if article.is_published %}
+                                                <li class="nav-item">
+                                                    <a href="{% url 'docs:article' slug=article.slug %}" 
+                                                       class="nav-link {% if current_article == article %}active{% endif %}">
+                                                        {{ article.title }}
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagrindinis turinys -->
+        <div class="col-md-9 col-lg-10 docs-content">
+            <div class="p-4">
+                {% block docs_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.docs-container {
+    min-height: calc(100vh - 56px); /* Sumažinam aukštį */
+    background-color: #f8f9fa;
+}
+
+.docs-sidebar {
+    background-color: white;
+    border-right: 1px solid var(--bs-border-color);
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    position: sticky;
+    top: 56px; /* Pridedam top, kad būtų priklijuotas prie navbar'o */
+}
+
+.docs-sidebar-content {
+    padding: 1rem;
+}
+
+.docs-search {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    padding: 0.5rem 0;
+    z-index: 1020;
+}
+
+.docs-search .form-control {
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0.75rem;
+}
+
+.docs-search .btn {
+    border-color: #dee2e6;
+}
+
+.docs-content {
+    background-color: white;
+    min-height: calc(100vh - 56px);
+}
+
+.category-header {
+    cursor: pointer;
+    padding: 0.5rem 0;
+    color: #2c3e50;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.category-header:hover {
+    color: var(--bs-primary);
+}
+
+.category-header i {
+    transition: transform 0.3s ease;
+    font-size: 0.75rem;
+    width: 16px;
+}
+
+.category-header[aria-expanded="true"] i {
+    transform: rotate(90deg);
+}
+
+.docs-nav .nav-link {
+    padding: 0.375rem 0;
+    padding-left: calc(16px + 0.5rem);
+    color: #666;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.docs-nav .nav-link:hover {
+    color: var(--bs-primary);
+    background: none;
+    padding-left: calc(16px + 0.75rem);
+}
+
+.docs-nav .nav-link.active {
+    color: var(--bs-primary);
+    background: none;
+    font-weight: 500;
+}
+
+@media (max-width: 767.98px) {
+    .docs-sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--bs-border-color);
+    }
+    
+    .docs-search {
+        position: static;
+    }
+}
+</style>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const activeLink = document.querySelector('.nav-link.active');
+    if (activeLink) {
+        const currentCategory = activeLink.closest('.collapse');
+        if (currentCategory) {
+            currentCategory.classList.add('show');
+            const categoryHeader = document.querySelector(`[data-bs-target="#${currentCategory.id}"]`);
+            if (categoryHeader) {
+                categoryHeader.setAttribute('aria-expanded', 'true');
+            }
+        }
+    }
+});
+</script>
+{% endblock %}
+{% endblock %} 

@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'boards',
     'teams',
     'app_notifications',
+    'docs',
 ]
 
 MIDDLEWARE = [

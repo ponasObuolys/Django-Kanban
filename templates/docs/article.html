@@ -1,0 +1,33 @@
+{% extends 'docs/base_docs.html' %}
+{% load i18n %}
+
+{% block subtitle %}{{ article.title }}{% endblock %}
+
+{% block docs_content %}
+<div class="article-meta mb-3">
+    <span class="badge bg-primary">{{ article.category.name }}</span>
+    <span class="text-muted ms-2">{% trans "Last updated" %}: {{ article.updated_at|date }}</span>
+</div>
+
+<div class="article-content">
+    {{ article.content|safe }}
+</div>
+
+<div class="docs-navigation">
+    {% if prev_article %}
+        <a href="{% url 'docs:article' slug=prev_article.slug %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>{{ prev_article.title }}
+        </a>
+    {% else %}
+        <div></div>
+    {% endif %}
+    
+    {% if next_article %}
+        <a href="{% url 'docs:article' slug=next_article.slug %}" class="btn btn-outline-primary">
+            {{ next_article.title }} <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+    {% else %}
+        <div></div>
+    {% endif %}
+</div>
+{% endblock %} 

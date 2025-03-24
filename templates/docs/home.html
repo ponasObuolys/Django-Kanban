@@ -1,0 +1,45 @@
+{% extends 'docs/base_docs.html' %}
+{% load i18n %}
+
+{% block subtitle %}{% trans "Home" %}{% endblock %}
+
+{% block docs_content %}
+<h1 class="mb-4">{% trans "Gretvėja Tasker Documentation" %}</h1>
+
+<div class="alert alert-info">
+    <h4 class="alert-heading">{% trans "Welcome to Gretvėja Tasker Documentation!" %}</h4>
+    <p>{% trans "Here you'll find comprehensive guides and documentation to help you start working with Gretvėja Tasker as quickly as possible. Let's jump right in!" %}</p>
+</div>
+
+<div class="row mt-5">
+    {% for category in categories %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ category.name }}</h5>
+                    <ul class="list-unstyled">
+                        {% for article in category.articles.all %}
+                            {% if article.is_published %}
+                                <li class="mb-2">
+                                    <a href="{% url 'docs:article' category_slug=category.slug article_slug=article.slug %}">
+                                        {{ article.title }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <a href="{% url 'docs:category' category_slug=category.slug %}" class="btn btn-outline-primary mt-3">
+                        {% trans "View All" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning">
+                {% trans "No documentation categories have been created yet." %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %} 

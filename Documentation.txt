@@ -1,0 +1,364 @@
+# GRETVĖJA TASKER - VARTOTOJO DOKUMENTACIJA
+
+## TURINYS
+1. ĮVADAS
+2. REGISTRACIJA IR PRISIJUNGIMAS
+3. VARTOTOJO PROFILIS
+4. LENTELIŲ VALDYMAS
+5. STULPELIŲ VALDYMAS
+6. UŽDUOČIŲ VALDYMAS
+7. KOMANDŲ VALDYMAS
+8. PRIEDAI IR YPATUMAI
+
+---
+
+## 1. ĮVADAS
+
+Gretvėja Tasker yra Kanban tipo užduočių valdymo sistema, skirta efektyviai planuoti ir sekti projekto užduotis. 
+Sistema leidžia vartotojams kurti virtualias lentas su stulpeliais (kolonėlėmis), kuriuose talpinamos ir tvarkomos užduotys. 
+
+Pagrindinės sistemos galimybės:
+- Intuityvus užduočių valdymas naudojant tempimo-paleidimo (drag-and-drop) metodą
+- Komandinis darbas su projektais
+- Užduočių rikiavimas pagal įvairius kriterijus (Excel stiliaus)
+- Pranešimų sistema
+- Daugiakalbė sąsaja (lietuvių ir anglų kalbos)
+- Detalus užduočių aprašymas su priedais, terminais ir prioritetais
+
+---
+
+## 2. REGISTRACIJA IR PRISIJUNGIMAS
+
+### 2.1. Registracija
+
+1. Atidarykite Gretvėja Tasker svetainę.
+2. Spustelėkite mygtuką "Registruotis" arba "Sukurti paskyrą" viršutiniame dešiniajame kampe.
+3. Užpildykite registracijos formą:
+   - Vartotojo vardas (privalomas)
+   - El. paštas (privalomas)
+   - Slaptažodis (privalomas, mažiausiai 8 simboliai)
+   - Slaptažodžio patvirtinimas
+4. Spustelėkite mygtuką "Registruotis".
+5. Patikrinkite savo el. paštą - turėtumėte gauti patvirtinimo laišką.
+6. Atverkite laišką ir spustelėkite patvirtinimo nuorodą.
+
+### 2.2. Prisijungimas
+
+1. Atidarykite Gretvėja Tasker svetainę.
+2. Spustelėkite mygtuką "Prisijungti" viršutiniame dešiniajame kampe.
+3. Įveskite savo vartotojo vardą arba el. paštą.
+4. Įveskite slaptažodį.
+5. Spustelėkite mygtuką "Prisijungti".
+
+### 2.3. Slaptažodžio atkūrimas
+
+1. Atidarykite prisijungimo puslapį.
+2. Spustelėkite nuorodą "Pamiršote slaptažodį?".
+3. Įveskite el. paštą, kurį naudojote registruodamiesi.
+4. Spustelėkite mygtuką "Siųsti instrukcijas".
+5. Patikrinkite savo el. paštą ir sekite instrukcijas.
+
+### 2.4. Kalbos keitimas
+
+1. Prisijungę prie sistemos, viršutiniame dešiniajame kampe rasite kalbos perjungimo mygtuką.
+2. Spustelėkite norimą kalbą (LT - lietuvių, EN - anglų).
+3. Sistema automatiškai atnaujins visą turinį pasirinkta kalba.
+
+---
+
+## 3. VARTOTOJO PROFILIS
+
+### 3.1. Profilio peržiūra
+
+1. Spustelėkite savo vartotojo vardą arba avatarą viršutiniame dešiniajame kampe.
+2. Pasirinkite "Mano profilis" iš išskleidžiamojo meniu.
+
+### 3.2. Profilio redagavimas
+
+1. Profilio peržiūros puslapyje spustelėkite mygtuką "Redaguoti profilį".
+2. Galite redaguoti šiuos duomenis:
+   - Vardas ir pavardė
+   - El. paštas
+   - Avataras (profilio nuotrauka)
+   - Kiti biografijos duomenys
+3. Kai baigsite, spustelėkite mygtuką "Išsaugoti pakeitimus".
+
+### 3.3. Slaptažodžio keitimas
+
+1. Eikite į savo profilio puslapį.
+2. Spustelėkite mygtuką "Keisti slaptažodį".
+3. Įveskite dabartinį slaptažodį.
+4. Įveskite naują slaptažodį ir jį pakartokite.
+5. Spustelėkite mygtuką "Išsaugoti naują slaptažodį".
+
+### 3.4. Pranešimų nustatymai
+
+1. Eikite į savo profilio puslapį.
+2. Spustelėkite skirtuką "Pranešimai".
+3. Galite įjungti arba išjungti pranešimus šiems įvykiams:
+   - Naujos užduoties priskyrimas
+   - Komentarai užduotyse
+   - Pakviestimas į komandą
+   - Terminų priminimai
+4. Spustelėkite mygtuką "Išsaugoti nustatymus", kai baigsite.
+
+---
+
+## 4. LENTELIŲ VALDYMAS
+
+### 4.1. Lentelių sąrašo peržiūra
+
+1. Prisijungę prie sistemos, viršutiniame meniu pasirinkite "Lentelės".
+2. Matysite dvi kategorijas:
+   - Asmeninės lentelės (sukurtos jūsų)
+   - Komandų lentelės (lentelės, prie kurių turite prieigą per komandas)
+
+### 4.2. Naujos lentelės sukūrimas
+
+1. Lentelių sąrašo puslapyje spustelėkite mygtuką "Sukurti lentelę".
+2. Įveskite lentelės pavadinimą (privalomas).
+3. Įveskite lentelės aprašymą (neprivalomas).
+4. Pasirinkite, ar lentelė bus asmeninė, ar priklausys komandai:
+   - Jei pasirinksite komandą, naudokite išskleidžiamąjį meniu, kad nurodytumėte, kuriai komandai ji priklauso.
+5. Spustelėkite mygtuką "Sukurti lentelę".
+6. Sistema automatiškai sukurs standartinius stulpelius (Padaryti, Daroma, Atlikta).
+
+### 4.3. Lentelės redagavimas
+
+1. Lentelių sąraše arba atidarytos lentelės puslapyje spustelėkite mygtuką "Redaguoti lentelę".
+2. Galite keisti šiuos duomenis:
+   - Pavadinimas
+   - Aprašymas
+   - Komanda (jei esate lentelės savininkas)
+3. Spustelėkite mygtuką "Išsaugoti pakeitimus".
+
+### 4.4. Lentelės trynimas
+
+1. Atidarykite norimą ištrinti lentelę.
+2. Spustelėkite mygtuką "Ištrinti lentelę".
+3. Pasirodys patvirtinimo dialogas su informacija apie lentelę (stulpelių skaičius, užduočių skaičius).
+4. Jei tikrai norite ištrinti, spustelėkite mygtuką "Ištrinti lentelę" patvirtinimo dialoge.
+5. **Dėmesio:** Lentelės trynimas yra negrįžtamas veiksmas. Visos lentelės užduotys ir stulpeliai bus pašalinti.
+
+---
+
+## 5. STULPELIŲ VALDYMAS
+
+### 5.1. Naujo stulpelio sukūrimas
+
+1. Atsidarę lentelę, spustelėkite mygtuką "Pridėti stulpelį".
+2. Įveskite stulpelio pavadinimą.
+3. Pasirinkite stulpelio tipą (pvz., "Padaryti", "Daroma", "Atlikta", "Atmesta").
+4. Nustatykite stulpelio poziciją lentoje (neprivaloma - pagal nutylėjimą bus pridėta į dešinę).
+5. Pasirinkite stulpelio spalvą (neprivaloma).
+6. Spustelėkite mygtuką "Sukurti stulpelį".
+
+### 5.2. Stulpelio redagavimas
+
+1. Lentelėje spustelėkite stulpelio antraštės srityje mygtuką "Redaguoti".
+2. Galite keisti:
+   - Pavadinimą
+   - Tipą
+   - Spalvą
+3. Spustelėkite mygtuką "Išsaugoti".
+
+### 5.3. Stulpelio perkėlimas (pozicijos keitimas)
+
+1. Užveskite pelės žymeklį ant stulpelio antraštės.
+2. Paspauskite kairįjį pelės mygtuką ir laikydami tempkite stulpelį į norimą poziciją.
+3. Atleiskite pelės mygtuką, kad paleistumėte stulpelį naujoje pozicijoje.
+
+### 5.4. Stulpelio trynimas
+
+1. Lentelėje spustelėkite stulpelio antraštės srityje mygtuką "Ištrinti".
+2. Pasirodys patvirtinimo dialogas.
+3. Spustelėkite "Patvirtinti", jei tikrai norite ištrinti stulpelį.
+4. **Pastaba:** Ištrynus stulpelį, visos jame esančios užduotys taip pat bus ištrintos.
+
+---
+
+## 6. UŽDUOČIŲ VALDYMAS
+
+### 6.1. Naujos užduoties sukūrimas
+
+1. Stulpelio viršuje raskite "+" mygtuką (užvedę pelę, matysite užrašą "Pridėti užduotį").
+2. Spustelėkite šį mygtuką.
+3. Užpildykite naujos užduoties formą:
+   - Pavadinimas (privalomas)
+   - Aprašymas (neprivalomas)
+   - Priskirtas asmuo (pasirinkite komandos narį arba palikite tuščią)
+   - Terminas (pasirinkite datą, iki kurios užduotis turi būti atlikta)
+   - Prioritetas (Žemas, Vidutinis, Aukštas)
+   - Etiketės (galite pridėti spalvotas etiketes užduočiai kategorizuoti)
+4. Spustelėkite mygtuką "Sukurti užduotį".
+
+### 6.2. Užduoties peržiūra
+
+1. Lentelėje spustelėkite užduoties pavadinimą.
+2. Atidaromas išsamus užduoties rodinys su visa informacija.
+
+### 6.3. Užduoties redagavimas
+
+1. Atidarykite užduotį peržiūrai.
+2. Spustelėkite mygtuką "Redaguoti".
+3. Atnaujinkite bet kuriuos užduoties laukus.
+4. Spustelėkite mygtuką "Išsaugoti pakeitimus".
+
+### 6.4. Užduoties perkėlimas tarp stulpelių
+
+#### Metodu tempti-paleisti (drag-and-drop):
+1. Užveskite pelės žymeklį ant užduoties.
+2. Paspauskite kairįjį pelės mygtuką ir laikydami tempkite užduotį į kitą stulpelį.
+3. Atleiskite pelės mygtuką, kad paleistumėte užduotį naujame stulpelyje.
+
+#### Per užduoties redagavimo formą:
+1. Atidarykite užduotį redagavimui.
+2. Iš išskleidžiamojo meniu pasirinkite kitą stulpelį.
+3. Spustelėkite mygtuką "Išsaugoti pakeitimus".
+
+### 6.5. Užduočių rikiavimas (Excel tipo)
+
+1. Stulpelio antraštėje spustelėkite rikiavimo mygtuką (šalia "+" mygtuko).
+2. Išskleidžiamajame meniu pasirinkite rikiavimo kriterijų:
+   - Pavadinimas A-Ž (abėcėlės tvarka)
+   - Pavadinimas Ž-A (atvirkštine abėcėlės tvarka)
+   - Terminas (anksčiausias) - nuo artimiausio iki tolimiausio
+   - Terminas (vėliausias) - nuo tolimiausio iki artimiausio
+   - Prioritetas (aukščiausias) - nuo aukšto iki žemo
+   - Prioritetas (žemiausias) - nuo žemo iki aukšto
+   - Naujausi - pagal sukūrimo datą, naujausi viršuje
+   - Seniausi - pagal sukūrimo datą, seniausi viršuje
+   - Atstatyti į pradinę būseną - grįžti prie originalaus rikiavimo
+3. Sistema automatiškai surikiuos užduotis pagal pasirinktą kriterijų.
+4. **Pastaba:** Rikiavimo nustatymai išsaugomi naršyklėje, todėl kitą kartą atidarius lentelę, rikiavimas bus išlaikytas.
+
+### 6.6. Užduoties komentavimas
+
+1. Atidarykite užduotį peržiūrai.
+2. Slinkite žemyn iki komentarų skyriaus.
+3. Įveskite savo komentarą teksto lauke.
+4. Spustelėkite mygtuką "Pridėti komentarą".
+5. Komentaras bus rodomas komentarų sąraše su jūsų vardu ir laiku.
+
+### 6.7. Pridedami dokumentai prie užduoties
+
+1. Atidarykite užduotį peržiūrai.
+2. Slinkite žemyn iki priedų skyriaus.
+3. Spustelėkite mygtuką "Pridėti priedą" arba "Įkelti failą".
+4. Pasirinkite failą iš savo įrenginio.
+5. Spustelėkite mygtuką "Įkelti".
+6. **Pastaba:** Palaikomi daugelis failų formatų, bet yra dydžio apribojimas.
+
+### 6.8. Užduoties priskyrimas kitam vartotojui
+
+1. Atidarykite užduotį redagavimui.
+2. "Priskirtas" lauke pasirinkite komandos narį iš išskleidžiamojo meniu.
+3. Jei norite pašalinti priskyrimą, pasirinkite "Niekam".
+4. Spustelėkite mygtuką "Išsaugoti pakeitimus".
+5. **Pastaba:** Priskirtas asmuo gaus pranešimą apie naują užduotį (jei pranešimai įjungti).
+
+### 6.9. Užduoties trynimas
+
+1. Atidarykite užduotį peržiūrai.
+2. Spustelėkite mygtuką "Ištrinti".
+3. Pasirodys patvirtinimo dialogas.
+4. Spustelėkite "Patvirtinti", jei tikrai norite ištrinti užduotį.
+5. **Dėmesio:** Užduoties trynimas yra negrįžtamas veiksmas. Visi komentarai ir priedai taip pat bus ištrinti.
+
+---
+
+## 7. KOMANDŲ VALDYMAS
+
+### 7.1. Komandos sukūrimas
+
+1. Viršutiniame meniu pasirinkite "Komandos".
+2. Spustelėkite mygtuką "Sukurti komandą".
+3. Įveskite komandos pavadinimą (privalomas).
+4. Įveskite komandos aprašymą (neprivalomas).
+5. Spustelėkite mygtuką "Sukurti komandą".
+6. Jūs automatiškai tampate šios komandos savininku.
+
+### 7.2. Narių kvietimas į komandą
+
+1. Eikite į komandos puslapį.
+2. Spustelėkite mygtuką "Pakviesti narį".
+3. Įveskite vartotojo el. paštą arba pasirinkite vartotoją iš sąrašo.
+4. Pasirinkite nario rolę (Narys, Admin).
+5. Spustelėkite mygtuką "Siųsti pakvietimą".
+6. **Pastaba:** Vartotojas gaus pranešimą apie pakvietimą ir turės jį priimti.
+
+### 7.3. Komandos narių valdymas
+
+1. Eikite į komandos puslapį.
+2. Spustelėkite skirtuką "Nariai".
+3. Galite atlikti šiuos veiksmus:
+   - Keisti nario rolę (Narys/Admin) - tik komandos savininkas
+   - Pašalinti narį iš komandos - tik komandos savininkas/administratorius
+   - Perduoti komandos savininko statusą - tik komandos savininkas
+
+### 7.4. Komandos lentelių valdymas
+
+1. Eikite į komandos puslapį.
+2. Spustelėkite skirtuką "Lentelės".
+3. Matysite visas komandai priklausančias lenteles.
+4. Galite sukurti naują komandos lentelę spustelėdami mygtuką "Sukurti lentelę".
+
+### 7.5. Komandos trynimas
+
+1. Eikite į komandos puslapį.
+2. Spustelėkite mygtuką "Ištrinti komandą" (tik komandos savininkas).
+3. Pasirodys patvirtinimo dialogas su informacija apie visas komandos lenteles ir narius.
+4. Įveskite komandos pavadinimą patvirtinimo lauke.
+5. Spustelėkite mygtuką "Ištrinti komandą".
+6. **Dėmesio:** Komandos trynimas yra negrįžtamas veiksmas. Visos komandos lentelės taip pat bus ištrintos.
+
+---
+
+## 8. PRIEDAI IR YPATUMAI
+
+### 8.1. Pranešimų sistema
+
+1. Viršutiniame meniu rasite varpelį, kuris rodo naujų pranešimų skaičių.
+2. Spustelėkite varpelį, kad peržiūrėtumėte savo pranešimus.
+3. Pranešimai gali būti apie:
+   - Naujas užduoties priskyrimą
+   - Artėjančius terminus
+   - Komentarus jūsų užduotyse
+   - Pakvietimus į komandas
+4. Spustelėkite pranešimą, kad jį pažymėtumėte kaip perskaitytą ir nueitumėte į susijusį turinį.
+5. Spustelėkite "Pažymėti visus kaip skaitytus", kad išvalytumėte visus pranešimus vienu metu.
+
+### 8.2. Etiketės
+
+1. Galite kurti ir valdyti etiketes lentelės lygmeniu.
+2. Eikite į lentelės puslapį.
+3. Spustelėkite mygtuką "Valdyti etiketes".
+4. Galite:
+   - Kurti naujas etiketes (pasirinkite pavadinimą ir spalvą)
+   - Redaguoti esamas etiketes
+   - Ištrinti etiketes
+5. Etiketes galite pridėti prie užduočių kuriant arba redaguojant užduotį.
+
+### 8.3. Duomenų eksportas
+
+1. Eikite į lentelės puslapį.
+2. Spustelėkite mygtuką "Eksportuoti".
+3. Pasirinkite eksporto formatą:
+   - CSV
+   - Excel
+   - PDF
+4. Pasirinkite, ką norite eksportuoti (visą lentelę ar tik tam tikrą stulpelį).
+5. Spustelėkite mygtuką "Eksportuoti".
+6. Failas bus atsisiųstas į jūsų įrenginį.
+
+### 8.4. Tamsi tema
+
+1. Viršutiniame dešiniajame kampe rasite temos perjungimo mygtuką (saulė/mėnulis).
+2. Spustelėkite šį mygtuką, kad perjungtumėte tarp šviesios ir tamsios temos.
+3. Jūsų pasirinkimas bus išsaugotas ir pritaikytas kituose seansuose.
+
+---
+
+Jei turite klausimų ar susidūrėte su problemomis naudodamiesi Gretvėja Tasker sistema, kreipkitės į Aurimą Butvilauską el. paštu aurimasb@gretveja.lt arba naudodami Teams.
+
+© 2025 Gretvėja Tasker.

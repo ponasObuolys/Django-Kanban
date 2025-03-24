@@ -1,31 +1,110 @@
-# Django Kanban Projekto Planas
+# Gretvėja Tasker - Projekto Planas
 
-## Atlikta
-- Sukurtas pagrindinis Django projektas
-- Sukurta duomenų bazės struktūra
-- Įgyvendintas pagrindinis funkcionalumas
-- Atnaujintas .gitignore failas su išsamiu Django projektui tinkamu turiniu
-- Pridėtas Excel tipo rikiavimas stulpeliams su šiomis galimybėmis:
-  - Rikiavimas pagal užduoties pavadinimą (A-Z, Z-A)
-  - Rikiavimas pagal terminą (anksčiausias, vėliausias)
-  - Rikiavimas pagal prioritetą (aukščiausias, žemiausias)
-  - Rikiavimas pagal sukūrimo datą (naujausi, seniausi)
-  - Rikiavimo nustatymų išsaugojimas per sesijas
+## Projekto statusas
 
-## Dabartiniai darbai
-- Nuolatinis UI/UX tobulinimas
+Projektas šiuo metu yra kūrimo fazėje, sukurta ir įgyvendinta pagrindinė Kanban tipo užduočių valdymo sistema.
 
-## Ateities planai
-- Patobulinti vartotojo sąsają
-- Pridėti daugiau funkcijų:
-  - Užduočių filtravimas pagal žymas ir priskirtus asmenis
-  - Daugiau rikiavimo parametrų
-  - Grupavimas pagal kategorijas
-- Optimizuoti veikimą
-- Pagerinti testavimą
+## Įgyvendintos funkcijos
 
-## Techninės užduotys
-- [ ] Atnaujinti dokumentaciją
-- [ ] Patobulinti saugumo nustatymus
-- [ ] Pridėti daugiau testų
-- [ ] Optimizuoti duomenų bazės užklausas 
+1. **Pagrindinė Kanban lentų sistema**
+   - Lentų kūrimas ir valdymas
+   - Stulpelių valdymas
+   - Užduočių tempimas ir perkėlimas tarp stulpelių
+   - Užduočių detalių peržiūra ir redagavimas
+
+2. **Vartotojų valdymas**
+   - Registracija ir prisijungimas
+   - Profilių valdymas
+   - Slaptažodžių atkūrimas
+
+3. **Komandos ir bendradarbiavimas**
+   - Komandų kūrimas
+   - Narių kvietimas į komandas
+   - Lentų dalinimasis su komandomis
+
+4. **Dokumentacija**
+   - Vartotojo dokumentacijos sistema
+   - Kategorijų ir straipsnių valdymas
+   - Dokumentacijos paieška
+
+## Artimiausio laikotarpio planas
+
+### 1 kvartalis
+
+- [x] **Dokumentacijos sistemos sukūrimas**
+  - [x] Dokumentacijos modelių sukūrimas
+  - [x] Dokumentacijos puslapių sukūrimas
+  - [x] Dokumentacijos importavimo komandos sukūrimas
+
+- [ ] **API kūrimas**
+  - [ ] REST API pagrindiniams projekto modeliams
+  - [ ] API autentifikacijos mechanizmas
+  - [ ] API dokumentacija
+
+- [ ] **Pranešimų sistema**
+  - [ ] Realaus laiko pranešimai
+  - [ ] El. pašto pranešimai
+  - [ ] Pranešimų centras naudotojo sąsajoje
+
+### 2 kvartalis
+
+- [ ] **Užduočių planuoklis (Scheduler)**
+  - [ ] Kalendoriaus vaizdas
+  - [ ] Deadline priminimų sistema
+  - [ ] Užduočių planavimas
+
+- [ ] **Integracijos su kitomis sistemomis**
+  - [ ] Google Calendar integracija
+  - [ ] GitHub/GitLab integracija
+  - [ ] Slack/Teams pranešimai
+
+- [ ] **Darbo laiko sekimas**
+  - [ ] Užduočių laiko sekimas
+  - [ ] Ataskaitos apie praleistą laiką
+  - [ ] Laikrodžio funkcionalumas (clock-in/clock-out)
+
+### 3 kvartalis
+
+- [ ] **Vartotojo sąsajos patobulinimai**
+  - [ ] Nauja dizaino sistema
+  - [ ] Tamsus ir šviesus režimai
+  - [ ] Mobilių įrenginių optimizacija
+
+- [ ] **Analitikos įrankiai**
+  - [ ] Užduočių statistika
+  - [ ] Komandų efektyvumo ataskaitos
+  - [ ] Grafinės ataskaitos
+
+### 4 kvartalis
+
+- [ ] **Enterprise funkcijos**
+  - [ ] Multi-tenancy palaikymas
+  - [ ] SSO integracija
+  - [ ] Išplėstinės vartotojų teisės
+  - [ ] Saugumo patobulinimai
+
+## Ilgalaikė vizija
+
+1. **Išplėtimas į pilną projekto valdymo platformą**
+   - Agile metodikų palaikymas (Scrum, Kanban, Scrumban)
+   - Išplėstinis resursų planavimas
+   - Biudžeto sekimas ir valdymas
+
+2. **AI integracijos**
+   - Automatinis užduočių priskyrimas
+   - Darbo krūvio prognozavimas
+   - Produktyvumo rekomendacijos
+
+3. **Mobilioji aplikacija**
+   - Native iOS/Android aplikacijos
+   - Offline režimas
+   - Push pranešimai
+
+4. **Ekosistemos plėtra**
+   - Marketplace papildiniams
+   - API ir SDK trečiųjų šalių integratoriams
+   - Bendruomenės įsitraukimo įrankiai
+
+---
+
+Dokumentas bus reguliariai atnaujinamas, atsižvelgiant į projekto progresą ir prioritetų pokyčius. 

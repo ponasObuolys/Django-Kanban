@@ -1,0 +1,137 @@
+{% extends 'base_docs.html' %}
+{% load i18n %}
+
+{% block subtitle %}{% trans "Documentation" %}{% endblock %}
+
+{% block docs_content %}
+<div class="docs-header mb-5">
+    <h1 class="display-4 mb-3">{% trans "Documentation" %}</h1>
+    <p class="lead text-muted">{% trans "Find answers to your questions about using the system" %}</p>
+    
+    <form action="{% url 'docs:search' %}" method="get" class="docs-search-form mt-4">
+        <div class="input-group input-group-lg">
+            <input type="text" name="q" class="form-control" placeholder="{% trans 'Search documentation...' %}">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+                {% trans "Search" %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="docs-categories">
+    <div class="row g-4">
+        {% for category in categories %}
+        <div class="col-md-6">
+            <div class="category-card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="category-icon me-3">
+                            <i class="fas fa-folder text-primary"></i>
+                        </div>
+                        <h2 class="h4 mb-0">{{ category.name }}</h2>
+                    </div>
+                    
+                    {% if category.description %}
+                    <p class="text-muted mb-4">{{ category.description }}</p>
+                    {% endif %}
+                    
+                    <div class="article-list">
+                        {% for article in category.articles.all %}
+                            {% if article.is_published %}
+                            <a href="{% url 'docs:article' slug=article.slug %}" class="article-link">
+                                <i class="fas fa-file-alt me-2"></i>
+                                {{ article.title }}
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.docs-header {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+    border-radius: 1rem;
+}
+
+.docs-search-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.docs-search-form .input-group {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.docs-search-form .form-control {
+    border: 2px solid #e9ecef;
+    padding: 0.75rem 1.5rem;
+}
+
+.docs-search-form .btn {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.category-card {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.category-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-icon i {
+    font-size: 1.25rem;
+}
+
+.article-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.article-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    color: var(--bs-body-color);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.article-link:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.05);
+    color: var(--bs-primary);
+    padding-left: 1rem;
+}
+
+.article-link i {
+    color: var(--bs-primary);
+    opacity: 0.7;
+}
+</style>
+{% endblock %} 

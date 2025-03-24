@@ -1,0 +1,44 @@
+{% extends 'docs/base_docs.html' %}
+{% load i18n %}
+
+{% block subtitle %}{{ category.name }}{% endblock %}
+
+{% block docs_content %}
+    {% if category.content %}
+        <div class="category-content mb-4">
+            {{ category.content|safe }}
+        </div>
+    {% endif %}
+
+    {% if articles %}
+        <div class="articles-list">
+            {% for article in articles %}
+                <div class="article-card mb-3">
+                    <div class="article-header">
+                        <h3>{{ article.title }}</h3>
+                        <span class="badge bg-secondary">{{ article.updated_at|date }}</span>
+                    </div>
+                    <div class="article-excerpt">
+                        {{ article.excerpt|safe }}
+                    </div>
+                    <a href="{% url 'docs:article' slug=article.slug %}" class="btn btn-primary">
+                        {% trans "Read more" %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            {% trans "No articles found in this category." %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Jei kategorija neturi turinio ir turi straipsnius, nukreipiame į pirmąjį straipsnį
+    {% if not category.content and articles %}
+        window.location.href = "{% url 'docs:article' slug=articles.0.slug %}";
+    {% endif %}
+</script>
+{% endblock %} 
