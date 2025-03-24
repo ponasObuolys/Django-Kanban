@@ -57,6 +57,36 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle Kanban Board Drag and Drop
     if (document.querySelector('.kanban-board')) {
         initializeKanbanBoard();
+        
+        // Handle task sorting
+        document.querySelectorAll('.sort-tasks').forEach(button => {
+            button.addEventListener('click', function() {
+                const columnId = this.dataset.columnId;
+                const sortBy = this.dataset.sortBy;
+                const sortOrder = this.dataset.sortOrder;
+                
+                sortTasks(columnId, sortBy, sortOrder);
+                
+                // Save sorting preference to localStorage
+                localStorage.setItem(`column_${columnId}_sort_by`, sortBy);
+                localStorage.setItem(`column_${columnId}_sort_order`, sortOrder);
+                
+                // Update UI to indicate current sort
+                updateSortingIndicator(columnId, sortBy, sortOrder);
+            });
+        });
+        
+        // Apply saved sorting on page load
+        document.querySelectorAll('.task-list').forEach(column => {
+            const columnId = column.dataset.columnId;
+            const savedSortBy = localStorage.getItem(`column_${columnId}_sort_by`);
+            const savedSortOrder = localStorage.getItem(`column_${columnId}_sort_order`);
+            
+            if (savedSortBy && savedSortOrder) {
+                sortTasks(columnId, savedSortBy, savedSortOrder);
+                updateSortingIndicator(columnId, savedSortBy, savedSortOrder);
+            }
+        });
     }
 
     // Add click handler for individual notifications
@@ -271,5 +301,128 @@ function updateColumnTaskCount(column) {
     const badge = column.closest('.kanban-column').querySelector('.badge');
     if (badge) {
         badge.textContent = taskCount;
+    }
+}
+
+function sortTasks(columnId, sortBy, sortOrder) {
+    const column = document.querySelector(`.task-list[data-column-id="${columnId}"]`);
+    if (!column) return;
+    
+    // Add sorting class for visual effect
+    column.classList.add('sorting');
+    
+    // Get all tasks in this column
+    const tasks = Array.from(column.querySelectorAll('.task'));
+    
+    // Sort tasks based on criteria
+    tasks.sort((a, b) => {
+        let valueA, valueB;
+        
+        if (sortBy === 'title') {
+            valueA = a.querySelector('h6 a').textContent.trim().toLowerCase();
+            valueB = b.querySelector('h6 a').textContent.trim().toLowerCase();
+            return sortOrder === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+        } 
+        else if (sortBy === 'due_date') {
+            const dueDateA = a.querySelector('.due-date');
+            const dueDateB = b.querySelector('.due-date');
+            
+            // Handle cases where due date might not exist
+            valueA = dueDateA ? new Date(dueDateA.textContent.trim()) : new Date(0);
+            valueB = dueDateB ? new Date(dueDateB.textContent.trim()) : new Date(0);
+            
+            // Special case: if one has due date and the other doesn't
+            if (!dueDateA && dueDateB) return sortOrder === 'asc' ? -1 : 1;
+            if (dueDateA && !dueDateB) return sortOrder === 'asc' ? 1 : -1;
+            
+            return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+        }
+        else if (sortBy === 'priority') {
+            // Convert priority to numeric value
+            const getPriorityValue = (element) => {
+                if (element.classList.contains('border-danger')) return 3; // high
+                if (element.classList.contains('border-warning')) return 2; // medium
+                return 1; // low
+            };
+            
+            valueA = getPriorityValue(a);
+            valueB = getPriorityValue(b);
+            
+            return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+        }
+        else if (sortBy === 'created_at' || sortBy === 'position') {
+            // For these we need to fetch data from data attributes
+            // Assuming they're stored or can be derived from the task ID
+            // As a fallback, revert to the default order
+            valueA = parseInt(a.dataset.taskId);
+            valueB = parseInt(b.dataset.taskId);
+            
+            return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+        }
+        
+        // Default case
+        return 0;
+    });
+    
+    // Reorder tasks in the DOM
+    tasks.forEach(task => {
+        column.appendChild(task);
+    });
+    
+    // Remove sorting effect after animation
+    setTimeout(() => {
+        column.classList.remove('sorting');
+    }, 300);
+    
+    // Disable drag and drop temporarily if we're sorting by anything other than position
+    if (sortBy !== 'position') {
+        tasks.forEach(task => {
+            task.setAttribute('draggable', 'false');
+        });
+    } else {
+        // Re-enable drag and drop for the default sorting
+        tasks.forEach(task => {
+            const userId = task.dataset.createdById;
+            const assignedToId = task.dataset.assignedToId;
+            const currentUserId = document.body.dataset.userId;
+            
+            if (userId === currentUserId || assignedToId === currentUserId) {
+                task.setAttribute('draggable', 'true');
+            }
+        });
+    }
+}
+
+function updateSortingIndicator(columnId, sortBy, sortOrder) {
+    // Find the column header
+    const columnHeader = document.querySelector(`.kanban-column .task-list[data-column-id="${columnId}"]`)
+                          .closest('.kanban-column')
+                          .querySelector('.column-header .dropdown button');
+    
+    // Update icon based on current sort
+    if (columnHeader) {
+        // Remove all existing sort classes
+        columnHeader.querySelector('i').className = '';
+        
+        // Add appropriate icon based on sort type
+        if (sortBy === 'title') {
+            columnHeader.querySelector('i').className = sortOrder === 'asc' ? 
+                'fas fa-sort-alpha-down' : 'fas fa-sort-alpha-up-alt';
+        } 
+        else if (sortBy === 'due_date') {
+            columnHeader.querySelector('i').className = sortOrder === 'asc' ?
+                'fas fa-sort-numeric-down' : 'fas fa-sort-numeric-up-alt';
+        }
+        else if (sortBy === 'priority') {
+            columnHeader.querySelector('i').className = sortOrder === 'asc' ?
+                'fas fa-sort-amount-up-alt' : 'fas fa-sort-amount-down';
+        }
+        else if (sortBy === 'created_at') {
+            columnHeader.querySelector('i').className = sortOrder === 'asc' ?
+                'fas fa-history' : 'fas fa-clock';
+        }
+        else {
+            columnHeader.querySelector('i').className = 'fas fa-sort';
+        }
     }
 } 

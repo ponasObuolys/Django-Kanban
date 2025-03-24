@@ -47,15 +47,65 @@
     {% for column in board.columns.all %}
         <div class="kanban-column">
             <div class="column-header d-flex justify-content-between align-items-center">
-                <span>{% trans column.title %}</span>
-                <span class="badge bg-secondary">{{ column.tasks.count }}</span>
+                <div class="d-flex align-items-center">
+                    <span>{% trans column.title %}</span>
+                    <span class="badge bg-secondary ms-2">{{ column.tasks.count }}</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    {% if can_edit %}
+                        <button class="btn btn-sm btn-icon add-task-btn me-2" data-column-id="{{ column.id }}" data-board-id="{{ board.id }}" data-bs-toggle="tooltip" data-bs-title="{% trans "Add Task" %}">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    {% endif %}
+                    <div class="column-sorting-options">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-sort"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><button class="dropdown-item sort-tasks" data-column-id="{{ column.id }}" data-sort-by="title" data-sort-order="asc">
+                                    <i class="fas fa-sort-alpha-down me-2"></i>{% trans "Pavadinimas A-Ž" %}
+                                </button></li>
+                                <li><button class="dropdown-item sort-tasks" data-column-id="{{ column.id }}" data-sort-by="title" data-sort-order="desc">
+                                    <i class="fas fa-sort-alpha-up-alt me-2"></i>{% trans "Pavadinimas Ž-A" %}
+                                </button></li>
+                                <li><button class="dropdown-item sort-tasks" data-column-id="{{ column.id }}" data-sort-by="due_date" data-sort-order="asc">
+                                    <i class="fas fa-sort-numeric-down me-2"></i>{% trans "Terminas (anksčiausias)" %}
+                                </button></li>
+                                <li><button class="dropdown-item sort-tasks" data-column-id="{{ column.id }}" data-sort-by="due_date" data-sort-order="desc">
+                                    <i class="fas fa-sort-numeric-up-alt me-2"></i>{% trans "Terminas (vėliausias)" %}
+                                </button></li>
+                                <li><button class="dropdown-item sort-tasks" data-column-id="{{ column.id }}" data-sort-by="priority" data-sort-order="desc">
+                                    <i class="fas fa-sort-amount-down me-2"></i>{% trans "Prioritetas (aukščiausias)" %}
+                                </button></li>
+                                <li><button class="dropdown-item sort-tasks" data-column-id="{{ column.id }}" data-sort-by="priority" data-sort-order="asc">
+                                    <i class="fas fa-sort-amount-up-alt me-2"></i>{% trans "Prioritetas (žemiausias)" %}
+                                </button></li>
+                                <li><button class="dropdown-item sort-tasks" data-column-id="{{ column.id }}" data-sort-by="created_at" data-sort-order="desc">
+                                    <i class="fas fa-clock me-2"></i>{% trans "Naujausi" %}
+                                </button></li>
+                                <li><button class="dropdown-item sort-tasks" data-column-id="{{ column.id }}" data-sort-by="created_at" data-sort-order="asc">
+                                    <i class="fas fa-history me-2"></i>{% trans "Seniausi" %}
+                                </button></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><button class="dropdown-item sort-tasks" data-column-id="{{ column.id }}" data-sort-by="position" data-sort-order="asc">
+                                    <i class="fas fa-undo me-2"></i>{% trans "Atstatyti į pradinę būseną" %}
+                                </button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="task-list" data-column-id="{{ column.id }}">
                 {% for task in column.tasks.all %}
                     <div class="task {% if task.priority == 'high' %}border border-danger bg-danger bg-opacity-10{% elif task.priority == 'medium' %}border border-warning bg-warning bg-opacity-10{% endif %}" 
                          id="task-{{ task.id }}" 
                          draggable="{% if task.created_by == user or task.assigned_to == user %}true{% else %}false{% endif %}" 
-                         data-task-id="{{ task.id }}">
+                         data-task-id="{{ task.id }}"
+                         data-created-by-id="{{ task.created_by.id }}"
+                         data-assigned-to-id="{% if task.assigned_to %}{{ task.assigned_to.id }}{% endif %}"
+                         data-created-at="{{ task.created_at|date:'U' }}"
+                         data-priority="{{ task.priority }}">
                         <!-- Task Labels -->
                         <div class="task-labels">
                             {% for label in task.labels.all %}
@@ -103,13 +153,6 @@
                     </div>
                 {% endfor %}
             </div>
-            {% if can_edit %}
-                <div class="p-2">
-                    <button class="add-task-btn" data-column-id="{{ column.id }}" data-board-id="{{ board.id }}">
-                        <i class="fas fa-plus me-2"></i>{% trans "Add Task" %}
-                    </button>
-                </div>
-            {% endif %}
         </div>
     {% endfor %}
 </div>
@@ -522,5 +565,9 @@
             document.getElementById('columnInput').value = columnId;
         });
     });
+    
+    // Initialize tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 </script>
 {% endblock %}

@@ -984,13 +984,13 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:259
 #: .\venv\Lib\site-packages\django\core\validators.py:259
 msgid ""
-"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+"Enter a valid "slug" consisting of letters, numbers, underscores or hyphens."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:267
 #: .\venv\Lib\site-packages\django\core\validators.py:267
 msgid ""
-"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"Enter a valid "slug" consisting of Unicode letters, numbers, underscores, or "
 "hyphens."
 msgstr ""
 
@@ -1125,7 +1125,7 @@ msgstr[3] ""
 #: .\venv\Lib\site-packages\django\core\validators.py:563
 #, python-format
 msgid ""
-"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"File extension "%(extension)s" is not allowed. Allowed extensions are: "
 "%(allowed_extensions)s."
 msgstr ""
 
@@ -1150,7 +1150,7 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\db\models\constraints.py:20
 #: .\venv\Lib\site-packages\django\db\models\constraints.py:20
 #, python-format
-msgid "Constraint “%(name)s” is violated."
+msgid "Constraint "%(name)s" is violated."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:133
@@ -1195,13 +1195,14 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1155
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1155
 #, python-format
-msgid "“%(value)s” value must be either True or False."
+msgid ""
+"“%(value)s" value must be either True or False."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1156
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1156
 #, python-format
-msgid "“%(value)s” value must be either True, False, or None."
+msgid "“%(value)s" value must be either True, False, or None."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1158
@@ -1229,7 +1230,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1415
 #, python-format
 msgid ""
-"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"“%(value)s" value has an invalid date format. It must be in YYYY-MM-DD "
 "format."
 msgstr ""
 
@@ -1239,7 +1240,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1554
 #, python-format
 msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"“%(value)s" value has the correct format (YYYY-MM-DD) but it is an invalid "
 "date."
 msgstr ""
 
@@ -1252,7 +1253,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1550
 #, python-format
 msgid ""
-"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
+"“%(value)s" value has an invalid format. It must be in YYYY-MM-DD "
 "HH:MM[:ss[.uuuuuu]][TZ] format."
 msgstr ""
 
@@ -1260,7 +1261,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1558
 #, python-format
 msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"“%(value)s" value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
 "[TZ]) but it is an invalid date/time."
 msgstr ""
 
@@ -1272,7 +1273,7 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1690
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1690
 #, python-format
-msgid "“%(value)s” value must be a decimal number."
+msgid "“%(value)s" value must be a decimal number."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1692
@@ -1284,7 +1285,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1853
 #, python-format
 msgid ""
-"“%(value)s” value has an invalid format. It must be in [DD] "
+"“%(value)s" value has an invalid format. It must be in [DD] "
 "[[HH:]MM:]ss[.uuuuuu] format."
 msgstr ""
 
@@ -1308,7 +1309,7 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2012
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2012
 #, python-format
-msgid "“%(value)s” value must be a float."
+msgid "“%(value)s" value must be a float."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2014
@@ -1319,7 +1320,7 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2054
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2054
 #, python-format
-msgid "“%(value)s” value must be an integer."
+msgid "“%(value)s" value must be an integer."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2056
@@ -1352,7 +1353,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2301
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2302
 #, python-format
-msgid "“%(value)s” value must be either None, True or False."
+msgid "“%(value)s" value must be either None, True or False."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2304
@@ -1390,7 +1391,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2512
 #, python-format
 msgid ""
-"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"“%(value)s" value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
 "format."
 msgstr ""
 
@@ -1398,7 +1399,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2516
 #, python-format
 msgid ""
-"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"“%(value)s" value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
 "invalid time."
 msgstr ""
 
@@ -1420,7 +1421,7 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2717
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2717
 #, python-format
-msgid "“%(value)s” is not a valid UUID."
+msgid "“%(value)s" is not a valid UUID."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2719
@@ -1499,14 +1500,14 @@ msgid "Enter a whole number."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:475
-#: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:1252
+#: .\venv\Lib\site-packages\django\forms\fields.py:1252
 #: .\venv\Lib\site-packages\django\forms\fields.py:475
 #: .\venv\Lib\site-packages\django\forms\fields.py:1252
 msgid "Enter a valid date."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:498
-#: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:1253
+#: .\venv\Lib\site-packages\django\forms\fields.py:1253
 #: .\venv\Lib\site-packages\django\forms\fields.py:498
 #: .\venv\Lib\site-packages\django\forms\fields.py:1253
 msgid "Enter a valid time."
@@ -1685,14 +1686,14 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\forms\models.py:1587
 #: .\venv\Lib\site-packages\django\forms\models.py:1587
 #, python-format
-msgid "“%(pk)s” is not a valid value."
+msgid "“%(pk)s" is not a valid value."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\utils.py:227
 #: .\venv\Lib\site-packages\django\forms\utils.py:227
 #, python-format
 msgid ""
-"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"%(datetime)s couldn't be interpreted in time zone %(current_timezone)s; it "
 "may be ambiguous or it may not exist."
 msgstr ""
 
@@ -2275,8 +2276,8 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:34
 #: .\venv\Lib\site-packages\django\views\csrf.py:34
 msgid ""
-"You are seeing this message because this HTTPS site requires a “Referer "
-"header” to be sent by your web browser, but none was sent. This header is "
+"You are seeing this message because this HTTPS site requires a "Referer "
+"header" to be sent by your web browser, but none was sent. This header is "
 "required for security reasons, to ensure that your browser is not being "
 "hijacked by third parties."
 msgstr ""
@@ -2284,18 +2285,18 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:40
 #: .\venv\Lib\site-packages\django\views\csrf.py:40
 msgid ""
-"If you have configured your browser to disable “Referer” headers, please re-"
-"enable them, at least for this site, or for HTTPS connections, or for “same-"
-"origin” requests."
+"If you have configured your browser to disable "Referer" headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for "same-"
+"origin" requests."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:45
 #: .\venv\Lib\site-packages\django\views\csrf.py:45
 msgid ""
 "If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
-"including the “Referrer-Policy: no-referrer” header, please remove them. The "
-"CSRF protection requires the “Referer” header to do strict referer checking. "
-"If you’re concerned about privacy, use alternatives like <a "
+"including the "Referrer-Policy: no-referrer" header, please remove them. The "
+"CSRF protection requires the "Referer" header to do strict referer checking. "
+"If you're concerned about privacy, use alternatives like <a "
 "rel=\"noreferrer\" …> for links to third-party sites."
 msgstr ""
 
@@ -2311,7 +2312,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\views\csrf.py:60
 msgid ""
 "If you have configured your browser to disable cookies, please re-enable "
-"them, at least for this site, or for “same-origin” requests."
+"them, at least for this site, or for "same-origin" requests."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:66
@@ -2367,7 +2368,7 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:692
 #: .\venv\Lib\site-packages\django\views\generic\dates.py:692
 #, python-format
-msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgid "Invalid date string "%(datestr)s" given format "%(format)s""
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\detail.py:56
@@ -2378,7 +2379,7 @@ msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\list.py:70
 #: .\venv\Lib\site-packages\django\views\generic\list.py:70
-msgid "Page is not “last”, nor can it be converted to an int."
+msgid "Page is not "last", nor can it be converted to an int."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\list.py:77
@@ -2390,7 +2391,8 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\list.py:169
 #: .\venv\Lib\site-packages\django\views\generic\list.py:169
 #, python-format
-msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgid "Empty list and "
+"%(class_name)s.allow_empty" is False."
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\static.py:49
@@ -2401,7 +2403,8 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\django\views\static.py:51
 #: .\venv\Lib\site-packages\django\views\static.py:51
 #, python-format
-msgid "“%(path)s” does not exist"
+msgid ""
+"%(path)s" does not exist"
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\static.py:68
@@ -2446,7 +2449,7 @@ msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:230
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:230
-msgid "Topics, references, &amp; how-to’s"
+msgid "Topics, references, &amp; how-to's"
 msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:238
@@ -2477,7 +2480,8 @@ msgstr ""
 #: .\venv\Lib\python3.12\site-packages\jsonfield\forms.py:15
 #: .\venv\Lib\site-packages\jsonfield\forms.py:15
 #, python-format
-msgid "\"%(value)s\" value must be valid JSON."
+msgid ""
+"%(value)s" value must be valid JSON."
 msgstr ""
 
 #: .\venv\Lib\site-packages\_pytest\config\argparsing.py:474
@@ -2591,3 +2595,31 @@ msgstr ""
 
 #~ msgid "just now"
 #~ msgstr "ką tik"
+
+# Sorting translations
+msgid "Title A-Z"
+msgstr "Pavadinimas A-Ž"
+
+msgid "Title Z-A"
+msgstr "Pavadinimas Ž-A"
+
+msgid "Due Date (earliest)"
+msgstr "Terminas (anksčiausias)"
+
+msgid "Due Date (latest)"
+msgstr "Terminas (vėliausias)"
+
+msgid "Priority (highest)"
+msgstr "Prioritetas (aukščiausias)"
+
+msgid "Priority (lowest)"
+msgstr "Prioritetas (žemiausias)"
+
+msgid "Newest"
+msgstr "Naujausi"
+
+msgid "Oldest"
+msgstr "Seniausi"
+
+msgid "Reset to Default"
+msgstr "Atstatyti į pradinę būseną"
