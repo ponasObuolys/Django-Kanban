@@ -361,40 +361,122 @@ function checkUnreadNotifications() {
 }
 
 function startNotificationPolling() {
-    // Reguliariai tikriname neperskaitytų pranešimų skaičių (kas 30 sekundžių)
+    // Pirmiausia iškart patikriname, ar yra pranešimų
+    checkForNewNotifications();
+    
+    // Reguliariai tikriname neperskaitytų pranešimų skaičių (kas 10 sekundžių)
     setInterval(function() {
-        // Siunčiame užklausą, kad gautume naujausią pranešimų skaičių
-        fetch('/notifications/get-count/', {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': getCookie('csrftoken')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            const currentCount = data.count;
-            const badge = document.getElementById('notifications-badge');
+        checkForNewNotifications();
+    }, 10000); // 10 sekundžių intervalas
+}
+
+function checkForNewNotifications() {
+    console.log("Tikrinami pranešimai...");
+    // Siunčiame užklausą, kad gautume naujausią pranešimų skaičių
+    fetch('/notifications/get-count/', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Serverio klaida: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        const currentCount = data.count;
+        const badge = document.getElementById('notifications-badge');
+        console.log("Gauta pranešimų:", currentCount, "Ankstesnis skaičius:", lastNotificationCount);
+        
+        // Atnaujiname pranešimų skaičių 
+        if (badge) {
+            badge.textContent = currentCount;
+            badge.style.display = currentCount > 0 ? 'inline-block' : 'none';
+        }
+        
+        // Jei pranešimų padaugėjo, grojame garsą ir rodome pop-up
+        if (lastNotificationCount !== null && currentCount > lastNotificationCount) {
+            playNotificationSound();
             
-            // Atnaujiname pranešimų skaičių 
-            if (badge) {
-                badge.textContent = currentCount;
-                badge.style.display = currentCount > 0 ? 'inline-block' : 'none';
-            }
+            // Rodome pop-up pranešimą
+            showNotificationPopup("Jūs turite naujų užduočių");
             
-            // Jei pranešimų padaugėjo, grojame garsą
-            if (lastNotificationCount !== null && currentCount > lastNotificationCount) {
-                playNotificationSound();
-                
-                // Atnaujiname pranešimų sąrašą, jei reikia
-                updateNotificationsList();
-            }
-            
-            // Išsaugome naują skaičių
-            lastNotificationCount = currentCount;
-        })
-        .catch(error => console.error('Klaida tikrinant pranešimus:', error));
-    }, 30000); // 30 sekundžių intervalas
+            // Atnaujiname pranešimų sąrašą
+            updateNotificationsList();
+        }
+        
+        // Išsaugome naują skaičių
+        lastNotificationCount = currentCount;
+    })
+    .catch(error => {
+        console.error('Klaida tikrinant pranešimus:', error);
+    });
+}
+
+// Pop-up pranešimų funkcija
+function showNotificationPopup(message) {
+    // Sukuriame pop-up elementą
+    const popup = document.createElement('div');
+    popup.className = 'notification-popup';
+    popup.innerHTML = `
+        <div class="notification-popup-content">
+            <i class="fas fa-bell me-2"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-3" aria-label="Close"></button>
+        </div>
+    `;
+    
+    // Pridedame stilių
+    popup.style.position = 'fixed';
+    popup.style.top = '20px';
+    popup.style.right = '20px';
+    popup.style.backgroundColor = 'var(--primary-color, #0d6efd)';
+    popup.style.color = 'white';
+    popup.style.padding = '15px';
+    popup.style.borderRadius = '8px';
+    popup.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+    popup.style.zIndex = '9999';
+    popup.style.minWidth = '300px';
+    popup.style.opacity = '0';
+    popup.style.transition = 'opacity 0.3s ease-in-out';
+    
+    // Stiliai vidiniams elementams
+    const content = popup.querySelector('.notification-popup-content');
+    content.style.display = 'flex';
+    content.style.alignItems = 'center';
+    
+    // Pridedame prie body
+    document.body.appendChild(popup);
+    
+    // Animacija - parodome
+    setTimeout(() => {
+        popup.style.opacity = '1';
+    }, 100);
+    
+    // Pridedame įvykio klausytoją "Uždaryti" mygtukui
+    popup.querySelector('.btn-close').addEventListener('click', function() {
+        // Animacija - paslepiame
+        popup.style.opacity = '0';
+        setTimeout(() => {
+            // Pašaliname iš DOM
+            document.body.removeChild(popup);
+        }, 300);
+    });
+    
+    // Automatiškai uždarome po 5 sekundžių
+    setTimeout(() => {
+        if (document.body.contains(popup)) {
+            popup.style.opacity = '0';
+            setTimeout(() => {
+                if (document.body.contains(popup)) {
+                    document.body.removeChild(popup);
+                }
+            }, 300);
+        }
+    }, 5000);
 }
 
 function updateNotificationsList() {
