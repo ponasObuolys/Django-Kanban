@@ -54,9 +54,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
     
+    // Pranešimų garso inicializavimas
+    initializeNotificationSound();
+    
+    // Patikrinti, ar yra neskaityti pranešimai ir jei taip, groti garsą
+    checkUnreadNotifications();
+    
+    // Pradėti reguliariai tikrinti naujus pranešimus
+    startNotificationPolling();
+    
     // Handle Kanban Board Drag and Drop
     if (document.querySelector('.kanban-board')) {
         initializeKanbanBoard();
+        
+        // Handle task sorting
+        document.querySelectorAll('.sort-tasks').forEach(button => {
+            button.addEventListener('click', function() {
+                const columnId = this.dataset.columnId;
+                const sortBy = this.dataset.sortBy;
+                const sortOrder = this.dataset.sortOrder;
+                
+                sortTasks(columnId, sortBy, sortOrder);
+                
+                // Save sorting preference to localStorage
+                localStorage.setItem(`column_${columnId}_sort_by`, sortBy);
+                localStorage.setItem(`column_${columnId}_sort_order`, sortOrder);
+                
+                // Update UI to indicate current sort
+                updateSortingIndicator(columnId, sortBy, sortOrder);
+            });
+        });
+        
+        // Apply saved sorting on page load
+        document.querySelectorAll('.task-list').forEach(column => {
+            const columnId = column.dataset.columnId;
+            const savedSortBy = localStorage.getItem(`column_${columnId}_sort_by`);
+            const savedSortOrder = localStorage.getItem(`column_${columnId}_sort_order`);
+            
+            if (savedSortBy && savedSortOrder) {
+                sortTasks(columnId, savedSortBy, savedSortOrder);
+                updateSortingIndicator(columnId, savedSortBy, savedSortOrder);
+            }
+        });
     }
 
     // Add click handler for individual notifications
@@ -266,10 +305,356 @@ function updateUnreadCount() {
     }
 }
 
+// Garsinio pranešimo funkcijos
+let notificationSound = null;
+let lastNotificationCount = null;
+
+function initializeNotificationSound() {
+    // Sukuriame audio objektą
+    notificationSound = new Audio('/static/audio/Notification.mp3');
+    
+    // Nustatome garsumą (nuo 0 iki 1)
+    notificationSound.volume = 0.5;
+    
+    // Įkrauname garsą iš anksto
+    notificationSound.load();
+    
+    // Išsaugome pradinį neperskaitytų pranešimų skaičių
+    const badge = document.getElementById('notifications-badge');
+    if (badge) {
+        lastNotificationCount = parseInt(badge.textContent) || 0;
+    }
+}
+
+function playNotificationSound() {
+    if (notificationSound) {
+        // Sustabdome garsą, jei jis jau groja
+        notificationSound.pause();
+        notificationSound.currentTime = 0;
+        
+        // Grojame garsą
+        notificationSound.play().catch(err => {
+            console.warn('Nepavyko paleisti pranešimo garso:', err);
+        });
+    }
+}
+
+function checkUnreadNotifications() {
+    const badge = document.getElementById('notifications-badge');
+    if (!badge) return;
+    
+    const currentCount = parseInt(badge.textContent) || 0;
+    
+    // Jei tai pirmas patikrinimas, tiesiog išsaugome skaičių
+    if (lastNotificationCount === null) {
+        lastNotificationCount = currentCount;
+        return;
+    }
+    
+    // Jei pranešimų padaugėjo, grojame garsą
+    if (currentCount > lastNotificationCount) {
+        playNotificationSound();
+    }
+    
+    // Atnaujiname paskutinį žinomą pranešimų skaičių
+    lastNotificationCount = currentCount;
+}
+
+function startNotificationPolling() {
+    // Pirmiausia iškart patikriname, ar yra pranešimų
+    checkForNewNotifications();
+    
+    // Reguliariai tikriname neperskaitytų pranešimų skaičių (kas 10 sekundžių)
+    setInterval(function() {
+        checkForNewNotifications();
+    }, 10000); // 10 sekundžių intervalas
+}
+
+function checkForNewNotifications() {
+    console.log("Tikrinami pranešimai...");
+    // Siunčiame užklausą, kad gautume naujausią pranešimų skaičių
+    fetch('/notifications/get-count/', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Serverio klaida: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        const currentCount = data.count;
+        const badge = document.getElementById('notifications-badge');
+        console.log("Gauta pranešimų:", currentCount, "Ankstesnis skaičius:", lastNotificationCount);
+        
+        // Atnaujiname pranešimų skaičių 
+        if (badge) {
+            badge.textContent = currentCount;
+            badge.style.display = currentCount > 0 ? 'inline-block' : 'none';
+        }
+        
+        // Jei pranešimų padaugėjo, grojame garsą ir rodome pop-up
+        if (lastNotificationCount !== null && currentCount > lastNotificationCount) {
+            playNotificationSound();
+            
+            // Rodome pop-up pranešimą
+            showNotificationPopup("Jūs turite naujų užduočių");
+            
+            // Atnaujiname pranešimų sąrašą
+            updateNotificationsList();
+        }
+        
+        // Išsaugome naują skaičių
+        lastNotificationCount = currentCount;
+    })
+    .catch(error => {
+        console.error('Klaida tikrinant pranešimus:', error);
+    });
+}
+
+// Pop-up pranešimų funkcija
+function showNotificationPopup(message) {
+    // Sukuriame pop-up elementą
+    const popup = document.createElement('div');
+    popup.className = 'notification-popup';
+    popup.innerHTML = `
+        <div class="notification-popup-content">
+            <div class="notification-popup-header">
+                <i class="fas fa-bell me-2"></i>
+                <span class="notification-title">Pranešimas</span>
+                <button type="button" class="btn-close ms-3" aria-label="Close"></button>
+            </div>
+            <div class="notification-popup-body">
+                ${message}
+            </div>
+        </div>
+    `;
+    
+    // Pridedame stilių
+    popup.style.position = 'fixed';
+    popup.style.top = '50%';
+    popup.style.left = '50%';
+    popup.style.transform = 'translate(-50%, -50%)';
+    popup.style.backgroundColor = 'white';
+    popup.style.color = 'var(--bs-dark, #212529)';
+    popup.style.padding = '0';
+    popup.style.borderRadius = '8px';
+    popup.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+    popup.style.zIndex = '9999';
+    popup.style.minWidth = '400px';
+    popup.style.maxWidth = '80%';
+    popup.style.opacity = '0';
+    popup.style.transition = 'opacity 0.3s ease-in-out';
+    popup.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+    
+    // Stiliai vidiniams elementams
+    const content = popup.querySelector('.notification-popup-content');
+    content.style.display = 'flex';
+    content.style.flexDirection = 'column';
+    
+    const header = popup.querySelector('.notification-popup-header');
+    header.style.display = 'flex';
+    header.style.alignItems = 'center';
+    header.style.padding = '15px 20px';
+    header.style.borderBottom = '1px solid rgba(0, 0, 0, 0.1)';
+    header.style.backgroundColor = 'var(--primary-color, #0d6efd)';
+    header.style.color = 'white';
+    header.style.borderTopLeftRadius = '8px';
+    header.style.borderTopRightRadius = '8px';
+    
+    const title = popup.querySelector('.notification-title');
+    title.style.fontWeight = 'bold';
+    title.style.fontSize = '1.2rem';
+    title.style.flex = '1';
+    
+    const closeBtn = popup.querySelector('.btn-close');
+    closeBtn.style.filter = 'invert(1)';
+    
+    const body = popup.querySelector('.notification-popup-body');
+    body.style.padding = '20px';
+    body.style.fontSize = '1.1rem';
+    body.style.textAlign = 'center';
+    
+    // Pridedame prie body
+    document.body.appendChild(popup);
+    
+    // Animacija - parodome
+    setTimeout(() => {
+        popup.style.opacity = '1';
+    }, 100);
+    
+    // Pridedame įvykio klausytoją "Uždaryti" mygtukui
+    popup.querySelector('.btn-close').addEventListener('click', function() {
+        // Animacija - paslepiame
+        popup.style.opacity = '0';
+        setTimeout(() => {
+            // Pašaliname iš DOM
+            document.body.removeChild(popup);
+        }, 300);
+    });
+}
+
+function updateNotificationsList() {
+    const dropdownMenu = document.querySelector('#notificationsDropdown + .dropdown-menu');
+    if (!dropdownMenu) return;
+    
+    fetch('/notifications/get-list/', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Atnaujiname pranešimų sąrašą
+        if (data.html) {
+            dropdownMenu.innerHTML = data.html;
+            
+            // Pridedame įvykių klausytojus naujiems pranešimams
+            dropdownMenu.querySelectorAll('[data-notification-id]').forEach(notification => {
+                notification.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const notificationId = this.dataset.notificationId;
+                    markNotificationAsRead(notificationId);
+                });
+            });
+        }
+    })
+    .catch(error => console.error('Klaida atnaujinant pranešimų sąrašą:', error));
+}
+
 function updateColumnTaskCount(column) {
     const taskCount = column.children.length;
     const badge = column.closest('.kanban-column').querySelector('.badge');
     if (badge) {
         badge.textContent = taskCount;
+    }
+}
+
+function sortTasks(columnId, sortBy, sortOrder) {
+    const column = document.querySelector(`.task-list[data-column-id="${columnId}"]`);
+    if (!column) return;
+    
+    // Add sorting class for visual effect
+    column.classList.add('sorting');
+    
+    // Get all tasks in this column
+    const tasks = Array.from(column.querySelectorAll('.task'));
+    
+    // Sort tasks based on criteria
+    tasks.sort((a, b) => {
+        let valueA, valueB;
+        
+        if (sortBy === 'title') {
+            valueA = a.querySelector('h6 a').textContent.trim().toLowerCase();
+            valueB = b.querySelector('h6 a').textContent.trim().toLowerCase();
+            return sortOrder === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+        } 
+        else if (sortBy === 'due_date') {
+            const dueDateA = a.querySelector('.due-date');
+            const dueDateB = b.querySelector('.due-date');
+            
+            // Handle cases where due date might not exist
+            valueA = dueDateA ? new Date(dueDateA.textContent.trim()) : new Date(0);
+            valueB = dueDateB ? new Date(dueDateB.textContent.trim()) : new Date(0);
+            
+            // Special case: if one has due date and the other doesn't
+            if (!dueDateA && dueDateB) return sortOrder === 'asc' ? -1 : 1;
+            if (dueDateA && !dueDateB) return sortOrder === 'asc' ? 1 : -1;
+            
+            return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+        }
+        else if (sortBy === 'priority') {
+            // Convert priority to numeric value
+            const getPriorityValue = (element) => {
+                if (element.classList.contains('border-danger')) return 3; // high
+                if (element.classList.contains('border-warning')) return 2; // medium
+                return 1; // low
+            };
+            
+            valueA = getPriorityValue(a);
+            valueB = getPriorityValue(b);
+            
+            return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+        }
+        else if (sortBy === 'created_at' || sortBy === 'position') {
+            // For these we need to fetch data from data attributes
+            // Assuming they're stored or can be derived from the task ID
+            // As a fallback, revert to the default order
+            valueA = parseInt(a.dataset.taskId);
+            valueB = parseInt(b.dataset.taskId);
+            
+            return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+        }
+        
+        // Default case
+        return 0;
+    });
+    
+    // Reorder tasks in the DOM
+    tasks.forEach(task => {
+        column.appendChild(task);
+    });
+    
+    // Remove sorting effect after animation
+    setTimeout(() => {
+        column.classList.remove('sorting');
+    }, 300);
+    
+    // Disable drag and drop temporarily if we're sorting by anything other than position
+    if (sortBy !== 'position') {
+        tasks.forEach(task => {
+            task.setAttribute('draggable', 'false');
+        });
+    } else {
+        // Re-enable drag and drop for the default sorting
+        tasks.forEach(task => {
+            const userId = task.dataset.createdById;
+            const assignedToId = task.dataset.assignedToId;
+            const currentUserId = document.body.dataset.userId;
+            
+            if (userId === currentUserId || assignedToId === currentUserId) {
+                task.setAttribute('draggable', 'true');
+            }
+        });
+    }
+}
+
+function updateSortingIndicator(columnId, sortBy, sortOrder) {
+    // Find the column header
+    const columnHeader = document.querySelector(`.kanban-column .task-list[data-column-id="${columnId}"]`)
+                          .closest('.kanban-column')
+                          .querySelector('.column-header .dropdown button');
+    
+    // Update icon based on current sort
+    if (columnHeader) {
+        // Remove all existing sort classes
+        columnHeader.querySelector('i').className = '';
+        
+        // Add appropriate icon based on sort type
+        if (sortBy === 'title') {
+            columnHeader.querySelector('i').className = sortOrder === 'asc' ? 
+                'fas fa-sort-alpha-down' : 'fas fa-sort-alpha-up-alt';
+        } 
+        else if (sortBy === 'due_date') {
+            columnHeader.querySelector('i').className = sortOrder === 'asc' ?
+                'fas fa-sort-numeric-down' : 'fas fa-sort-numeric-up-alt';
+        }
+        else if (sortBy === 'priority') {
+            columnHeader.querySelector('i').className = sortOrder === 'asc' ?
+                'fas fa-sort-amount-up-alt' : 'fas fa-sort-amount-down';
+        }
+        else if (sortBy === 'created_at') {
+            columnHeader.querySelector('i').className = sortOrder === 'asc' ?
+                'fas fa-history' : 'fas fa-clock';
+        }
+        else {
+            columnHeader.querySelector('i').className = 'fas fa-sort';
+        }
     }
 } 
