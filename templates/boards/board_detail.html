@@ -223,14 +223,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Team Member</h5>
+                <h5 class="modal-title">{% trans "Add Team Member" %}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="post" action="{% url 'teams:add_member' team_id=board.team.id %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label" for="selectUser">Select User</label>
+                        <label class="form-label" for="selectUser">{% trans "Select User" %}</label>
                         <select name="user" id="selectUser" class="form-control">
                             {% for user in users %}
                                 <option value="{{ user.id }}">{{ user.get_full_name|default:user.username }}</option>
@@ -239,8 +239,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Member</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary">{% trans "Add Member" %}</button>
                 </div>
             </form>
         </div>
@@ -261,8 +261,10 @@
             <div class="modal-body">
                 <div class="alert alert-danger">
                     <p class="mb-0">
-                        You are about to delete the board "{{ board.title }}". This action cannot be undone.
+                        {% blocktrans with board_title=board.title %}
+                        You are about to delete the board "{{ board_title }}". This action cannot be undone.
                         All tasks, columns, and associated data will be permanently deleted.
+                        {% endblocktrans %}
                     </p>
                 </div>
                 <div class="mb-3">
@@ -279,7 +281,7 @@
                         {% if board.team %}
                         <li>
                             <i class="fas fa-users me-2"></i>
-                            <strong>Team:</strong> {{ board.team.name }}
+                            <strong>{% trans "Team" %}:</strong> {{ board.team.name }}
                         </li>
                         {% endif %}
                     </ul>

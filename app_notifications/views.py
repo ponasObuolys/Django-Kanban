@@ -18,10 +18,29 @@ def mark_notification_as_read(request, notification_id):
     return JsonResponse({'status': 'success'})
 
 @login_required
-@require_POST
 def mark_all_notifications_as_read(request):
-    request.user.notifications.unread().mark_all_as_read()
-    return JsonResponse({'status': 'success'})
+    """Pažymi visus vartotojo neperskaitytus pranešimus kaip perskaitytus."""
+    try:
+        # Gaukime neperskaitytų pranešimų skaičių prieš juos pažymint
+        unread_count = request.user.notifications.unread().count()
+        
+        # Pažymime visus kaip perskaitytus 
+        request.user.notifications.unread().mark_all_as_read()
+        
+        # Užregistruojame veiksmą žurnale
+        logger.debug(f"Vartotojas {request.user.username} pažymėjo visus {unread_count} pranešimus kaip perskaitytus")
+        
+        return JsonResponse({
+            'status': 'success',
+            'marked_count': unread_count,
+            'message': 'Visi pranešimai pažymėti kaip perskaityti'
+        })
+    except Exception as e:
+        logger.error(f"Klaida žymint pranešimus kaip perskaitytus: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Įvyko klaida žymint pranešimus kaip perskaitytus'
+        }, status=500)
 
 @login_required
 def get_count(request):

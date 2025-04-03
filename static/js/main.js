@@ -261,37 +261,55 @@ function markNotificationAsRead(notificationId) {
 }
 
 function markAllNotificationsAsRead() {
+    console.log('Bandoma pažymėti visus pranešimus kaip perskaitytus...');
+    
+    // Pirmiausia bandome POST metodą
     fetch('/notifications/mark-all-as-read/', {
         method: 'POST',
         headers: {
-            'X-CSRFToken': getCookie('csrftoken')
-        }
+            'X-CSRFToken': getCookie('csrftoken'),
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
     })
     .then(response => {
-        if (response.ok) {
-            const notifications = document.querySelectorAll('[data-notification-id]');
-            notifications.forEach(notification => {
-                notification.classList.add('read');
-                notification.style.display = 'none';
-            });
-            const badge = document.getElementById('notifications-badge');
-            if (badge) {
-                badge.style.display = 'none';
-                badge.textContent = '0';
-            }
-            // Hide the mark all as read button and show empty message
-            const markAllBtn = document.getElementById('markAllAsRead');
-            if (markAllBtn) {
-                markAllBtn.closest('.dropdown-divider')?.remove();
-                markAllBtn.remove();
-            }
-            const dropdownMenu = document.querySelector('.dropdown-menu');
-            if (dropdownMenu && !dropdownMenu.querySelector('.dropdown-item:not(.read)')) {
-                dropdownMenu.innerHTML = '<span class="dropdown-item">No new notifications</span>';
-            }
+        if (!response.ok) {
+            // Jei POST nepavyko, bandome GET
+            console.log('POST metodas nepavyko, bandome GET...');
+            return fetch('/notifications/mark-all-as-read/');
         }
+        return response;
     })
-    .catch(error => console.error('Error marking all notifications as read:', error));
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Serverio klaida: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Visi pranešimai pažymėti kaip perskaityti:', data);
+        
+        // Atnaujiname pranešimų skaičių
+        const badge = document.getElementById('notifications-badge');
+        if (badge) {
+            badge.style.display = 'none';
+            badge.textContent = '0';
+        }
+        
+        // Arba užkraukime visą pranešimų sąrašą iš naujo
+        updateNotificationsList();
+        
+        // Atnaujiname paskutinį žinomą pranešimų skaičių
+        lastNotificationCount = 0;
+    })
+    .catch(error => {
+        console.error('Klaida žymint visus pranešimus kaip perskaitytus:', error);
+        
+        // Paskutinis bandymas tiesiogiai naudojant window.location
+        console.log('Bandoma paskutinis variantas - nukreipimas į mark-all-as-read URL');
+        window.location.href = '/notifications/mark-all-as-read/';
+    });
 }
 
 function updateUnreadCount() {
@@ -371,7 +389,17 @@ function startNotificationPolling() {
 }
 
 function checkForNewNotifications() {
-    console.log("Tikrinami pranešimai...");
+    console.debug("Tikrinami pranešimai...");
+    
+    // Įtraukime naują pranešimų tikrinimo metodą
+    const currentRoute = window.location.pathname;
+    console.debug("Dabartinis kelias:", currentRoute);
+    
+    // Nukreipimas, jei tai testo puslapis
+    if (currentRoute.includes('test-page')) {
+        console.debug("Aptiktas testo puslapis, naudojama speciali logika");
+    }
+    
     // Siunčiame užklausą, kad gautume naujausią pranešimų skaičių
     fetch('/notifications/get-count/', {
         method: 'GET',
@@ -382,23 +410,29 @@ function checkForNewNotifications() {
     })
     .then(response => {
         if (!response.ok) {
+            console.error("Serverio atsakymas nepavyko:", response.status, response.statusText);
             throw new Error('Serverio klaida: ' + response.status);
         }
+        console.debug("Gautas atsakymas iš serverio:", response.status);
         return response.json();
     })
     .then(data => {
         const currentCount = data.count;
         const badge = document.getElementById('notifications-badge');
-        console.log("Gauta pranešimų:", currentCount, "Ankstesnis skaičius:", lastNotificationCount);
+        console.debug("Gauta pranešimų:", currentCount, "Ankstesnis skaičius:", lastNotificationCount);
         
         // Atnaujiname pranešimų skaičių 
         if (badge) {
             badge.textContent = currentCount;
             badge.style.display = currentCount > 0 ? 'inline-block' : 'none';
+            console.debug("Atnaujintas pranešimų skaičius ekrane:", currentCount);
+        } else {
+            console.warn("Nerastas pranešimų ženkliukas (badge) DOM'e");
         }
         
         // Jei pranešimų padaugėjo, grojame garsą ir rodome pop-up
         if (lastNotificationCount !== null && currentCount > lastNotificationCount) {
+            console.debug("Aptikti nauji pranešimai! Paleidžiamas garsas ir rodomas pop-up");
             playNotificationSound();
             
             // Rodome pop-up pranešimą
@@ -523,6 +557,15 @@ function updateNotificationsList() {
                     markNotificationAsRead(notificationId);
                 });
             });
+            
+            // Pridedame įvykio klausytoją "Pažymėti visus kaip perskaitytus" mygtukui
+            const markAllBtn = dropdownMenu.querySelector('#markAllAsRead');
+            if (markAllBtn) {
+                markAllBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    markAllNotificationsAsRead();
+                });
+            }
         }
     })
     .catch(error => console.error('Klaida atnaujinant pranešimų sąrašą:', error));
