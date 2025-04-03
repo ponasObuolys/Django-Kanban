@@ -22,10 +22,13 @@ from django.conf.urls.i18n import i18n_patterns
 from django.views.i18n import set_language
 from django.views.generic import TemplateView, RedirectView
 from accounts.views import CustomSignupView
+from app_notifications.views import test_page, test_notification
 
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('notifications/test-page/', test_page, name='test_page'),
+    path('notifications/test/', test_notification, name='test_notification'),
 ]
 
 urlpatterns += i18n_patterns(
@@ -36,7 +39,7 @@ urlpatterns += i18n_patterns(
     path('accounts/', include('accounts.urls')),  # Your custom profile views
     path('boards/', include('boards.urls')),
     path('teams/', include('teams.urls')),
-    path('notifications/', include('notifications.urls', namespace='notifications')),
+    path('notifications/', include('app_notifications.urls', namespace='notifications')),
     path('docs/', include('docs.urls')),  # Documentation URLs
     prefix_default_language=True
 )
