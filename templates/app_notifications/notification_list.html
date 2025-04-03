@@ -1,0 +1,22 @@
+{% load i18n %}
+
+{% for notification in notifications %}
+    {% if notification.verb == 'invited you to join' %}
+        <a class="dropdown-item" href="{% url 'teams:invitation_list' %}" data-notification-id="{{ notification.id }}">
+            <i class="fas fa-user-plus me-2"></i>{{ notification.description }}
+        </a>
+    {% else %}
+        <a class="dropdown-item" href="#" data-notification-id="{{ notification.id }}">
+            <i class="fas fa-bell me-2"></i>{{ notification.description }}
+        </a>
+    {% endif %}
+{% empty %}
+    <span class="dropdown-item">{% trans "No new notifications" %}</span>
+{% endfor %}
+
+{% if notifications %}
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item text-center" href="#" id="markAllAsRead">
+        <i class="fas fa-check-double me-2"></i>{% trans "Mark all as read" %}
+    </a>
+{% endif %} 

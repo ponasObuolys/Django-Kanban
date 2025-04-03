@@ -54,6 +54,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     });
     
+    // Pranešimų garso inicializavimas
+    initializeNotificationSound();
+    
+    // Patikrinti, ar yra neskaityti pranešimai ir jei taip, groti garsą
+    checkUnreadNotifications();
+    
+    // Pradėti reguliariai tikrinti naujus pranešimus
+    startNotificationPolling();
+    
     // Handle Kanban Board Drag and Drop
     if (document.querySelector('.kanban-board')) {
         initializeKanbanBoard();
@@ -294,6 +303,128 @@ function updateUnreadCount() {
             badge.style.display = 'none';
         }
     }
+}
+
+// Garsinio pranešimo funkcijos
+let notificationSound = null;
+let lastNotificationCount = null;
+
+function initializeNotificationSound() {
+    // Sukuriame audio objektą
+    notificationSound = new Audio('/static/audio/Notification.mp3');
+    
+    // Nustatome garsumą (nuo 0 iki 1)
+    notificationSound.volume = 0.5;
+    
+    // Įkrauname garsą iš anksto
+    notificationSound.load();
+    
+    // Išsaugome pradinį neperskaitytų pranešimų skaičių
+    const badge = document.getElementById('notifications-badge');
+    if (badge) {
+        lastNotificationCount = parseInt(badge.textContent) || 0;
+    }
+}
+
+function playNotificationSound() {
+    if (notificationSound) {
+        // Sustabdome garsą, jei jis jau groja
+        notificationSound.pause();
+        notificationSound.currentTime = 0;
+        
+        // Grojame garsą
+        notificationSound.play().catch(err => {
+            console.warn('Nepavyko paleisti pranešimo garso:', err);
+        });
+    }
+}
+
+function checkUnreadNotifications() {
+    const badge = document.getElementById('notifications-badge');
+    if (!badge) return;
+    
+    const currentCount = parseInt(badge.textContent) || 0;
+    
+    // Jei tai pirmas patikrinimas, tiesiog išsaugome skaičių
+    if (lastNotificationCount === null) {
+        lastNotificationCount = currentCount;
+        return;
+    }
+    
+    // Jei pranešimų padaugėjo, grojame garsą
+    if (currentCount > lastNotificationCount) {
+        playNotificationSound();
+    }
+    
+    // Atnaujiname paskutinį žinomą pranešimų skaičių
+    lastNotificationCount = currentCount;
+}
+
+function startNotificationPolling() {
+    // Reguliariai tikriname neperskaitytų pranešimų skaičių (kas 30 sekundžių)
+    setInterval(function() {
+        // Siunčiame užklausą, kad gautume naujausią pranešimų skaičių
+        fetch('/notifications/get-count/', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const currentCount = data.count;
+            const badge = document.getElementById('notifications-badge');
+            
+            // Atnaujiname pranešimų skaičių 
+            if (badge) {
+                badge.textContent = currentCount;
+                badge.style.display = currentCount > 0 ? 'inline-block' : 'none';
+            }
+            
+            // Jei pranešimų padaugėjo, grojame garsą
+            if (lastNotificationCount !== null && currentCount > lastNotificationCount) {
+                playNotificationSound();
+                
+                // Atnaujiname pranešimų sąrašą, jei reikia
+                updateNotificationsList();
+            }
+            
+            // Išsaugome naują skaičių
+            lastNotificationCount = currentCount;
+        })
+        .catch(error => console.error('Klaida tikrinant pranešimus:', error));
+    }, 30000); // 30 sekundžių intervalas
+}
+
+function updateNotificationsList() {
+    const dropdownMenu = document.querySelector('#notificationsDropdown + .dropdown-menu');
+    if (!dropdownMenu) return;
+    
+    fetch('/notifications/get-list/', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Atnaujiname pranešimų sąrašą
+        if (data.html) {
+            dropdownMenu.innerHTML = data.html;
+            
+            // Pridedame įvykių klausytojus naujiems pranešimams
+            dropdownMenu.querySelectorAll('[data-notification-id]').forEach(notification => {
+                notification.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const notificationId = this.dataset.notificationId;
+                    markNotificationAsRead(notificationId);
+                });
+            });
+        }
+    })
+    .catch(error => console.error('Klaida atnaujinant pranešimų sąrašą:', error));
 }
 
 function updateColumnTaskCount(column) {
