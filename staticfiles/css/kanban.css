@@ -48,4 +48,73 @@
 
 .label-color {
     color: var(--label-color);
+}
+
+/* Add Task button styles */
+.column-header .add-task-btn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bs-primary);
+    color: #fff;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.column-header .add-task-btn:hover {
+    background-color: var(--bs-primary-dark, #0a58ca);
+    transform: scale(1.1);
+}
+
+.column-header .add-task-btn i {
+    font-size: 0.75rem;
+}
+
+/* Sorting styles */
+.column-sorting-options .dropdown-toggle::after {
+    display: none;
+}
+
+.column-sorting-options .btn {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.column-sorting-options .dropdown-menu {
+    min-width: 220px;
+}
+
+.column-sorting-options .dropdown-item {
+    font-size: 0.9rem;
+    padding: 0.35rem 1rem;
+}
+
+.column-sorting-options .dropdown-item:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.column-sorting-options .dropdown-item i {
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Indicate when tasks are being sorted */
+.task-list.sorting {
+    position: relative;
+}
+
+.task-list.sorting::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.03);
+    z-index: 1;
+    pointer-events: none;
 } 
