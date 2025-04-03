@@ -100,7 +100,7 @@
                 {% for task in column.tasks.all %}
                     <div class="task {% if task.priority == 'high' %}border border-danger bg-danger bg-opacity-10{% elif task.priority == 'medium' %}border border-warning bg-warning bg-opacity-10{% endif %}" 
                          id="task-{{ task.id }}" 
-                         draggable="{% if task.created_by == user or task.assigned_to == user %}true{% else %}false{% endif %}" 
+                         draggable="{% if board.owner == user %}true{% else %}false{% endif %}" 
                          data-task-id="{{ task.id }}"
                          data-created-by-id="{{ task.created_by.id }}"
                          data-assigned-to-id="{% if task.assigned_to %}{{ task.assigned_to.id }}{% endif %}"

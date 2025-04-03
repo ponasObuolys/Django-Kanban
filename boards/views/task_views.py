@@ -188,9 +188,10 @@ def update_task_position(request):
                     'error': 'Cannot move task between different boards'
                 }, status=400)
             
-            if not can_manage_task(request.user, task):
+            # Patikrinti, ar vartotojas yra lentos savininkas
+            if task.column.board.owner != request.user:
                 return JsonResponse({
-                    'error': "You don't have permission to move this task."
+                    'error': "Tik lentos savininkas gali perkelti užduotis."
                 }, status=403)
             
             TaskService.update_position(task, new_column, new_position)
