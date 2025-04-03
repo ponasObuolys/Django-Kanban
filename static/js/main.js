@@ -423,30 +423,61 @@ function showNotificationPopup(message) {
     popup.className = 'notification-popup';
     popup.innerHTML = `
         <div class="notification-popup-content">
-            <i class="fas fa-bell me-2"></i>
-            <span>${message}</span>
-            <button type="button" class="btn-close ms-3" aria-label="Close"></button>
+            <div class="notification-popup-header">
+                <i class="fas fa-bell me-2"></i>
+                <span class="notification-title">Pranešimas</span>
+                <button type="button" class="btn-close ms-3" aria-label="Close"></button>
+            </div>
+            <div class="notification-popup-body">
+                ${message}
+            </div>
         </div>
     `;
     
     // Pridedame stilių
     popup.style.position = 'fixed';
-    popup.style.top = '20px';
-    popup.style.right = '20px';
-    popup.style.backgroundColor = 'var(--primary-color, #0d6efd)';
-    popup.style.color = 'white';
-    popup.style.padding = '15px';
+    popup.style.top = '50%';
+    popup.style.left = '50%';
+    popup.style.transform = 'translate(-50%, -50%)';
+    popup.style.backgroundColor = 'white';
+    popup.style.color = 'var(--bs-dark, #212529)';
+    popup.style.padding = '0';
     popup.style.borderRadius = '8px';
-    popup.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+    popup.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
     popup.style.zIndex = '9999';
-    popup.style.minWidth = '300px';
+    popup.style.minWidth = '400px';
+    popup.style.maxWidth = '80%';
     popup.style.opacity = '0';
     popup.style.transition = 'opacity 0.3s ease-in-out';
+    popup.style.border = '1px solid rgba(0, 0, 0, 0.1)';
     
     // Stiliai vidiniams elementams
     const content = popup.querySelector('.notification-popup-content');
     content.style.display = 'flex';
-    content.style.alignItems = 'center';
+    content.style.flexDirection = 'column';
+    
+    const header = popup.querySelector('.notification-popup-header');
+    header.style.display = 'flex';
+    header.style.alignItems = 'center';
+    header.style.padding = '15px 20px';
+    header.style.borderBottom = '1px solid rgba(0, 0, 0, 0.1)';
+    header.style.backgroundColor = 'var(--primary-color, #0d6efd)';
+    header.style.color = 'white';
+    header.style.borderTopLeftRadius = '8px';
+    header.style.borderTopRightRadius = '8px';
+    
+    const title = popup.querySelector('.notification-title');
+    title.style.fontWeight = 'bold';
+    title.style.fontSize = '1.2rem';
+    title.style.flex = '1';
+    
+    const closeBtn = popup.querySelector('.btn-close');
+    closeBtn.style.filter = 'invert(1)';
+    
+    const body = popup.querySelector('.notification-popup-body');
+    body.style.padding = '20px';
+    body.style.fontSize = '1.1rem';
+    body.style.textAlign = 'center';
     
     // Pridedame prie body
     document.body.appendChild(popup);
@@ -465,18 +496,6 @@ function showNotificationPopup(message) {
             document.body.removeChild(popup);
         }, 300);
     });
-    
-    // Automatiškai uždarome po 5 sekundžių
-    setTimeout(() => {
-        if (document.body.contains(popup)) {
-            popup.style.opacity = '0';
-            setTimeout(() => {
-                if (document.body.contains(popup)) {
-                    document.body.removeChild(popup);
-                }
-            }, 300);
-        }
-    }, 5000);
 }
 
 function updateNotificationsList() {
