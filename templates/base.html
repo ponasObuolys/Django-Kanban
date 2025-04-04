@@ -88,7 +88,7 @@
                                 {% if user.notifications.unread.exists %}
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item text-center" href="#" id="markAllAsRead">
-                                        <small>{% trans "Mark all as read" %}</small>
+                                        <i class="fas fa-check-double me-2"></i>{% trans "Mark all as read" %}
                                     </a>
                                 {% endif %}
                             </div>
@@ -213,6 +213,28 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/datetime-config.js' %}"></script>
     {% endcompress %}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pridedame klausytojus pranešimų mygtukas
+            const markAllBtn = document.querySelector('#markAllAsRead');
+            if (markAllBtn) {
+                markAllBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    markAllNotificationsAsRead();
+                });
+            }
+            
+            // Pridedame klausytojus pranešimų elementams
+            document.querySelectorAll('[data-notification-id]').forEach(notification => {
+                notification.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const notificationId = this.dataset.notificationId;
+                    markNotificationAsRead(notificationId);
+                });
+            });
+        });
+    </script>
     
     {% block extra_js %}{% endblock %}
 </body>

@@ -241,45 +241,46 @@ function getCookie(name) {
 
 // Notification Functions
 function markNotificationAsRead(notificationId) {
+    console.log(`Žymimas pranešimas kaip perskaitytas: ${notificationId}`);
+    
     fetch(`/notifications/mark-as-read/${notificationId}/`, {
         method: 'POST',
         headers: {
-            'X-CSRFToken': getCookie('csrftoken')
+            'X-CSRFToken': getCookie('csrftoken'),
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
         }
     })
     .then(response => {
-        if (response.ok) {
-            const notification = document.querySelector(`[data-notification-id="${notificationId}"]`);
-            if (notification) {
-                notification.classList.add('read');
-                notification.style.display = 'none';
-            }
-            updateUnreadCount();
+        if (!response.ok) {
+            throw new Error('Serverio klaida: ' + response.status);
         }
+        return response.json();
     })
-    .catch(error => console.error('Error marking notification as read:', error));
+    .then(data => {
+        console.log(`Pranešimas ${notificationId} pažymėtas kaip perskaitytas:`, data);
+        
+        // Atnaujiname pranešimų skaičių
+        updateNotificationCount();
+        
+        // Atnaujiname pranešimų sąrašą
+        updateNotificationsList();
+    })
+    .catch(error => {
+        console.error(`Klaida žymint pranešimą ${notificationId} kaip perskaitytą:`, error);
+    });
 }
 
 function markAllNotificationsAsRead() {
     console.log('Bandoma pažymėti visus pranešimus kaip perskaitytus...');
     
-    // Pirmiausia bandome POST metodą
     fetch('/notifications/mark-all-as-read/', {
         method: 'POST',
         headers: {
             'X-CSRFToken': getCookie('csrftoken'),
             'X-Requested-With': 'XMLHttpRequest',
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
-    })
-    .then(response => {
-        if (!response.ok) {
-            // Jei POST nepavyko, bandome GET
-            console.log('POST metodas nepavyko, bandome GET...');
-            return fetch('/notifications/mark-all-as-read/');
         }
-        return response;
     })
     .then(response => {
         if (!response.ok) {
@@ -297,18 +298,18 @@ function markAllNotificationsAsRead() {
             badge.textContent = '0';
         }
         
-        // Arba užkraukime visą pranešimų sąrašą iš naujo
-        updateNotificationsList();
+        // Uždarome išskleidžiamąjį menu
+        const dropdownMenu = document.querySelector('#notificationsDropdown + .dropdown-menu');
+        if (dropdownMenu) {
+            // Atnaujiname sąrašą
+            updateNotificationsList();
+        }
         
         // Atnaujiname paskutinį žinomą pranešimų skaičių
         lastNotificationCount = 0;
     })
     .catch(error => {
         console.error('Klaida žymint visus pranešimus kaip perskaitytus:', error);
-        
-        // Paskutinis bandymas tiesiogiai naudojant window.location
-        console.log('Bandoma paskutinis variantas - nukreipimas į mark-all-as-read URL');
-        window.location.href = '/notifications/mark-all-as-read/';
     });
 }
 
@@ -561,10 +562,14 @@ function updateNotificationsList() {
             // Pridedame įvykio klausytoją "Pažymėti visus kaip perskaitytus" mygtukui
             const markAllBtn = dropdownMenu.querySelector('#markAllAsRead');
             if (markAllBtn) {
+                console.log('Pridedamas klausytojas "Pažymėti visus kaip perskaitytus" mygtukui');
                 markAllBtn.addEventListener('click', function(e) {
                     e.preventDefault();
+                    console.log('Mygtukas "Pažymėti visus kaip perskaitytus" paspaustas');
                     markAllNotificationsAsRead();
                 });
+            } else {
+                console.log('Nepavyko rasti "Pažymėti visus kaip perskaitytus" mygtuko');
             }
         }
     })
@@ -700,4 +705,34 @@ function updateSortingIndicator(columnId, sortBy, sortOrder) {
             columnHeader.querySelector('i').className = 'fas fa-sort';
         }
     }
+}
+
+// Funkcija atnaujina pranešimų skaičiaus ženkliuką
+function updateNotificationCount() {
+    fetch('/notifications/get-count/', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const badge = document.getElementById('notifications-badge');
+        if (badge) {
+            const count = data.count;
+            badge.textContent = count;
+            
+            // Paslepiame ženkliuką, jei nėra pranešimų
+            if (count === 0) {
+                badge.style.display = 'none';
+            } else {
+                badge.style.display = 'inline-block';
+            }
+            
+            // Atnaujiname paskutinį žinomą skaičių
+            lastNotificationCount = count;
+        }
+    })
+    .catch(error => console.error('Klaida gaunant pranešimų skaičių:', error));
 } 
