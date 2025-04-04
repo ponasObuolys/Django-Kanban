@@ -1,4 +1,4 @@
-#!/opt/Django-Kanban/venv/bin/python3
+#!/Users/auris/Documents/GitHub/Django-Kanban/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
