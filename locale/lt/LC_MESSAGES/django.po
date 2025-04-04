@@ -5,23 +5,23 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Gretvėja Tasker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-27 19:51+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2025-04-04 11:22+0300\n"
+"Last-Translator: \n"
+"Language-Team: Aurimas\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && (n%100<11 || n%100>19) ? 0 : "
+"n%10>=2 && n%10<=9 && (n%100<11 || n%100>19) ? 1 : 2);\n"
+"X-Generator: Poedit 3.6\n"
 
 #: .\accounts\models.py:6
 msgid "email address"
-msgstr ""
+msgstr "el. pašto adresas"
 
 #: .\accounts\models.py:16
 msgid "User notification preferences"
@@ -45,8 +45,8 @@ msgstr "Pavadinimas"
 #: .\boards\forms.py:18 .\boards\forms.py:54
 #: .\templates\boards\board_detail.html:143
 #: .\templates\boards\task_confirm_delete.html:35
-#: .\templates\boards\task_detail.html:36
-#: .\templates\teams\team_detail.html:196 .\templates\teams\team_list.html:131
+#: .\templates\boards\task_detail.html:36 .\templates\teams\team_detail.html:196
+#: .\templates\teams\team_list.html:131
 msgid "Description"
 msgstr "Aprašymas"
 
@@ -94,19 +94,19 @@ msgstr "Žymos"
 
 #: .\teams\forms.py:13
 msgid "Pavadinimas"
-msgstr ""
+msgstr "Pavadinimas"
 
 #: .\teams\forms.py:14
 msgid "Aprašymas"
-msgstr ""
+msgstr "Aprašymas"
 
 #: .\teams\forms.py:17
 msgid "Įveskite komandos pavadinimą"
-msgstr ""
+msgstr "Įveskite komandos pavadinimą"
 
 #: .\teams\forms.py:18
 msgid "Trumpai aprašykite komandą (neprivaloma)"
-msgstr ""
+msgstr "Trumpai aprašykite komandą (neprivaloma)"
 
 #: .\templates\account\login.html:6 .\templates\account\login.html:17
 #: .\templates\account\login.html:54
@@ -116,21 +116,14 @@ msgstr "Prisijungti"
 
 #: .\templates\account\login.html:25
 msgid "or use your email to sign in"
-msgstr ""
+msgstr "arba prisijunkite naudodami savo el. paštą"
 
 #: .\templates\account\login.html:61
-#, fuzzy
-#| msgid "Current Password"
 msgid "Forgot Password?"
-msgstr "Dabartinis slaptažodis"
+msgstr "Pamiršote slaptažodį?"
 
 #: .\templates\account\login.html:65
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "                            Already have an account? Then please <a "
-#| "href=\"%(login_url)s\">sign in</a>.\n"
-#| "                            "
+#, python-format
 msgid ""
 "\n"
 "                                Don't have an account? <a "
@@ -138,55 +131,54 @@ msgid ""
 "                                "
 msgstr ""
 "\n"
-"                            Jau turite paskyrą? Tada prašome <a "
-"href=\"%(login_url)s\">prisijungti</a>.\n"
+"                            Neturite paskyros? <a href=\"%(signup_url)s\" "
+"class=\"text-decoration-none\">Užsiregistruokite</a>\n"
+"\n"
 "                            "
 
 #: .\templates\account\logout.html:4 .\templates\account\logout.html:15
 #: .\templates\account\logout.html:26
-#, fuzzy
-#| msgid "Sign Up"
 msgid "Sign Out"
-msgstr "Registruotis"
+msgstr "Išsiregistruoti"
 
 #: .\templates\account\logout.html:17
 msgid "Are you sure you want to sign out?"
-msgstr ""
+msgstr "Ar tikrai norite išsiregistruoti?"
 
 #: .\templates\account\password_reset.html:5
 #: .\templates\account\password_reset.html:16
 #: .\templates\account\password_reset_done.html:4
-#, fuzzy
-#| msgid "Password"
 msgid "Password Reset"
-msgstr "Slaptažodis"
+msgstr "Slaptažodžio atstatymas"
 
 #: .\templates\account\password_reset.html:18
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
 msgstr ""
+"Pamiršote slaptažodį? Įveskite savo el. pašto adresą ir mes jums atsiųsime el. "
+"laišką, kuriuo galėsite jį iš naujo nustatyti."
 
 #: .\templates\account\password_reset.html:43
-#, fuzzy
-#| msgid "New Password"
 msgid "Reset My Password"
-msgstr "Naujas slaptažodis"
+msgstr "Mano slaptažodžio atkūrimas"
 
 #: .\templates\account\password_reset.html:46
 #: .\templates\account\password_reset_done.html:21
 msgid "Back to Login"
-msgstr ""
+msgstr "Grįžti į prisijungimą"
 
 #: .\templates\account\password_reset_done.html:15
 msgid "Check Your Email"
-msgstr ""
+msgstr "Patikrinkite savo el. paštą"
 
 #: .\templates\account\password_reset_done.html:17
 msgid ""
-"We have sent you an e-mail. Please contact us if you do not receive it "
-"within a few minutes."
+"We have sent you an e-mail. Please contact us if you do not receive it within "
+"a few minutes."
 msgstr ""
+"Išsiuntėme jums el. laišką. Prašome susisiekti, jei per kelias minutes jo "
+"negausite."
 
 #: .\templates\account\password_reset_from_key.html:5
 #: .\templates\account\password_reset_from_key.html:62
@@ -197,27 +189,27 @@ msgstr "Keisti slaptažodį"
 
 #: .\templates\account\password_reset_from_key.html:23
 msgid "Bad Token"
-msgstr ""
+msgstr "Blogas žetonas (Bad Token)"
 
 #: .\templates\account\password_reset_from_key.html:25
-#, fuzzy
-#| msgid "New Password"
 msgid "Set New Password"
-msgstr "Naujas slaptažodis"
+msgstr "Nustatyti naują slaptažodį"
 
 #: .\templates\account\password_reset_from_key.html:31
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used. Please request a new password reset."
 msgstr ""
+"Slaptažodžio atstatymo nuoroda buvo negaliojanti, galbūt todėl, kad ji jau "
+"buvo panaudota. Prašykite naujo slaptažodžio atstatymo."
 
 #: .\templates\account\password_reset_from_key.html:35
 msgid "Request New Reset Link"
-msgstr ""
+msgstr "Užsisakyti naują atstatymo nuorodą"
 
 #: .\templates\account\password_reset_from_key.html:68
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Jūsų slaptažodis pakeistas."
 
 #: .\templates\account\signup.html:5 .\templates\account\signup.html:13
 #: .\templates\account\signup.html:42 .\templates\base.html:122
@@ -265,7 +257,7 @@ msgstr "Profilio nustatymai"
 #: .\templates\accounts\settings\settings.html:41
 #: .\templates\accounts\settings\settings.html:44 .\templates\base.html:95
 msgid "Avatar"
-msgstr ""
+msgstr "Profilio paveikslėlis"
 
 #: .\templates\accounts\settings\settings.html:54
 msgid "First Name"
@@ -386,10 +378,8 @@ msgstr "Visos teisės saugomos."
 
 # Navigation and Common Elements
 #: .\templates\boards\board_detail.html:6
-#, fuzzy
-#| msgid "Boards"
 msgid "Board"
-msgstr "Lentos"
+msgstr "Lenta"
 
 #: .\templates\boards\board_detail.html:23
 msgid "Add Member"
@@ -430,7 +420,7 @@ msgstr "Priskirta"
 
 #: .\templates\boards\board_detail.html:149
 msgid "No one"
-msgstr ""
+msgstr "Nė vienas"
 
 #: .\templates\boards\board_detail.html:156
 #: .\templates\boards\task_confirm_delete.html:51
@@ -455,9 +445,8 @@ msgstr "Stulpeliai"
 msgid "Tasks"
 msgstr "Užduotys"
 
-#: .\templates\boards\board_detail.html:267
-#: .\templates\teams\team_detail.html:38 .\templates\teams\team_detail.html:184
-#: .\templates\teams\team_list.html:119
+#: .\templates\boards\board_detail.html:267 .\templates\teams\team_detail.html:38
+#: .\templates\teams\team_detail.html:184 .\templates\teams\team_list.html:119
 msgid "Team Information"
 msgstr "Komandos informacija"
 
@@ -465,14 +454,12 @@ msgstr "Komandos informacija"
 msgid "Team Owner"
 msgstr "Komandos savininkas"
 
-#: .\templates\boards\board_detail.html:286
-#: .\templates\teams\team_detail.html:44 .\templates\teams\team_detail.html:101
-#: .\templates\teams\team_list.html:176
+#: .\templates\boards\board_detail.html:286 .\templates\teams\team_detail.html:44
+#: .\templates\teams\team_detail.html:101 .\templates\teams\team_list.html:176
 msgid "Owner"
 msgstr "Savininkas"
 
-#: .\templates\boards\board_detail.html:292
-#: .\templates\teams\team_detail.html:68
+#: .\templates\boards\board_detail.html:292 .\templates\teams\team_detail.html:68
 msgid "Team Members"
 msgstr "Komandos nariai"
 
@@ -495,8 +482,7 @@ msgstr "Trumpai aprašykite šios lentos paskirtį."
 
 #: .\templates\boards\board_form.html:38
 msgid "Select a team if you want to share this board with team members."
-msgstr ""
-"Pasirinkite komandą, jei norite dalintis šia lenta su komandos nariais."
+msgstr "Pasirinkite komandą, jei norite dalintis šia lenta su komandos nariais."
 
 #: .\templates\boards\board_form.html:44
 msgid "Back"
@@ -558,8 +544,8 @@ msgid ""
 "                            "
 msgstr ""
 "\n"
-"                            Jau turite paskyrą? Tada prašome <a "
-"href=\"%(login_url)s\">prisijungti</a>.\n"
+"                            Ar tikrai norite ištrinti šią užduotį <a "
+"href=\"%(task_title)s”? Šio veiksmo negalima atšaukti\n"
 "                            "
 
 # Task Detail Page
@@ -640,17 +626,15 @@ msgstr "Pridėti priedą"
 #: .\templates\boards\task_detail.html:217
 #: .\templates\boards\task_detail.html:223
 msgid "Upload failed. Please try again."
-msgstr ""
+msgstr "Įkėlimas nepavyko. Pabandykite dar kartą."
 
 #: .\templates\boards\task_detail.html:229
 msgid "Uploading..."
-msgstr ""
+msgstr "Įkeliama…"
 
 #: .\templates\boards\task_detail.html:247
-#, fuzzy
-#| msgid "You are about to delete the team"
 msgid "Are you sure you want to delete this attachment?"
-msgstr "Jūs ruošiatės ištrinti komandą"
+msgstr "Ar tikrai norite ištrinti šį priedą?"
 
 #: .\templates\boards\task_form.html:7 .\templates\boards\task_form.html:21
 #: .\templates\boards\task_form.html:33
@@ -690,8 +674,8 @@ msgstr "Užduočių valdymas"
 msgid ""
 "Create, organize, and track tasks with our intuitive task board interface."
 msgstr ""
-"Kurkite, organizuokite ir sekite užduotis naudodami intuityvią užduočių "
-"lentos sąsają."
+"Kurkite, organizuokite ir sekite užduotis naudodami intuityvią užduočių lentos "
+"sąsają."
 
 #: .\templates\home.html:47
 msgid "Team Collaboration"
@@ -763,7 +747,7 @@ msgstr "Nariai"
 
 #: .\templates\teams\team_detail.html:56 .\templates\teams\team_detail.html:192
 msgid "Sukurta"
-msgstr ""
+msgstr "Sukurta"
 
 #: .\templates\teams\team_detail.html:70
 msgid "Manage Members"
@@ -818,18 +802,16 @@ msgstr ""
 "komandos ir jos resursų."
 
 #: .\templates\teams\team_detail.html:196 .\templates\teams\team_list.html:131
-#, fuzzy
-#| msgid "Description"
 msgid "No description"
 msgstr "Nėra aprašymo"
 
 #: .\templates\teams\team_form.html:23 .\templates\teams\team_form.html:27
 msgid "Atšaukti"
-msgstr ""
+msgstr "Atšaukti"
 
 #: .\templates\teams\team_form.html:31
 msgid "Išsaugoti"
-msgstr ""
+msgstr "Išsaugoti"
 
 #: .\templates\teams\team_list.html:13
 msgid "Create New Team"
@@ -848,10 +830,9 @@ msgid "Reject"
 msgstr "Atmesti"
 
 #: .\templates\teams\team_list.html:47 .\templates\teams\team_list.html:92
-#, fuzzy, python-format
-#| msgid "Created {} ago"
+#, python-format
 msgid "Created %(time)s ago"
-msgstr "Sukurta prieš {}"
+msgstr "Sukurta prieš %(time)s"
 
 #: .\templates\teams\team_list.html:59
 msgid "Teams I Own"
@@ -867,26 +848,29 @@ msgid ""
 "\n"
 "                                    You are about to delete the team "
 "\"%(team_name)s\". This action cannot be undone.\n"
-"                                    All team members will lose access to "
-"this team and its resources.\n"
+"                                    All team members will lose access to this "
+"team and its resources.\n"
 "                                    "
 msgstr ""
+"\n"
+"                                    Ketinate ištrinti komandą „%(team_name)s“. "
+"Šio veiksmo atšaukti negalima.\n"
+"                                    Visi komandos nariai neteks prieigos prie "
+"šios komandos ir jos išteklių.\n"
+"                                    "
 
 #: .\templates\teams\team_list.html:154
-#, fuzzy
-#| msgid "You don't have any team boards yet."
 msgid "You don't own any teams yet."
-msgstr "Kol kas neturite komandų lentų."
+msgstr "Dar neturite nė vienos komandos."
 
 #: .\templates\teams\team_list.html:161
 msgid "Teams I'm In"
 msgstr "Komandos, kuriose esu"
 
 #: .\templates\teams\team_list.html:187
-#, fuzzy, python-format
-#| msgid "minutes ago"
+#, python-format
 msgid "Joined %(time)s ago"
-msgstr "minutės"
+msgstr "Prisijungė prieš %(time)s"
 
 #: .\templates\teams\team_list.html:196
 msgid "You're not a member of any teams yet."
@@ -895,130 +879,134 @@ msgstr "Kol kas nesate jokios komandos narys."
 #: .\venv\Lib\python3.12\site-packages\django\contrib\messages\apps.py:16
 #: .\venv\Lib\site-packages\django\contrib\messages\apps.py:16
 msgid "Messages"
-msgstr ""
+msgstr "Žinutės"
 
 #: .\venv\Lib\python3.12\site-packages\django\contrib\sitemaps\apps.py:8
 #: .\venv\Lib\site-packages\django\contrib\sitemaps\apps.py:8
 msgid "Site Maps"
-msgstr ""
+msgstr "Svetainės žemėlapiai"
 
 #: .\venv\Lib\python3.12\site-packages\django\contrib\staticfiles\apps.py:9
 #: .\venv\Lib\site-packages\django\contrib\staticfiles\apps.py:9
 msgid "Static Files"
-msgstr ""
+msgstr "Statiniai failai"
 
 #: .\venv\Lib\python3.12\site-packages\django\contrib\syndication\apps.py:7
 #: .\venv\Lib\site-packages\django\contrib\syndication\apps.py:7
 msgid "Syndication"
-msgstr ""
+msgstr "Sindikacija"
 
 #. Translators: String used to replace omitted page numbers in elided page
 #. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
 #: .\venv\Lib\python3.12\site-packages\django\core\paginator.py:30
 #: .\venv\Lib\site-packages\django\core\paginator.py:30
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: .\venv\Lib\python3.12\site-packages\django\core\paginator.py:32
 #: .\venv\Lib\site-packages\django\core\paginator.py:32
 msgid "That page number is not an integer"
-msgstr ""
+msgstr "Šis puslapio numeris nėra skaičius"
 
 #: .\venv\Lib\python3.12\site-packages\django\core\paginator.py:33
 #: .\venv\Lib\site-packages\django\core\paginator.py:33
 msgid "That page number is less than 1"
-msgstr ""
+msgstr "Tas puslapio numeris yra mažesnis nei 1"
 
 #: .\venv\Lib\python3.12\site-packages\django\core\paginator.py:34
 #: .\venv\Lib\site-packages\django\core\paginator.py:34
 msgid "That page contains no results"
-msgstr ""
+msgstr "Šiame puslapyje nėra jokių rezultatų"
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:22
 #: .\venv\Lib\site-packages\django\core\validators.py:22
 msgid "Enter a valid value."
-msgstr ""
+msgstr "Įveskite galiojančią reikšmę."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:104
 #: .\venv\Lib\site-packages\django\forms\fields.py:760
 #: .\venv\Lib\site-packages\django\core\validators.py:104
-#: .\venv\Lib\site-packages\django\forms\fields.py:760
 msgid "Enter a valid URL."
-msgstr ""
+msgstr "Įveskite galiojantį URL adresą."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:165
 #: .\venv\Lib\site-packages\django\core\validators.py:165
 msgid "Enter a valid integer."
-msgstr ""
+msgstr "Įveskite galiojantį sveikąjį skaičių."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:176
 #: .\venv\Lib\site-packages\django\core\validators.py:176
 msgid "Enter a valid email address."
-msgstr ""
+msgstr "Įveskite teisingą el. pašto adresą."
 
 #. Translators: "letters" means latin letters: a-z and A-Z.
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:259
 #: .\venv\Lib\site-packages\django\core\validators.py:259
 msgid ""
-"Enter a valid "slug" consisting of letters, numbers, underscores or hyphens."
+"Enter a valid \"slug\" consisting of letters, numbers, underscores or hyphens."
 msgstr ""
+"Įveskite galiojantį „slugą“, sudarytą iš raidžių, skaičių, pabraukimų arba "
+"brūkšnelių."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:267
 #: .\venv\Lib\site-packages\django\core\validators.py:267
 msgid ""
-"Enter a valid "slug" consisting of Unicode letters, numbers, underscores, or "
+"Enter a valid \"slug\" consisting of Unicode letters, numbers, underscores, or "
 "hyphens."
 msgstr ""
+"Įveskite galiojantį \"slug\", sudarytą iš raidžių, skaičių, pabraukimų arba "
+"brūkšnelių."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:279
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:306
 #: .\venv\Lib\site-packages\django\core\validators.py:279
 #: .\venv\Lib\site-packages\django\core\validators.py:306
 msgid "Enter a valid IPv4 address."
-msgstr ""
+msgstr "Įveskite galiojantį IPv4 adresą."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:286
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:307
 #: .\venv\Lib\site-packages\django\core\validators.py:286
 #: .\venv\Lib\site-packages\django\core\validators.py:307
 msgid "Enter a valid IPv6 address."
-msgstr ""
+msgstr "Įveskite galiojantį IPv6 adresą."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:298
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:305
 #: .\venv\Lib\site-packages\django\core\validators.py:298
 #: .\venv\Lib\site-packages\django\core\validators.py:305
 msgid "Enter a valid IPv4 or IPv6 address."
-msgstr ""
+msgstr "Įveskite galiojančius IPv4 ir IPv6 adresus."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:341
 #: .\venv\Lib\site-packages\django\core\validators.py:341
 msgid "Enter only digits separated by commas."
-msgstr ""
+msgstr "Įveskite tik kableliais atskirtus skaitmenis."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:347
 #: .\venv\Lib\site-packages\django\core\validators.py:347
 #, python-format
 msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
-msgstr ""
+msgstr "Įsitikinkite, kad ši vertė yra %(limit_value)s (ji yra %(show_value)s)."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:382
 #: .\venv\Lib\site-packages\django\core\validators.py:382
 #, python-format
 msgid "Ensure this value is less than or equal to %(limit_value)s."
-msgstr ""
+msgstr "Užtikrinkite, kad ši vertė būtų mažesnė arba lygi %(limit_value)s."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:391
 #: .\venv\Lib\site-packages\django\core\validators.py:391
 #, python-format
 msgid "Ensure this value is greater than or equal to %(limit_value)s."
-msgstr ""
+msgstr "Užtikrinkite, kad ši vertė būtų didesnė arba lygi %(limit_value)s."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:400
 #: .\venv\Lib\site-packages\django\core\validators.py:400
 #, python-format
 msgid "Ensure this value is a multiple of step size %(limit_value)s."
 msgstr ""
+"Užtikrinkite, kad ši reikšmė būtų žingsnio dydžio %(limit_value)s kartotinė."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:407
 #: .\venv\Lib\site-packages\django\core\validators.py:407
@@ -1027,6 +1015,9 @@ msgid ""
 "Ensure this value is a multiple of step size %(limit_value)s, starting from "
 "%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
 msgstr ""
+"Užtikrinkite, kad ši reikšmė yra žingsnio dydžio %(limit_value)s kartotinis, "
+"pradedant nuo %(offset)s, pvz., %(offset)s, %(valid_value1)s, %(valid_value2)s "
+"ir t. t."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:439
 #: .\venv\Lib\site-packages\django\core\validators.py:439
@@ -1040,7 +1031,6 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:457
 #: .\venv\Lib\site-packages\django\core\validators.py:457
@@ -1054,7 +1044,6 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:480
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:355
@@ -1063,7 +1052,7 @@ msgstr[3] ""
 #: .\venv\Lib\site-packages\django\forms\fields.py:355
 #: .\venv\Lib\site-packages\django\forms\fields.py:394
 msgid "Enter a number."
-msgstr ""
+msgstr "Įrašykite skaičių."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:482
 #: .\venv\Lib\site-packages\django\core\validators.py:482
@@ -1073,7 +1062,6 @@ msgid_plural "Ensure that there are no more than %(max)s digits in total."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:487
 #: .\venv\Lib\site-packages\django\core\validators.py:487
@@ -1083,7 +1071,6 @@ msgid_plural "Ensure that there are no more than %(max)s decimal places."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:492
 #: .\venv\Lib\site-packages\django\core\validators.py:492
@@ -1095,120 +1082,119 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:563
 #: .\venv\Lib\site-packages\django\core\validators.py:563
 #, python-format
 msgid ""
-"File extension "%(extension)s" is not allowed. Allowed extensions are: "
+"File extension \"%(extension)s\" is not allowed. Allowed extensions are: "
 "%(allowed_extensions)s."
 msgstr ""
+"Failo plėtinys \"%(extension)s\" neleidžiamas. Leidžiami šie plėtiniai: "
+"%(allowed_extensions)s."
 
 #: .\venv\Lib\python3.12\site-packages\django\core\validators.py:624
 #: .\venv\Lib\site-packages\django\core\validators.py:624
 msgid "Null characters are not allowed."
-msgstr ""
+msgstr "Nuliniai simboliai neleidžiami."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\base.py:1473
 #: .\venv\Lib\python3.12\site-packages\django\forms\models.py:906
 #: .\venv\Lib\site-packages\django\db\models\base.py:1473
 #: .\venv\Lib\site-packages\django\forms\models.py:906
 msgid "and"
-msgstr ""
+msgstr "ir"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\base.py:1475
 #: .\venv\Lib\site-packages\django\db\models\base.py:1475
 #, python-format
 msgid "%(model_name)s with this %(field_labels)s already exists."
-msgstr ""
+msgstr "%(model_name)s su šiuo %(field_labels)s jau egzistuoja."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\constraints.py:20
 #: .\venv\Lib\site-packages\django\db\models\constraints.py:20
 #, python-format
-msgid "Constraint "%(name)s" is violated."
-msgstr ""
+msgid "Constraint \"%(name)s\" is violated."
+msgstr "Pažeistas apribojimas \"%(name)s”."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:133
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:133
 #, python-format
 msgid "Value %(value)r is not a valid choice."
-msgstr ""
+msgstr "Vertė %(value)r nėra tinkamas pasirinkimas."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:134
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:134
-#, fuzzy
-#| msgid "This field is required."
 msgid "This field cannot be null."
-msgstr "Šis laukas yra privalomas."
+msgstr "Šis laukas negali būti nulinis."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:135
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:135
 msgid "This field cannot be blank."
-msgstr ""
+msgstr "Šis laukelis negali būti tuščias."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:136
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:136
 #, python-format
 msgid "%(model_name)s with this %(field_label)s already exists."
-msgstr ""
+msgstr "%(model_name)s su šia %(field_label)s jau egzistuoja."
 
 #. Translators: The 'lookup_type' is one of 'date', 'year' or
 #. 'month'. Eg: "Title must be unique for pub_date year"
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:140
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:140
 #, python-format
-msgid ""
-"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
-msgstr ""
+msgid "%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr "%(field_label)s turi būti unikalus %(date_field_label)s %(lookup_type)s."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:179
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:179
 #, python-format
 msgid "Field of type: %(field_type)s"
-msgstr ""
+msgstr "Tipo laukas: %(field_type)s"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1155
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1155
 #, python-format
-msgid ""
-"\"%(value)s" value must be either True or False."
-msgstr ""
+msgid "\"%(value)s\" value must be either True or False."
+msgstr "\"%(value)s\" reikšmė turi būti True arba False."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1156
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1156
 #, python-format
-msgid "\"%(value)s" value must be either True, False, or None."
-msgstr ""
+msgid "\"%(value)s\" value must be either True, False, or None."
+msgstr "\"%(value)s\" reikšmė turi būti True, False arba None."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1158
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1158
 msgid "Boolean (Either True or False)"
-msgstr ""
+msgstr "Loginis (True arba False)"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1208
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1208
 #, python-format
 msgid "String (up to %(max_length)s)"
-msgstr ""
+msgstr "Stygos (iki %(max_length)s)"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1210
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1210
 msgid "String (unlimited)"
-msgstr ""
+msgstr "String (neribotas)"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1314
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1314
 msgid "Comma-separated integers"
-msgstr ""
+msgstr "Kableliais atskirti sveikieji skaičiai"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1415
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1415
 #, python-format
 msgid ""
-"\"%(value)s" value has an invalid date format. It must be in YYYY-MM-DD "
+"\"%(value)s\" value has an invalid date format. It must be in YYYY-MM-DD "
 "format."
 msgstr ""
+"\"%(value)s\" reikšmė turi netinkamą datos formatą. Ji turi būti 1900-MM-DD "
+"formato."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1419
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1554
@@ -1216,254 +1202,264 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1554
 #, python-format
 msgid ""
-"\"%(value)s" value has the correct format (YYYY-MM-DD) but it is an invalid "
+"\"%(value)s\" value has the correct format (YYYY-MM-DD) but it is an invalid "
 "date."
 msgstr ""
+"\"%(value)s\" reikšmė yra tinkamo formato (YYYY-MM-DD), tačiau tai yra "
+"negaliojanti data."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1423
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1423
 msgid "Date (without time)"
-msgstr ""
+msgstr "Data (be laiko)"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1550
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1550
 #, python-format
 msgid ""
-"\"%(value)s" value has an invalid format. It must be in YYYY-MM-DD "
+"\"%(value)s\" value has an invalid format. It must be in YYYY-MM-DD "
 "HH:MM[:ss[.uuuuuu]][TZ] format."
 msgstr ""
+"\"%(value)s\" reikšmė yra netinkamo formato. Ji turi būti YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ] formato."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1558
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1558
 #, python-format
 msgid ""
-"\"%(value)s" value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"\"%(value)s\" value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
 "[TZ]) but it is an invalid date/time."
 msgstr ""
+"\"%(value)s\" reikšmė yra tinkamo formato (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]), tačiau tai yra negaliojanti data ir laikas."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1563
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1563
 msgid "Date (with time)"
-msgstr ""
+msgstr "Data (su laiku)"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1690
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1690
 #, python-format
-msgid "\"%(value)s" value must be a decimal number."
-msgstr ""
+msgid "\"%(value)s\" value must be a decimal number."
+msgstr "\"%(value)s\" reikšmė turi būti dešimtainis skaičius."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1692
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1692
 msgid "Decimal number"
-msgstr ""
+msgstr "Dešimtainis skaičius"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1853
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1853
 #, python-format
 msgid ""
-"\"%(value)s" value has an invalid format. It must be in [DD] "
+"\"%(value)s\" value has an invalid format. It must be in [DD] "
 "[[HH:]MM:]ss[.uuuuuu] format."
 msgstr ""
+"\"%(value)s\" reikšmė yra netinkamo formato. Ji turi būti [DD] "
+"[[HH:]MM:]ss[.uuuuuu] formato."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1857
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1857
-#, fuzzy
-#| msgid "Description"
 msgid "Duration"
-msgstr "Aprašymas"
+msgstr "Trukmė"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1909
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1909
 msgid "Email address"
-msgstr ""
+msgstr "El. pašto adresas"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:1934
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:1934
 msgid "File path"
-msgstr ""
+msgstr "Failo kelias"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2012
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2012
 #, python-format
-msgid "\"%(value)s" value must be a float."
-msgstr ""
+msgid "\"%(value)s\" value must be a float."
+msgstr "\"%(value)s\" reikšmė turi būti kintamoji."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2014
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2014
 msgid "Floating point number"
-msgstr ""
+msgstr "Slankiojo kablelio skaičius"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2054
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2054
 #, python-format
-msgid "\"%(value)s" value must be an integer."
-msgstr ""
+msgid "\"%(value)s\" value must be an integer."
+msgstr "\"%(value)s\" reikšmė turi būti sveikasis skaičius."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2056
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2056
 msgid "Integer"
-msgstr ""
+msgstr "Skaičius"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2152
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2152
 msgid "Big (8 byte) integer"
-msgstr ""
+msgstr "Didelis (8 baitų) sveikasis skaičius"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2169
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2169
 msgid "Small integer"
-msgstr ""
+msgstr "Mažas skaičius"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2177
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2177
 msgid "IPv4 address"
-msgstr ""
+msgstr "IPv4 adresas"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2208
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2208
 msgid "IP address"
-msgstr ""
+msgstr "IP adresas"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2301
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2302
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2301
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2302
 #, python-format
-msgid "\"%(value)s" value must be either None, True or False."
-msgstr ""
+msgid "\"%(value)s\" value must be either None, True or False."
+msgstr "\"%(value)s\" reikšmė turi būti None, True arba False."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2304
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2304
 msgid "Boolean (Either True, False or None)"
-msgstr ""
+msgstr "Loginis (True, False arba None)"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2355
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2355
 msgid "Positive big integer"
-msgstr ""
+msgstr "Teigiamas didelis sveikas skaičius"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2370
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2370
 msgid "Positive integer"
-msgstr ""
+msgstr "Teigiamas skaičius"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2385
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2385
 msgid "Positive small integer"
-msgstr ""
+msgstr "Teigiamas mažas skaičius"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2401
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2401
 #, python-format
 msgid "Slug (up to %(max_length)s)"
-msgstr ""
+msgstr "Slug (iki %(max_length)s)"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2437
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2437
 msgid "Text"
-msgstr ""
+msgstr "Tekstas"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2512
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2512
 #, python-format
 msgid ""
-"\"%(value)s" value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"\"%(value)s\" value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
 "format."
 msgstr ""
+"\"%(value)s\" reikšmė yra netinkamo formato. Ji turi būti HH:MM[:ss[.uuuuuu]] "
+"formato."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2516
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2516
 #, python-format
 msgid ""
-"\"%(value)s" value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"\"%(value)s\" value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
 "invalid time."
 msgstr ""
+"\"%(value)s\" reikšmė yra tinkamo formato (HH:MM[:ss[.uuuuuu]]), tačiau tai "
+"yra neteisingas laikas."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2520
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2520
 msgid "Time"
-msgstr ""
+msgstr "Laikas"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2628
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2628
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2652
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2652
 msgid "Raw binary data"
-msgstr ""
+msgstr "Neapdoroti dvejetainiai duomenys"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2717
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2717
 #, python-format
-msgid "\"%(value)s" is not a valid UUID."
-msgstr ""
+msgid "\"%(value)s\" is not a valid UUID."
+msgstr "\"%(value)s\" nėra galiojantis UUID."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\__init__.py:2719
 #: .\venv\Lib\site-packages\django\db\models\fields\__init__.py:2719
 msgid "Universally unique identifier"
-msgstr ""
+msgstr "Visuotinai unikalus identifikatorius"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\files.py:232
 #: .\venv\Lib\site-packages\django\db\models\fields\files.py:232
 msgid "File"
-msgstr ""
+msgstr "Dokumentas"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\files.py:393
 #: .\venv\Lib\site-packages\django\db\models\fields\files.py:393
 msgid "Image"
-msgstr ""
+msgstr "Paveikslėlis"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\json.py:26
 #: .\venv\Lib\site-packages\django\db\models\fields\json.py:26
 msgid "A JSON object"
-msgstr ""
+msgstr "JSON objektas"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\json.py:28
 #: .\venv\Lib\site-packages\django\db\models\fields\json.py:28
 msgid "Value must be valid JSON."
-msgstr ""
+msgstr "Reikšmė turi būti galiojanti JSON."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\related.py:939
 #: .\venv\Lib\site-packages\django\db\models\fields\related.py:939
 #, python-format
 msgid "%(model)s instance with %(field)s %(value)r does not exist."
-msgstr ""
+msgstr "%(model)s egzempliorius su %(field)s %(value)r neegzistuoja."
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\related.py:941
 #: .\venv\Lib\site-packages\django\db\models\fields\related.py:941
 msgid "Foreign Key (type determined by related field)"
-msgstr ""
+msgstr "Svetimas raktas (tipas nustatomas pagal susijusį lauką)"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\related.py:1235
 #: .\venv\Lib\site-packages\django\db\models\fields\related.py:1235
 msgid "One-to-one relationship"
-msgstr ""
+msgstr "Individualūs santykiai"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\related.py:1292
 #: .\venv\Lib\site-packages\django\db\models\fields\related.py:1292
 #, python-format
 msgid "%(from)s-%(to)s relationship"
-msgstr ""
+msgstr "%(from)s-%(to)s santykiai"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\related.py:1294
 #: .\venv\Lib\site-packages\django\db\models\fields\related.py:1294
 #, python-format
 msgid "%(from)s-%(to)s relationships"
-msgstr ""
+msgstr "%(from)s-%(to)s santykiai"
 
 #: .\venv\Lib\python3.12\site-packages\django\db\models\fields\related.py:1342
 #: .\venv\Lib\site-packages\django\db\models\fields\related.py:1342
 msgid "Many-to-many relationship"
-msgstr ""
+msgstr "Ryšys „daug su daug"
 
 #. Translators: If found as last label character, these punctuation
 #. characters will prevent the default label_suffix to be appended to the label
 #: .\venv\Lib\python3.12\site-packages\django\forms\boundfield.py:185
 #: .\venv\Lib\site-packages\django\forms\boundfield.py:185
 msgid ":?.!"
-msgstr ""
+msgstr ":?.!"
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:95
 #: .\venv\Lib\site-packages\django\forms\fields.py:95
@@ -1473,52 +1469,50 @@ msgstr "Šis laukas yra privalomas."
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:304
 #: .\venv\Lib\site-packages\django\forms\fields.py:304
 msgid "Enter a whole number."
-msgstr ""
+msgstr "Įveskite visą skaičių."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:475
 #: .\venv\Lib\site-packages\django\forms\fields.py:1252
 #: .\venv\Lib\site-packages\django\forms\fields.py:475
-#: .\venv\Lib\site-packages\django\forms\fields.py:1252
 msgid "Enter a valid date."
-msgstr ""
+msgstr "Įveskite galiojančią datą."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:498
 #: .\venv\Lib\site-packages\django\forms\fields.py:1253
 #: .\venv\Lib\site-packages\django\forms\fields.py:498
-#: .\venv\Lib\site-packages\django\forms\fields.py:1253
 msgid "Enter a valid time."
-msgstr ""
+msgstr "Įveskite galiojantį laiką."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:525
 #: .\venv\Lib\site-packages\django\forms\fields.py:525
 msgid "Enter a valid date/time."
-msgstr ""
+msgstr "Įveskite galiojančią datą ir laiką."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:559
 #: .\venv\Lib\site-packages\django\forms\fields.py:559
 msgid "Enter a valid duration."
-msgstr ""
+msgstr "Įveskite tinkamą trukmę."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:560
 #: .\venv\Lib\site-packages\django\forms\fields.py:560
 #, python-brace-format
 msgid "The number of days must be between {min_days} and {max_days}."
-msgstr ""
+msgstr "Dienų skaičius turi būti tarp {min_days} ir {max_days}."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:629
 #: .\venv\Lib\site-packages\django\forms\fields.py:629
 msgid "No file was submitted. Check the encoding type on the form."
-msgstr ""
+msgstr "Nebuvo pateikta nė viena byla. Patikrinkite formos kodavimo tipą."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:630
 #: .\venv\Lib\site-packages\django\forms\fields.py:630
 msgid "No file was submitted."
-msgstr ""
+msgstr "Nebuvo pateikta nė viena byla."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:631
 #: .\venv\Lib\site-packages\django\forms\fields.py:631
 msgid "The submitted file is empty."
-msgstr ""
+msgstr "Pateiktas failas yra tuščias."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:633
 #: .\venv\Lib\site-packages\django\forms\fields.py:633
@@ -1529,12 +1523,12 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:638
 #: .\venv\Lib\site-packages\django\forms\fields.py:638
 msgid "Please either submit a file or check the clear checkbox, not both."
 msgstr ""
+"Pateikite failą arba pažymėkite žymimąjį langelį „Išvalyti“, bet ne abu kartu."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:702
 #: .\venv\Lib\site-packages\django\forms\fields.py:702
@@ -1542,6 +1536,8 @@ msgid ""
 "Upload a valid image. The file you uploaded was either not an image or a "
 "corrupted image."
 msgstr ""
+"Įkelkite galiojantį paveikslėlį. Jūsų įkeltas failas nėra paveikslėlis arba "
+"jis sugadintas."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:874
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:960
@@ -1552,6 +1548,7 @@ msgstr ""
 #, python-format
 msgid "Select a valid choice. %(value)s is not one of the available choices."
 msgstr ""
+"Pasirinkite tinkamą variantą. %(value)s nėra vienas iš galimų pasirinkimų."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:962
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:1081
@@ -1560,34 +1557,34 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\forms\fields.py:1081
 #: .\venv\Lib\site-packages\django\forms\models.py:1583
 msgid "Enter a list of values."
-msgstr ""
+msgstr "Įveskite reikšmių sąrašą."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:1082
 #: .\venv\Lib\site-packages\django\forms\fields.py:1082
 msgid "Enter a complete value."
-msgstr ""
+msgstr "Įveskite pilną reikšmę."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:1321
 #: .\venv\Lib\site-packages\django\forms\fields.py:1321
 msgid "Enter a valid UUID."
-msgstr ""
+msgstr "Įveskite tinkamą UUID."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\fields.py:1351
 #: .\venv\Lib\site-packages\django\forms\fields.py:1351
 msgid "Enter a valid JSON."
-msgstr ""
+msgstr "Įveskite tinkamą JSON."
 
 #. Translators: This is the default suffix added to form field labels
 #: .\venv\Lib\python3.12\site-packages\django\forms\forms.py:94
 #: .\venv\Lib\site-packages\django\forms\forms.py:94
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\forms.py:231
 #: .\venv\Lib\site-packages\django\forms\forms.py:231
 #, python-format
 msgid "(Hidden field %(name)s) %(error)s"
-msgstr ""
+msgstr "(Paslėptas laukas %(name)s) %(error)s"
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\formsets.py:61
 #: .\venv\Lib\site-packages\django\forms\formsets.py:61
@@ -1596,6 +1593,9 @@ msgid ""
 "ManagementForm data is missing or has been tampered with. Missing fields: "
 "%(field_names)s. You may need to file a bug report if the issue persists."
 msgstr ""
+"Valdymo formos duomenų nėra arba jie buvo suklastoti. Trūkstami laukai: "
+"%(field_names)s. Jei problema išlieka, gali tekti pateikti pranešimą apie "
+"klaidą."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\formsets.py:65
 #: .\venv\Lib\site-packages\django\forms\formsets.py:65
@@ -1605,7 +1605,6 @@ msgid_plural "Please submit at most %(num)d forms."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\formsets.py:70
 #: .\venv\Lib\site-packages\django\forms\formsets.py:70
@@ -1615,93 +1614,99 @@ msgid_plural "Please submit at least %(num)d forms."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\formsets.py:484
 #: .\venv\Lib\python3.12\site-packages\django\forms\formsets.py:491
 #: .\venv\Lib\site-packages\django\forms\formsets.py:484
 #: .\venv\Lib\site-packages\django\forms\formsets.py:491
 msgid "Order"
-msgstr ""
+msgstr "Užsakymas"
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\models.py:899
 #: .\venv\Lib\site-packages\django\forms\models.py:899
 #, python-format
 msgid "Please correct the duplicate data for %(field)s."
-msgstr ""
+msgstr "Please correct the duplicate data for %(field)s."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\models.py:904
 #: .\venv\Lib\site-packages\django\forms\models.py:904
 #, python-format
 msgid "Please correct the duplicate data for %(field)s, which must be unique."
 msgstr ""
+"Ištaisykite besidubliuojančius %(field)s duomenis, kurie turi būti unikalūs."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\models.py:911
 #: .\venv\Lib\site-packages\django\forms\models.py:911
 #, python-format
 msgid ""
-"Please correct the duplicate data for %(field_name)s which must be unique "
-"for the %(lookup)s in %(date_field)s."
+"Please correct the duplicate data for %(field_name)s which must be unique for "
+"the %(lookup)s in %(date_field)s."
 msgstr ""
+"Ištaisykite pasikartojančius %(field_name)s duomenis, kurie turi būti unikalūs "
+"%(lookup)s %(date_field)s."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\models.py:920
 #: .\venv\Lib\site-packages\django\forms\models.py:920
 msgid "Please correct the duplicate values below."
-msgstr ""
+msgstr "Ištaisykite toliau pateiktas pasikartojančias vertes."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\models.py:1357
 #: .\venv\Lib\site-packages\django\forms\models.py:1357
 msgid "The inline value did not match the parent instance."
-msgstr ""
+msgstr "Įterptinė vertė nesutapo su pagrindine instancija."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\models.py:1448
 #: .\venv\Lib\site-packages\django\forms\models.py:1448
 msgid "Select a valid choice. That choice is not one of the available choices."
 msgstr ""
+"Pasirinkite tinkamą pasirinkimą. Šis pasirinkimas nėra vienas iš galimų "
+"pasirinkimų."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\models.py:1587
 #: .\venv\Lib\site-packages\django\forms\models.py:1587
 #, python-format
-msgid "\"%(pk)s" is not a valid value."
-msgstr ""
+msgid "\"%(pk)s\" is not a valid value."
+msgstr "„%(pk)s“ nėra tinkama reikšmė."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\utils.py:227
 #: .\venv\Lib\site-packages\django\forms\utils.py:227
 #, python-format
 msgid ""
-"%(datetime)s couldn't be interpreted in time zone %(current_timezone)s; it "
-"may be ambiguous or it may not exist."
+"%(datetime)s couldn't be interpreted in time zone %(current_timezone)s; it may "
+"be ambiguous or it may not exist."
 msgstr ""
+"%(datetime)s nepavyko interpretuoti laiko zonoje %(current_timezone)s; ji gali "
+"būti dviprasmiška arba jos gali ir nebūti."
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\widgets.py:461
 #: .\venv\Lib\site-packages\django\forms\widgets.py:461
 msgid "Clear"
-msgstr ""
+msgstr "Išvalyti"
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\widgets.py:462
 #: .\venv\Lib\site-packages\django\forms\widgets.py:462
 msgid "Currently"
-msgstr ""
+msgstr "Šiuo metu"
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\widgets.py:463
 #: .\venv\Lib\site-packages\django\forms\widgets.py:463
 msgid "Change"
-msgstr "Išsaugoti pakeitimus"
+msgstr "Pakeisti"
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\widgets.py:800
 #: .\venv\Lib\site-packages\django\forms\widgets.py:800
 msgid "Unknown"
-msgstr ""
+msgstr "Nežinomas"
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\widgets.py:801
 #: .\venv\Lib\site-packages\django\forms\widgets.py:801
 msgid "Yes"
-msgstr ""
+msgstr "Taip"
 
 #: .\venv\Lib\python3.12\site-packages\django\forms\widgets.py:802
 #: .\venv\Lib\site-packages\django\forms\widgets.py:802
 msgid "No"
-msgstr ""
+msgstr "Ne"
 
 #. Translators: Please do not add spaces around commas.
 #: .\venv\Lib\python3.12\site-packages\django\template\defaultfilters.py:876
@@ -1719,177 +1724,176 @@ msgid_plural "%(size)d bytes"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\template\defaultfilters.py:925
 #: .\venv\Lib\site-packages\django\template\defaultfilters.py:925
 #, python-format
 msgid "%s KB"
-msgstr ""
+msgstr "%s KB"
 
 #: .\venv\Lib\python3.12\site-packages\django\template\defaultfilters.py:927
 #: .\venv\Lib\site-packages\django\template\defaultfilters.py:927
 #, python-format
 msgid "%s MB"
-msgstr ""
+msgstr "%s MB"
 
 #: .\venv\Lib\python3.12\site-packages\django\template\defaultfilters.py:929
 #: .\venv\Lib\site-packages\django\template\defaultfilters.py:929
 #, python-format
 msgid "%s GB"
-msgstr ""
+msgstr "%s GB"
 
 #: .\venv\Lib\python3.12\site-packages\django\template\defaultfilters.py:931
 #: .\venv\Lib\site-packages\django\template\defaultfilters.py:931
 #, python-format
 msgid "%s TB"
-msgstr ""
+msgstr "%s TB"
 
 #: .\venv\Lib\python3.12\site-packages\django\template\defaultfilters.py:933
 #: .\venv\Lib\site-packages\django\template\defaultfilters.py:933
 #, python-format
 msgid "%s PB"
-msgstr ""
+msgstr "%s PB"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dateformat.py:74
 #: .\venv\Lib\site-packages\django\utils\dateformat.py:74
 msgid "p.m."
-msgstr ""
+msgstr "vakare."
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dateformat.py:75
 #: .\venv\Lib\site-packages\django\utils\dateformat.py:75
 msgid "a.m."
-msgstr ""
+msgstr "ryte."
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dateformat.py:80
 #: .\venv\Lib\site-packages\django\utils\dateformat.py:80
 msgid "PM"
-msgstr ""
+msgstr "vakare"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dateformat.py:81
 #: .\venv\Lib\site-packages\django\utils\dateformat.py:81
 msgid "AM"
-msgstr ""
+msgstr "ryte"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dateformat.py:153
 #: .\venv\Lib\site-packages\django\utils\dateformat.py:153
 msgid "midnight"
-msgstr "Šviesi"
+msgstr "vidurnaktis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dateformat.py:155
 #: .\venv\Lib\site-packages\django\utils\dateformat.py:155
 msgid "noon"
-msgstr ""
+msgstr "vidurdienis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:7
 #: .\venv\Lib\site-packages\django\utils\dates.py:7
 msgid "Monday"
-msgstr ""
+msgstr "Pirmadienis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:8
 #: .\venv\Lib\site-packages\django\utils\dates.py:8
 msgid "Tuesday"
-msgstr ""
+msgstr "Antradienis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:9
 #: .\venv\Lib\site-packages\django\utils\dates.py:9
 msgid "Wednesday"
-msgstr ""
+msgstr "Trečiadienis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:10
 #: .\venv\Lib\site-packages\django\utils\dates.py:10
 msgid "Thursday"
-msgstr ""
+msgstr "Ketvirtadienis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:11
 #: .\venv\Lib\site-packages\django\utils\dates.py:11
 msgid "Friday"
-msgstr ""
+msgstr "Penktadienis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:12
 #: .\venv\Lib\site-packages\django\utils\dates.py:12
 msgid "Saturday"
-msgstr ""
+msgstr "Šeštadienis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:13
 #: .\venv\Lib\site-packages\django\utils\dates.py:13
 msgid "Sunday"
-msgstr ""
+msgstr "Sekmadienis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:16
 #: .\venv\Lib\site-packages\django\utils\dates.py:16
 msgid "Mon"
-msgstr ""
+msgstr "Pir"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:17
 #: .\venv\Lib\site-packages\django\utils\dates.py:17
 msgid "Tue"
-msgstr ""
+msgstr "Ant"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:18
 #: .\venv\Lib\site-packages\django\utils\dates.py:18
 msgid "Wed"
-msgstr ""
+msgstr "Tre"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:19
 #: .\venv\Lib\site-packages\django\utils\dates.py:19
 msgid "Thu"
-msgstr ""
+msgstr "Ket"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:20
 #: .\venv\Lib\site-packages\django\utils\dates.py:20
 msgid "Fri"
-msgstr ""
+msgstr "Pen"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:21
 #: .\venv\Lib\site-packages\django\utils\dates.py:21
 msgid "Sat"
-msgstr "Būsena"
+msgstr "Šeš"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:22
 #: .\venv\Lib\site-packages\django\utils\dates.py:22
 msgid "Sun"
-msgstr ""
+msgstr "Sek"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:25
 #: .\venv\Lib\site-packages\django\utils\dates.py:25
 msgid "January"
-msgstr ""
+msgstr "Sausis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:26
 #: .\venv\Lib\site-packages\django\utils\dates.py:26
 msgid "February"
-msgstr ""
+msgstr "Vasaris"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:27
 #: .\venv\Lib\site-packages\django\utils\dates.py:27
 msgid "March"
-msgstr ""
+msgstr "Kovas"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:28
 #: .\venv\Lib\site-packages\django\utils\dates.py:28
 msgid "April"
-msgstr ""
+msgstr "Balandis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:29
 #: .\venv\Lib\site-packages\django\utils\dates.py:29
 msgid "May"
-msgstr "diena"
+msgstr "Gegužė"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:30
 #: .\venv\Lib\site-packages\django\utils\dates.py:30
 msgid "June"
-msgstr ""
+msgstr "Birželis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:31
 #: .\venv\Lib\site-packages\django\utils\dates.py:31
 msgid "July"
-msgstr ""
+msgstr "Liepa"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:32
 #: .\venv\Lib\site-packages\django\utils\dates.py:32
 msgid "August"
-msgstr ""
+msgstr "Rugpjūtis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:33
 #: .\venv\Lib\site-packages\django\utils\dates.py:33
@@ -1899,245 +1903,226 @@ msgstr "Narys"
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:34
 #: .\venv\Lib\site-packages\django\utils\dates.py:34
 msgid "October"
-msgstr ""
+msgstr "Spalis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:35
 #: .\venv\Lib\site-packages\django\utils\dates.py:35
 msgid "November"
-msgstr "Narys"
+msgstr "Lapkritis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:36
 #: .\venv\Lib\site-packages\django\utils\dates.py:36
-#, fuzzy
-#| msgid "Member"
 msgid "December"
-msgstr "Narys"
+msgstr "Gruodis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:39
 #: .\venv\Lib\site-packages\django\utils\dates.py:39
 msgid "jan"
-msgstr ""
+msgstr "sau"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:40
 #: .\venv\Lib\site-packages\django\utils\dates.py:40
 msgid "feb"
-msgstr ""
+msgstr "vas"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:41
 #: .\venv\Lib\site-packages\django\utils\dates.py:41
 msgid "mar"
-msgstr ""
+msgstr "kov"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:42
 #: .\venv\Lib\site-packages\django\utils\dates.py:42
 msgid "apr"
-msgstr ""
+msgstr "bal"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:43
 #: .\venv\Lib\site-packages\django\utils\dates.py:43
-#, fuzzy
-#| msgid "day"
-#| msgid_plural "days"
 msgid "may"
-msgstr "diena"
+msgstr "geg"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:44
 #: .\venv\Lib\site-packages\django\utils\dates.py:44
 msgid "jun"
-msgstr ""
+msgstr "bir"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:45
 #: .\venv\Lib\site-packages\django\utils\dates.py:45
 msgid "jul"
-msgstr ""
+msgstr "lie"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:46
 #: .\venv\Lib\site-packages\django\utils\dates.py:46
-#, fuzzy
-#| msgid "ago"
 msgid "aug"
-msgstr "prieš"
+msgstr "rugpj"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:47
 #: .\venv\Lib\site-packages\django\utils\dates.py:47
 msgid "sep"
-msgstr ""
+msgstr "rugs"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:48
 #: .\venv\Lib\site-packages\django\utils\dates.py:48
 msgid "oct"
-msgstr ""
+msgstr "spa"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:49
 #: .\venv\Lib\site-packages\django\utils\dates.py:49
 msgid "nov"
-msgstr ""
+msgstr "lap"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:50
 #: .\venv\Lib\site-packages\django\utils\dates.py:50
 msgid "dec"
-msgstr ""
+msgstr "gru"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:53
 #: .\venv\Lib\site-packages\django\utils\dates.py:53
 msgctxt "abbrev. month"
 msgid "Jan."
-msgstr ""
+msgstr "Sau."
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:54
 #: .\venv\Lib\site-packages\django\utils\dates.py:54
 msgctxt "abbrev. month"
 msgid "Feb."
-msgstr ""
+msgstr "Vas."
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:55
 #: .\venv\Lib\site-packages\django\utils\dates.py:55
 msgctxt "abbrev. month"
 msgid "March"
-msgstr ""
+msgstr "Kovas"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:56
 #: .\venv\Lib\site-packages\django\utils\dates.py:56
 msgctxt "abbrev. month"
 msgid "April"
-msgstr ""
+msgstr "Bal/"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:57
 #: .\venv\Lib\site-packages\django\utils\dates.py:57
-#, fuzzy
-#| msgid "day"
-#| msgid_plural "days"
 msgctxt "abbrev. month"
 msgid "May"
-msgstr "diena"
+msgstr "Gegu"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:58
 #: .\venv\Lib\site-packages\django\utils\dates.py:58
 msgctxt "abbrev. month"
 msgid "June"
-msgstr ""
+msgstr "Birž"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:59
 #: .\venv\Lib\site-packages\django\utils\dates.py:59
 msgctxt "abbrev. month"
 msgid "July"
-msgstr ""
+msgstr "Liep"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:60
 #: .\venv\Lib\site-packages\django\utils\dates.py:60
 msgctxt "abbrev. month"
 msgid "Aug."
-msgstr ""
+msgstr "Rugpj."
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:61
 #: .\venv\Lib\site-packages\django\utils\dates.py:61
 msgctxt "abbrev. month"
 msgid "Sept."
-msgstr ""
+msgstr "Rugs."
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:62
 #: .\venv\Lib\site-packages\django\utils\dates.py:62
 msgctxt "abbrev. month"
 msgid "Oct."
-msgstr ""
+msgstr "Spa."
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:63
 #: .\venv\Lib\site-packages\django\utils\dates.py:63
 msgctxt "abbrev. month"
 msgid "Nov."
-msgstr ""
+msgstr "Lap."
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:64
 #: .\venv\Lib\site-packages\django\utils\dates.py:64
 msgctxt "abbrev. month"
 msgid "Dec."
-msgstr ""
+msgstr "Gruo."
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:67
 #: .\venv\Lib\site-packages\django\utils\dates.py:67
 msgctxt "alt. month"
 msgid "January"
-msgstr ""
+msgstr "Sausis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:68
 #: .\venv\Lib\site-packages\django\utils\dates.py:68
 msgctxt "alt. month"
 msgid "February"
-msgstr ""
+msgstr "Vasaris"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:69
 #: .\venv\Lib\site-packages\django\utils\dates.py:69
 msgctxt "alt. month"
 msgid "March"
-msgstr ""
+msgstr "Kovas"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:70
 #: .\venv\Lib\site-packages\django\utils\dates.py:70
 msgctxt "alt. month"
 msgid "April"
-msgstr ""
+msgstr "Balandis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:71
 #: .\venv\Lib\site-packages\django\utils\dates.py:71
-#, fuzzy
-#| msgid "day"
-#| msgid_plural "days"
 msgctxt "alt. month"
 msgid "May"
-msgstr "diena"
+msgstr "Gegužė"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:72
 #: .\venv\Lib\site-packages\django\utils\dates.py:72
 msgctxt "alt. month"
 msgid "June"
-msgstr ""
+msgstr "Birželis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:73
 #: .\venv\Lib\site-packages\django\utils\dates.py:73
 msgctxt "alt. month"
 msgid "July"
-msgstr ""
+msgstr "Liepa"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:74
 #: .\venv\Lib\site-packages\django\utils\dates.py:74
 msgctxt "alt. month"
 msgid "August"
-msgstr ""
+msgstr "Rugpjūtis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:75
 #: .\venv\Lib\site-packages\django\utils\dates.py:75
-#, fuzzy
-#| msgid "Member"
 msgctxt "alt. month"
 msgid "September"
-msgstr "Narys"
+msgstr "Rugsėjis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:76
 #: .\venv\Lib\site-packages\django\utils\dates.py:76
 msgctxt "alt. month"
 msgid "October"
-msgstr ""
+msgstr "Spalis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:77
 #: .\venv\Lib\site-packages\django\utils\dates.py:77
-#, fuzzy
-#| msgid "Member"
 msgctxt "alt. month"
 msgid "November"
-msgstr "Narys"
+msgstr "Lapkritis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\dates.py:78
 #: .\venv\Lib\site-packages\django\utils\dates.py:78
-#, fuzzy
-#| msgid "Member"
 msgctxt "alt. month"
 msgid "December"
-msgstr "Narys"
+msgstr "Gruodis"
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\ipv6.py:8
 #: .\venv\Lib\site-packages\django\utils\ipv6.py:8
 msgid "This is not a valid IPv6 address."
-msgstr ""
+msgstr "Tai nėra galiojantis IPv6 adresas."
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\text.py:70
 #: .\venv\Lib\site-packages\django\utils\text.py:70
@@ -2148,21 +2133,15 @@ msgstr ""
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\text.py:270
 #: .\venv\Lib\site-packages\django\utils\text.py:270
-#, fuzzy
-#| msgid "hour"
-#| msgid_plural "hours"
 msgid "or"
-msgstr "valanda"
+msgstr "arba"
 
 #. Translators: This string is used as a separator between list elements
 #: .\venv\Lib\python3.12\site-packages\django\utils\text.py:289
 #: .\venv\Lib\site-packages\django\utils\timesince.py:135
 #: .\venv\Lib\site-packages\django\utils\text.py:289
-#: .\venv\Lib\site-packages\django\utils\timesince.py:135
-#, fuzzy
-#| msgid ","
 msgid ", "
-msgstr " ir"
+msgstr ", "
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\timesince.py:8
 #: .\venv\Lib\site-packages\django\utils\timesince.py:8
@@ -2172,7 +2151,6 @@ msgid_plural "%(num)d years"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\timesince.py:9
 #: .\venv\Lib\site-packages\django\utils\timesince.py:9
@@ -2182,7 +2160,6 @@ msgid_plural "%(num)d months"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\timesince.py:10
 #: .\venv\Lib\site-packages\django\utils\timesince.py:10
@@ -2192,7 +2169,6 @@ msgid_plural "%(num)d weeks"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\timesince.py:11
 #: .\venv\Lib\site-packages\django\utils\timesince.py:11
@@ -2202,7 +2178,6 @@ msgid_plural "%(num)d days"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\timesince.py:12
 #: .\venv\Lib\site-packages\django\utils\timesince.py:12
@@ -2212,29 +2187,25 @@ msgid_plural "%(num)d hours"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-msgstr[3] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\utils\timesince.py:13
 #: .\venv\Lib\site-packages\django\utils\timesince.py:13
-#, fuzzy, python-format
-#| msgid "minute"
-#| msgid_plural "minutes"
+#, python-format
 msgid "%(num)d minute"
 msgid_plural "%(num)d minutes"
-msgstr[0] "minutė"
-msgstr[1] "minutės"
-msgstr[2] "minučių"
-msgstr[3] "minučių"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:29
 #: .\venv\Lib\site-packages\django\views\csrf.py:29
 msgid "Forbidden"
-msgstr ""
+msgstr "Uždrausta"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:30
 #: .\venv\Lib\site-packages\django\views\csrf.py:30
 msgid "CSRF verification failed. Request aborted."
-msgstr ""
+msgstr "CSRF patikrinimas nepavyko. Užklausa nutraukta."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:34
 #: .\venv\Lib\site-packages\django\views\csrf.py:34
@@ -2244,6 +2215,10 @@ msgid ""
 "required for security reasons, to ensure that your browser is not being "
 "hijacked by third parties."
 msgstr ""
+"Šį pranešimą matote, nes ši HTTPS svetainė reikalauja, kad jūsų naršyklė "
+"išsiųstų „Referer“ antraštę, tačiau ji nebuvo išsiųsta. Ši antraštė reikalinga "
+"saugumo sumetimais, siekiant užtikrinti, kad jūsų naršyklės nepavogtų "
+"trečiosios šalys."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:40
 #: .\venv\Lib\site-packages\django\views\csrf.py:40
@@ -2252,6 +2227,9 @@ msgid ""
 "enable them, at least for this site, or for HTTPS connections, or for \"same-"
 "origin\" requests."
 msgstr ""
+"Jei savo naršyklėje nustatėte, kad būtų išjungtos „Referer“ antraštės, vėl jas "
+"įjunkite, bent jau šiai svetainei, HTTPS ryšiams arba „tos pačios kilmės“ "
+"užklausoms."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:45
 #: .\venv\Lib\site-packages\django\views\csrf.py:45
@@ -2259,34 +2237,44 @@ msgid ""
 "If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
 "including the \"Referrer-Policy: no-referrer\" header, please remove them. The "
 "CSRF protection requires the \"Referer\" header to do strict referer checking. "
-"If you're concerned about privacy, use alternatives like <a "
-"rel=\"noreferrer\" …> for links to third-party sites."
+"If you're concerned about privacy, use alternatives like <a rel=\"noreferrer\" "
+"…> for links to third-party sites."
 msgstr ""
+"Jei naudojate <meta name=„referrer“ content=„no-referrer“> žymą arba antraštę "
+"„Referrer-Policy: no-referrer“, pašalinkite juos. CSRF apsaugai reikalinga "
+"antraštė „Referer“, kad būtų galima atlikti griežtą refererio tikrinimą. Jei "
+"nerimaujate dėl privatumo, nuorodoms į trečiųjų šalių svetaines naudokite "
+"alternatyvas, pavyzdžiui, <a rel=„noreferrer“ ...>."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:54
 #: .\venv\Lib\site-packages\django\views\csrf.py:54
 msgid ""
 "You are seeing this message because this site requires a CSRF cookie when "
-"submitting forms. This cookie is required for security reasons, to ensure "
-"that your browser is not being hijacked by third parties."
+"submitting forms. This cookie is required for security reasons, to ensure that "
+"your browser is not being hijacked by third parties."
 msgstr ""
+"Šį pranešimą matote, nes ši svetainė reikalauja CSRF slapuko teikiant formas. "
+"Šio slapuko reikalaujama saugumo sumetimais, siekiant užtikrinti, kad jūsų "
+"naršyklės nepavogtų trečiosios šalys."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:60
 #: .\venv\Lib\site-packages\django\views\csrf.py:60
 msgid ""
-"If you have configured your browser to disable cookies, please re-enable "
-"them, at least for this site, or for \"same-origin\" requests."
+"If you have configured your browser to disable cookies, please re-enable them, "
+"at least for this site, or for \"same-origin\" requests."
 msgstr ""
+"Jei savo naršyklėje nustatėte išjungti slapukus, vėl juos įjunkite, bent jau "
+"šioje svetainėje arba „tos pačios kilmės“ užklausoms."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\csrf.py:66
 #: .\venv\Lib\site-packages\django\views\csrf.py:66
 msgid "More information is available with DEBUG=True."
-msgstr ""
+msgstr "Daugiau informacijos galima gauti pasirinkus DEBUG=True."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:44
 #: .\venv\Lib\site-packages\django\views\generic\dates.py:44
 msgid "No year specified"
-msgstr ""
+msgstr "Nenurodyti metai"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:64
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:115
@@ -2295,22 +2283,22 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\views\generic\dates.py:115
 #: .\venv\Lib\site-packages\django\views\generic\dates.py:214
 msgid "Date out of range"
-msgstr ""
+msgstr "Data už intervalo ribų"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:94
 #: .\venv\Lib\site-packages\django\views\generic\dates.py:94
 msgid "No month specified"
-msgstr ""
+msgstr "Nenurodytas mėnuo"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:147
 #: .\venv\Lib\site-packages\django\views\generic\dates.py:147
 msgid "No day specified"
-msgstr ""
+msgstr "Nenurodyta diena"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:194
 #: .\venv\Lib\site-packages\django\views\generic\dates.py:194
 msgid "No week specified"
-msgstr ""
+msgstr "Nenurodyta savaitė"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:349
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:380
@@ -2318,7 +2306,7 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\views\generic\dates.py:380
 #, python-format
 msgid "No %(verbose_name_plural)s available"
-msgstr ""
+msgstr "Nėra %(verbose_name_plural)s"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:652
 #: .\venv\Lib\site-packages\django\views\generic\dates.py:652
@@ -2327,47 +2315,48 @@ msgid ""
 "Future %(verbose_name_plural)s not available because "
 "%(class_name)s.allow_future is False."
 msgstr ""
+"Ateitis %(verbose_name_plural)s neprieinama, nes %(class_name)s.allow_future "
+"yra False."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\dates.py:692
 #: .\venv\Lib\site-packages\django\views\generic\dates.py:692
 #, python-format
 msgid "Invalid date string \"%(datestr)s\" given format \"%(format)s\""
-msgstr ""
+msgstr "Invalid date string \"%(datestr)s\" given format \"%(format)s\""
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\detail.py:56
 #: .\venv\Lib\site-packages\django\views\generic\detail.py:56
 #, python-format
 msgid "No %(verbose_name)s found matching the query"
-msgstr ""
+msgstr "Užklausą atitinkančių %(verbose_name)s nerasta"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\list.py:70
 #: .\venv\Lib\site-packages\django\views\generic\list.py:70
 msgid "Page is not \"last\", nor can it be converted to an int."
-msgstr ""
+msgstr "Puslapis nėra „paskutinis“ ir negali būti konvertuojamas į int skaičių."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\list.py:77
 #: .\venv\Lib\site-packages\django\views\generic\list.py:77
 #, python-format
 msgid "Invalid page (%(page_number)s): %(message)s"
-msgstr ""
+msgstr "Neteisingas puslapis (%(page_number)s): %(message)s"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\generic\list.py:169
 #: .\venv\Lib\site-packages\django\views\generic\list.py:169
 #, python-format
-msgid "Empty list and "
-"\"%(class_name)s.allow_empty\" is False."
-msgstr ""
+msgid "Empty list and \"%(class_name)s.allow_empty\" is False."
+msgstr "Tuščias sąrašas ir „%(class_name)s.allow_empty“ yra False."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\static.py:49
 #: .\venv\Lib\site-packages\django\views\static.py:49
 msgid "Directory indexes are not allowed here."
-msgstr ""
+msgstr "Katalogu indeksai čia neleistini."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\static.py:51
 #: .\venv\Lib\site-packages\django\views\static.py:51
 #, python-format
 msgid "\"%(path)s\" does not exist"
-msgstr ""
+msgstr "\"%(path)s\" neegzistuoja"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\static.py:68
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\directory_index.html:8
@@ -2377,14 +2366,14 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\views\templates\directory_index.html:11
 #, python-format
 msgid "Index of %(directory)s"
-msgstr ""
+msgstr "%(directory)s indeksas"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:7
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:220
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:7
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:220
 msgid "The install worked successfully! Congratulations!"
-msgstr ""
+msgstr "Įdiegimas pavyko sėkmingai! Sveikinimai!"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:206
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:206
@@ -2393,6 +2382,8 @@ msgid ""
 "View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
 "target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
 msgstr ""
+"Peržiūrėti <a href=„https://docs.djangoproject.com/en/%(version)s/releases/“ "
+"target=„_blank“ rel=„noopener“>„Django“ %(version)s išleidimo pastabas</a>"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:221
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:221
@@ -2403,55 +2394,55 @@ msgid ""
 "rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
 "configured any URLs."
 msgstr ""
+"Šį puslapį matote, nes <a href=„https://docs.djangoproject.com/en/%(version)s/"
+"ref/settings/#debug“ target=„_blank“ rel=„noopener“>DEBUG=True</a> yra jūsų "
+"nustatymų faile, o jūs nesukonfigūravote jokių URL adresų."
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:229
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:229
 msgid "Django Documentation"
-msgstr ""
+msgstr "Django Dokumentacija"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:230
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:230
 msgid "Topics, references, &amp; how-to's"
-msgstr ""
+msgstr "Temos, nuorodos &amp; kaip tai padaryti"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:238
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:238
 msgid "Tutorial: A Polling App"
-msgstr ""
+msgstr "Mokomoji priemonė: Apklausos programa"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:239
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:239
 msgid "Get started with Django"
-msgstr ""
+msgstr "Pradėkite su Django"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:247
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:247
 msgid "Django Community"
-msgstr ""
+msgstr "Django Bendruomenė"
 
 #: .\venv\Lib\python3.12\site-packages\django\views\templates\default_urlconf.html:248
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:248
 msgid "Connect, get help, or contribute"
-msgstr ""
+msgstr "Prisijunkite, gaukite pagalbos arba prisidėkite"
 
 #: .\venv\Lib\python3.12\site-packages\jsonfield\fields.py:48
 #: .\venv\Lib\site-packages\jsonfield\fields.py:48
 msgid "Enter valid JSON."
-msgstr ""
+msgstr "Įveskite teisingą JSON."
 
 #: .\venv\Lib\python3.12\site-packages\jsonfield\forms.py:15
 #: .\venv\Lib\site-packages\jsonfield\forms.py:15
 #, python-format
 msgid "\"%(value)s\" value must be valid JSON."
-msgstr ""
+msgstr "\"%(value)s\" reikšmė turi būti teisingas JSON."
 
 #: .\venv\Lib\site-packages\_pytest\config\argparsing.py:474
 #, python-format
 msgid "ambiguous option: %(option)s could match %(matches)s"
-msgstr ""
-
-#~ msgid "just now"
-#~ msgstr "ką tik"
+msgstr "dviprasmiška parinktis: %(option)s gali atitikti %(matches)s"
 
 # Sorting translations
 msgid "Title A-Z"
@@ -2480,3 +2471,6 @@ msgstr "Seniausi"
 
 msgid "Reset to Default"
 msgstr "Atstatyti į pradinę būseną"
+
+#~ msgid "just now"
+#~ msgstr "ką tik"
