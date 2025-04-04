@@ -1,0 +1,30 @@
+# Project Rules
+
+## Language & Documentation
+- **Primary Language:** Lithuanian (code comments, documentation)
+- **Variable/Technical Terms:** English
+- **Required Files:** `ROADMAP.md`, `CHANGELOG.md`, `DB_INFO.md`
+
+## Technology Stack
+- **Frontend:** React with TypeScript, shadcn/ui, Tailwind CSS
+- **Backend/DB:** Supabase
+- **State Management:** React Query
+- **Forms:** react-hook-form, zod
+- **Routing:** React Router
+
+## Code Structure
+- Follow existing component structure (shadcn/ui, Tailwind)
+- Maintain folder hierarchy (components, pages, hooks, utilities)
+- Organize components by feature (admin, home, layout, ui)
+
+## Performance
+- Use `LazyImage` component for images
+- Apply optimization techniques from `imageOptimization` utilities
+- Use preloading strategies from `imagePreloader`
+
+## Content Management
+- Use `RichTextEditor` for content editing
+- Use `FileUpload` for image handling
+
+## Authentication
+- Use `AuthContext` provider 
