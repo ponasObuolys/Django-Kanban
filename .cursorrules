@@ -1,24 +1,69 @@
 # Project Rules
 
-## Language & Documentation
+## 🔄 Project Awareness & Context
 - **Primary Language:** Lithuanian (code comments, documentation)
 - **Variable/Technical Terms:** English
 - **Required Files:** `ROADMAP.md`, `CHANGELOG.md`, `DB_INFO.md`
+- **Always read `.cursorrules`** to understand the project's language requirements, style, and constraints.
+- **Review `ROADMAP.md` and `CHANGELOG.md`** to understand project goals, recent changes, and upcoming features.
+- **Consult `DB_INFO.md`** before making any database-related changes to maintain structural integrity.
+- **All code, comments, and documentation must be in Lithuanian**, except for technical terms and variable names as specified in the language rule.
 
-## Technology Stack
-- **Frontend:** Bootstrap
-- **Backend/DB:** Django
+## 🧱 Code Structure & Modularity
+- **Technology Stack:**
+  - **Frontend:** Bootstrap
+  - **Backend/DB:** Django
+- **Follow the existing component structure** using shadcn/ui components and Tailwind CSS styling.
+- **Use the established folder hierarchy** with components, pages, hooks, and utilities in their respective directories.
+- **Organize components by feature** (admin, home, layout, ui) as shown in the existing structure.
+- **Keep the React component architecture consistent** with the current patterns in the project.
 
-## Code Structure
-- Follow existing component structure (shadcn/ui, Tailwind)
-- Maintain folder hierarchy (components, pages, hooks, utilities)
-- Organize components by feature (admin, home, layout, ui)
+## 🖥️ Frontend Development
+- **Use React with TypeScript** for all component development.
+- **Utilize shadcn/ui components** for UI elements to maintain consistency.
+- **Apply Tailwind CSS** for styling according to the project's theme variables.
+- **Implement responsive design patterns** consistent with the existing mobile-first approach.
+- **Use LazyImage component** instead of standard img tags for performance optimization.
 
-## Performance
-- Add Django specific performance considerations if known
+## 💾 Database & API Integration
+- **Use Supabase** for all database operations as specified in project rules.
+- **Follow the database schema** as documented in `DB_INFO.md`.
+- **Maintain RLS (Row Level Security) policies** when creating or modifying database operations.
+- **Use the existing integration modules** for all API requests to Supabase.
 
-## Content Management
-- Add Django specific content management tools if known
+## 🔄 State Management & Forms
+- **Use React Query** for server state management.
+- **Implement form validation with zod and react-hook-form** as shown in existing components.
+- **Follow the established authentication pattern** using the AuthContext provider.
 
-## Authentication
-- Specify Django's authentication system 
+## 📊 Content Management
+- **Use RichTextEditor component** for all content editing functionality.
+- **Implement proper image handling** with the FileUpload component for storage operations.
+- **Follow the metadata structure** for articles, tools, and courses as established in the database.
+
+## 🚀 Performance Optimization
+- **Implement lazy loading for images** using the custom LazyImage component or addLazyLoadingToImages utility.
+- **Use proper optimization techniques** as shown in the existing imageOptimization utilities.
+- **Apply preloading strategies** where appropriate using the imagePreloader utility.
+- **Add Django specific performance considerations** when applicable.
+
+## 📱 Routing & Navigation
+- **Register new pages in App.tsx** following the existing routing structure.
+- **Use React Router** for all navigation with consistent patterns.
+- **Implement proper page transitions** using the useScrollToTop hook when navigating.
+
+## 🧪 Error Handling
+- **Use toast notifications** for user feedback on errors and successful operations.
+- **Implement proper API error handling** with informative user messages.
+- **Always include try/catch blocks** when performing asynchronous operations.
+
+## 📚 Documentation & Localization
+- **Maintain translations in LanguageContext.tsx** as specified in the language rule.
+- **Document complex functions** with clear comments in Lithuanian.
+- **Update relevant documentation** when making significant changes to functionality.
+
+## 🔒 Security & Authentication
+- **Follow the established auth patterns** using the AuthContext for user authentication.
+- **Respect admin roles** and implement proper access controls.
+- **Never expose sensitive information** such as API keys directly in the code.
+- **Specify Django's authentication system** in security implementations. 
