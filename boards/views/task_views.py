@@ -9,6 +9,7 @@ from ..services.task_service import TaskService
 from ..permissions import can_manage_task, can_manage_comment, can_manage_attachment, can_edit_board
 import json
 from django.db.models import Max
+from notifications.signals import notify
 
 @login_required
 def task_create(request):
@@ -73,7 +74,7 @@ def task_edit(request, task_id):
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
-            TaskService.update_task(task, form.cleaned_data)
+            TaskService.update_task(task, form.cleaned_data, current_user=request.user)
             messages.success(request, 'Task updated successfully.')
             return redirect('boards:board_detail', board_id=task.column.board.id)
     else:
@@ -274,8 +275,20 @@ def task_assign(request, task_id):
                 return redirect('boards:task_detail', task_id=task.id)
             
             # Priskirti užduotį vartotojui
+            previously_assigned = set(task.assigned_to.all())
             task.assigned_to.set([user])
             task.save()
+            
+            # Siunčiam pranešimą naujam priskirtam vartotojui, jei jis nebuvo priskirtas anksčiau
+            if user not in previously_assigned and user != request.user:
+                notify.send(
+                    sender=request.user,
+                    recipient=user,
+                    verb='assigned you to',
+                    target=task,
+                    description=f'You have been assigned to task "{task.title}"'
+                )
+            
             messages.success(request, f'Task assigned to {user.username} successfully.')
         except get_user_model().DoesNotExist:
             messages.error(request, "Selected user does not exist.")

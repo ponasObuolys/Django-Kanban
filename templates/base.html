@@ -71,26 +71,14 @@
                                 <i class="fas fa-bell me-1"></i>
                                 <span id="notifications-badge" class="badge bg-danger">{{ user.notifications.unread.count }}</span>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                {% for notification in user.notifications.unread %}
-                                    {% if notification.verb == 'invited you to join' %}
-                                        <a class="dropdown-item" href="{% url 'teams:invitation_list' %}" data-notification-id="{{ notification.id }}">
-                                            <i class="fas fa-user-plus me-2"></i>{{ notification.description }}
-                                        </a>
-                                    {% else %}
-                                        <a class="dropdown-item" href="#" data-notification-id="{{ notification.id }}">
-                                            <i class="fas fa-bell me-2"></i>{{ notification.description }}
-                                        </a>
-                                    {% endif %}
-                                {% empty %}
-                                    <span class="dropdown-item">{% trans "No new notifications" %}</span>
-                                {% endfor %}
-                                {% if user.notifications.unread.exists %}
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item text-center" href="#" id="markAllAsRead">
-                                        <i class="fas fa-check-double me-2"></i>{% trans "Mark all as read" %}
-                                    </a>
-                                {% endif %}
+                            <div class="dropdown-menu dropdown-menu-end notifications-menu">
+                                <!-- Pranešimų turinys bus įkeltas dinamiškai per JavaScript -->
+                                <div class="dropdown-item text-center">
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                        <span class="visually-hidden">{% trans "Loading..." %}</span>
+                                    </div>
+                                    <span class="ms-2">{% trans "Loading notifications..." %}</span>
+                                </div>
                             </div>
                         </li>
                         

@@ -22,6 +22,20 @@ document.addEventListener('DOMContentLoaded', function() {
         themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
     }
     
+    // Pranešimų dropdown meniu atvėrimo logiką
+    const notificationsDropdown = document.getElementById('notificationsDropdown');
+    if (notificationsDropdown) {
+        notificationsDropdown.addEventListener('click', function(e) {
+            // Kai dropdown meniu atsidaro, atnaujinama pranešimų sąrašą
+            updateNotificationsList();
+        });
+        
+        // Tikrinama ar dropdown meniu yra atidarytas
+        notificationsDropdown.addEventListener('shown.bs.dropdown', function() {
+            updateNotificationsList();
+        });
+    }
+    
     // Language selection form handling
     const languageForms = document.querySelectorAll('.language-form');
     languageForms.forEach(form => {
@@ -253,26 +267,35 @@ function markNotificationAsRead(notificationId) {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Serverio klaida: ' + response.status);
+            throw new Error('Network response was not ok');
         }
         return response.json();
     })
     .then(data => {
-        console.log(`Pranešimas ${notificationId} pažymėtas kaip perskaitytas:`, data);
+        console.log(`Pranešimas ${notificationId} pažymėtas kaip perskaitytas`, data);
         
-        // Atnaujiname pranešimų skaičių
-        updateNotificationCount();
+        // Pašaliname pažymėtą pranešimą iš sąrašo arba atnaujinama būsena
+        const notification = document.querySelector(`[data-notification-id="${notificationId}"]`);
+        if (notification) {
+            notification.remove();
+        }
         
-        // Atnaujiname pranešimų sąrašą
-        updateNotificationsList();
+        // Atnaujinti pranešimų skaičių
+        updateUnreadCount();
+        
+        // Jei nebeliko neperskaitytų pranešimų, atnaujinti sąrašą
+        const badge = document.getElementById('notifications-badge');
+        if (badge && parseInt(badge.textContent) === 0) {
+            updateNotificationsList();
+        }
     })
     .catch(error => {
-        console.error(`Klaida žymint pranešimą ${notificationId} kaip perskaitytą:`, error);
+        console.error('Klaida žymint pranešimą kaip perskaitytą:', error);
     });
 }
 
 function markAllNotificationsAsRead() {
-    console.log('Bandoma pažymėti visus pranešimus kaip perskaitytus...');
+    console.log('Žymimi visi pranešimai kaip perskaityti');
     
     fetch('/notifications/mark-all-as-read/', {
         method: 'POST',
@@ -284,29 +307,18 @@ function markAllNotificationsAsRead() {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Serverio klaida: ' + response.status);
+            throw new Error('Network response was not ok');
         }
         return response.json();
     })
     .then(data => {
-        console.log('Visi pranešimai pažymėti kaip perskaityti:', data);
+        console.log('Visi pranešimai pažymėti kaip perskaityti', data);
         
-        // Atnaujiname pranešimų skaičių
-        const badge = document.getElementById('notifications-badge');
-        if (badge) {
-            badge.style.display = 'none';
-            badge.textContent = '0';
-        }
+        // Atnaujinti pranešimų skaičių
+        updateUnreadCount();
         
-        // Uždarome išskleidžiamąjį menu
-        const dropdownMenu = document.querySelector('#notificationsDropdown + .dropdown-menu');
-        if (dropdownMenu) {
-            // Atnaujiname sąrašą
-            updateNotificationsList();
-        }
-        
-        // Atnaujiname paskutinį žinomą pranešimų skaičių
-        lastNotificationCount = 0;
+        // Atnaujinti pranešimų sąrašą
+        updateNotificationsList();
     })
     .catch(error => {
         console.error('Klaida žymint visus pranešimus kaip perskaitytus:', error);
@@ -315,13 +327,27 @@ function markAllNotificationsAsRead() {
 
 function updateUnreadCount() {
     const badge = document.getElementById('notifications-badge');
-    if (badge) {
-        const currentCount = parseInt(badge.textContent) - 1;
-        badge.textContent = currentCount > 0 ? currentCount : '';
-        if (currentCount <= 0) {
-            badge.style.display = 'none';
+    if (!badge) return;
+    
+    fetch('/notifications/get-count/', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken')
         }
-    }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const count = data.count;
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline-block' : 'none';
+        
+        // Atnaujiname paskutinį žinomą skaičių
+        lastNotificationCount = count;
+    })
+    .catch(error => {
+        console.error('Klaida atnaujinant pranešimų skaičių:', error);
+    });
 }
 
 // Garsinio pranešimo funkcijos
@@ -436,11 +462,36 @@ function checkForNewNotifications() {
             console.debug("Aptikti nauji pranešimai! Paleidžiamas garsas ir rodomas pop-up");
             playNotificationSound();
             
-            // Rodome pop-up pranešimą
-            showNotificationPopup("Jūs turite naujų užduočių");
-            
-            // Atnaujiname pranešimų sąrašą
-            updateNotificationsList();
+            // Gauname naujausius pranešimus
+            fetch('/notifications/get-list/', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Atnaujiname pranešimų sąrašą
+                updateNotificationsList();
+                
+                // Rodome pop-up pranešimą su naujausio pranešimo tekstu
+                const parser = new DOMParser();
+                const htmlDoc = parser.parseFromString(data.html, 'text/html');
+                const firstNotification = htmlDoc.querySelector('.dropdown-item:not([id="markAllAsRead"])');
+                
+                if (firstNotification) {
+                    // Pašaliname ikonas ir paliekame tik tekstą
+                    const messageText = firstNotification.innerText.trim();
+                    showNotificationPopup(messageText);
+                } else {
+                    showNotificationPopup("Jūs turite naujų pranešimų");
+                }
+            })
+            .catch(error => {
+                console.error('Klaida gaunant pranešimų sąrašą:', error);
+                showNotificationPopup("Jūs turite naujų pranešimų");
+            });
         }
         
         // Išsaugome naują skaičių
@@ -534,8 +585,18 @@ function showNotificationPopup(message) {
 }
 
 function updateNotificationsList() {
-    const dropdownMenu = document.querySelector('#notificationsDropdown + .dropdown-menu');
+    const dropdownMenu = document.querySelector('.notifications-menu');
     if (!dropdownMenu) return;
+    
+    // Rodome loading indikatorių
+    dropdownMenu.innerHTML = `
+        <div class="dropdown-item text-center">
+            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="visually-hidden">Kraunama...</span>
+            </div>
+            <span class="ms-2">Kraunami pranešimai...</span>
+        </div>
+    `;
     
     fetch('/notifications/get-list/', {
         method: 'GET',
@@ -547,33 +608,40 @@ function updateNotificationsList() {
     .then(response => response.json())
     .then(data => {
         // Atnaujiname pranešimų sąrašą
-        if (data.html) {
-            dropdownMenu.innerHTML = data.html;
-            
-            // Pridedame įvykių klausytojus naujiems pranešimams
-            dropdownMenu.querySelectorAll('[data-notification-id]').forEach(notification => {
-                notification.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const notificationId = this.dataset.notificationId;
-                    markNotificationAsRead(notificationId);
-                });
+        dropdownMenu.innerHTML = data.html;
+        
+        // Pridedame įvykių klausytojus naujiems pranešimams
+        dropdownMenu.querySelectorAll('[data-notification-id]').forEach(notification => {
+            notification.addEventListener('click', function(e) {
+                e.preventDefault();
+                const notificationId = this.dataset.notificationId;
+                markNotificationAsRead(notificationId);
+                
+                // Jei yra URL, atliekame nukreipimą
+                if (this.getAttribute('href') !== '#') {
+                    window.location.href = this.getAttribute('href');
+                }
             });
-            
-            // Pridedame įvykio klausytoją "Pažymėti visus kaip perskaitytus" mygtukui
-            const markAllBtn = dropdownMenu.querySelector('#markAllAsRead');
-            if (markAllBtn) {
-                console.log('Pridedamas klausytojas "Pažymėti visus kaip perskaitytus" mygtukui');
-                markAllBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('Mygtukas "Pažymėti visus kaip perskaitytus" paspaustas');
-                    markAllNotificationsAsRead();
-                });
-            } else {
-                console.log('Nepavyko rasti "Pažymėti visus kaip perskaitytus" mygtuko');
-            }
+        });
+        
+        // Pridedame įvykių klausytoją "Pažymėti visus kaip perskaitytus" mygtukui
+        const markAllBtn = dropdownMenu.querySelector('#markAllAsRead');
+        if (markAllBtn) {
+            markAllBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                markAllNotificationsAsRead();
+            });
         }
     })
-    .catch(error => console.error('Klaida atnaujinant pranešimų sąrašą:', error));
+    .catch(error => {
+        console.error('Klaida gaunant pranešimų sąrašą:', error);
+        dropdownMenu.innerHTML = `
+            <div class="dropdown-item text-center text-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Nepavyko užkrauti pranešimų. Bandykite vėliau.
+            </div>
+        `;
+    });
 }
 
 function updateColumnTaskCount(column) {

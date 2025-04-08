@@ -30,15 +30,29 @@ class TaskService:
         # Jei yra priskirtų vartotojų, priskiriame juos
         if assigned_users is not None:
             task.assigned_to.set(assigned_users)
+            
+            # Siųsti pranešimus priskirtiems vartotojams
+            for assigned_user in assigned_users:
+                if assigned_user != user:  # Nesiųsti pranešimo užduoties kūrėjui
+                    notify.send(
+                        user,
+                        recipient=assigned_user,
+                        verb='assigned you to',
+                        target=task,
+                        description=f'You have been assigned to task "{task.title}"'
+                    )
         
         return task
 
     @staticmethod
-    def update_task(task, data):
+    def update_task(task, data, current_user=None):
         """Update task with provided data"""
         # Išsaugome žymes ir priskirtus vartotojus atskirai
         labels = data.pop('labels', None)
         assigned_users = data.pop('assigned_to', None)
+        
+        # Išsaugome senus priskirtus vartotojus, kad žinotume, kas naujai pridėtas
+        previously_assigned = set(task.assigned_to.all())
         
         # Atnaujiname kitus laukus
         for key, value in data.items():
@@ -52,6 +66,21 @@ class TaskService:
         # Jei yra priskirtų vartotojų, atnaujiname juos
         if assigned_users is not None:
             task.assigned_to.set(assigned_users)
+            
+            # Siųsti pranešimus naujai priskirtiems vartotojams
+            newly_assigned = set(assigned_users) - previously_assigned
+            
+            sender = current_user if current_user else task.created_by
+            
+            for assigned_user in newly_assigned:
+                if assigned_user != sender:
+                    notify.send(
+                        sender=sender,
+                        recipient=assigned_user,
+                        verb='assigned you to',
+                        target=task,
+                        description=f'You have been assigned to task "{task.title}"'
+                    )
         
         return task
 
@@ -111,6 +140,19 @@ class TaskService:
         if new_column.type == 'done' and old_column.type != 'done':
             task.completed_at = timezone.now()
             task.save()
+            
+            # Siųsti pranešimus užduoties kūrėjui ir priskirtiems vartotojams
+            recipients = set(task.assigned_to.all()) | {task.created_by}
+            
+            for recipient in recipients:
+                notify.send(
+                    sender=task.created_by,
+                    recipient=recipient,
+                    verb='completed',
+                    target=task,
+                    description=f'Task "{task.title}" has been marked as complete'
+                )
+                
         # If moved from Done column, clear completed date
         elif new_column.type != 'done' and old_column.type == 'done':
             task.completed_at = None
