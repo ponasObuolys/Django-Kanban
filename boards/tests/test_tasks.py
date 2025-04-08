@@ -191,7 +191,7 @@ class TestTaskAssignment:
         
         assert response.status_code == 302
         task.refresh_from_db()
-        assert task.assigned_to == another_user
+        assert list(task.assigned_to.all()) == [another_user]
 
     def test_assign_task_to_invalid_user(self, client, user, board, columns):
         client.login(username='testuser', password='testpass123')
@@ -212,7 +212,7 @@ class TestTaskAssignment:
         
         assert response.status_code == 302  # Should redirect with error
         task.refresh_from_db()
-        assert task.assigned_to is None
+        assert task.assigned_to.count() == 0
 
     def test_assign_task_unauthorized_user(self, client, user, another_user, board, columns):
         client.login(username='anotheruser', password='testpass123')
@@ -233,7 +233,7 @@ class TestTaskAssignment:
         
         assert response.status_code == 302  # Redirect with error message
         task.refresh_from_db()
-        assert task.assigned_to is None
+        assert task.assigned_to.count() == 0
 
     def test_assign_task_to_non_team_member(self, client, user, another_user, board, columns):
         client.login(username='testuser', password='testpass123')
@@ -260,7 +260,7 @@ class TestTaskAssignment:
         
         assert response.status_code == 302  # Should redirect with error
         task.refresh_from_db()
-        assert task.assigned_to is None
+        assert task.assigned_to.count() == 0
 
     def test_assign_task_in_personal_board(self, client, user, another_user, board, columns):
         client.login(username='testuser', password='testpass123')
@@ -282,7 +282,7 @@ class TestTaskAssignment:
         
         assert response.status_code == 302  # Should redirect with error
         task.refresh_from_db()
-        assert task.assigned_to is None
+        assert task.assigned_to.count() == 0
 
     def test_reassign_task(self, client, user, another_user, board, columns):
         client.login(username='testuser', password='testpass123')
@@ -299,10 +299,10 @@ class TestTaskAssignment:
             description='Test Description',
             column=todo_column,
             created_by=user,
-            assigned_to=user,  # Initially assigned to owner
             priority='medium',
             position=1
         )
+        task.assigned_to.add(user)  # Initially assigned to owner
         
         # Reassign to another user
         response = client.post(reverse('boards:task_assign', args=[task.id]), {
@@ -311,4 +311,4 @@ class TestTaskAssignment:
         
         assert response.status_code == 302
         task.refresh_from_db()
-        assert task.assigned_to == another_user 
+        assert list(task.assigned_to.all()) == [another_user] 

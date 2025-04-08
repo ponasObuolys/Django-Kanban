@@ -249,3 +249,35 @@ def task_detail(request, task_id):
         'attachment_form': attachment_form,
         'can_edit': can_manage_task(request.user, task)
     })
+
+@login_required
+def task_assign(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    
+    if not can_manage_task(request.user, task):
+        messages.error(request, "You don't have permission to assign this task.")
+        return redirect('boards:task_detail', task_id=task.id)
+    
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        try:
+            user = get_user_model().objects.get(id=user_id)
+            
+            # Patikrinti, ar vartotojas priklauso komandai (jei lenta yra komandinė)
+            board = task.column.board
+            if board.team:
+                if not board.team.members.filter(id=user.id).exists():
+                    messages.error(request, "Selected user is not a member of this board's team.")
+                    return redirect('boards:task_detail', task_id=task.id)
+            elif user != board.owner and user != request.user:
+                messages.error(request, "You can only assign tasks to yourself or the board owner in personal boards.")
+                return redirect('boards:task_detail', task_id=task.id)
+            
+            # Priskirti užduotį vartotojui
+            task.assigned_to.set([user])
+            task.save()
+            messages.success(request, f'Task assigned to {user.username} successfully.')
+        except get_user_model().DoesNotExist:
+            messages.error(request, "Selected user does not exist.")
+    
+    return redirect('boards:task_detail', task_id=task.id)
