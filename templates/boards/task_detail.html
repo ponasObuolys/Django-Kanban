@@ -116,8 +116,10 @@
                                 </li>
                                 <li>
                                     <strong>{% trans "Assigned to" %}:</strong> 
-                                    {% if task.assigned_to %}
-                                        {{ task.assigned_to.username }}
+                                    {% if task.assigned_to.exists %}
+                                        {% for assignee in task.assigned_to.all %}
+                                            {{ assignee.get_full_name|default:assignee.username }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
                                     {% else %}
                                         {% trans "Unassigned" %}
                                     {% endif %}

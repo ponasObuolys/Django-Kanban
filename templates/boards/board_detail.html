@@ -137,18 +137,28 @@
                             {% if task.attachments.exists %}
                                 <span><i class="fas fa-paperclip"></i>{{ task.attachments.count }}</span>
                             {% endif %}
-                            
-                            {% if task.assigned_to %}
-                                <div class="member-avatar ms-auto" title="{{ task.assigned_to.get_full_name|default:task.assigned_to.username }}">
-                                    {% if task.assigned_to.avatar %}
-                                        <img src="{{ task.assigned_to.avatar.url }}" alt="{{ task.assigned_to.username }}" class="img-fluid">
+                        </div>
+                        
+                        <!-- Task Assignees -->
+                        <div class="task-assignees ms-auto d-flex align-items-center">
+                            {% for assignee in task.assigned_to.all|slice:":3" %} {# Rodyti max 3 avatarus #}
+                                <div class="member-avatar small-avatar" title="{{ assignee.get_full_name|default:assignee.username }}" data-bs-toggle="tooltip">
+                                    {% if assignee.avatar %}
+                                        <img src="{{ assignee.avatar.url }}" alt="{{ assignee.username }}" class="img-fluid">
                                     {% else %}
-                                        <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary text-white">
-                                            {{ task.assigned_to.username|make_list|first|upper }}
+                                        <div class="avatar-initials">
+                                            {{ assignee.username|make_list|first|upper }}
                                         </div>
                                     {% endif %}
                                 </div>
-                            {% endif %}
+                            {% endfor %}
+                            {% with remaining_count=task.assigned_to.count|add:"-3" %}
+                                {% if remaining_count > 0 %}
+                                    <div class="member-avatar small-avatar remaining-count" title="{% blocktrans count counter=remaining_count %}+{{ counter }} more assignee{% plural %}+{{ counter }} more assignees{% endblocktrans %}" data-bs-toggle="tooltip">
+                                        +{{ remaining_count }}
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
                         </div>
                     </div>
                 {% endfor %}

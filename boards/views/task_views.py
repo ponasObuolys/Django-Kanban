@@ -105,23 +105,6 @@ def task_delete(request, task_id):
     })
 
 @login_required
-def task_assign(request, task_id):
-    task = get_object_or_404(Task, id=task_id)
-    
-    if not can_manage_task(request.user, task):
-        return JsonResponse({
-            'error': "You don't have permission to assign this task."
-        }, status=403)
-    
-    assignee_id = request.POST.get('assignee')
-    assignee = None
-    if assignee_id:
-        assignee = get_object_or_404(get_user_model(), id=assignee_id)
-    
-    TaskService.assign_task(task, assignee, request.user)
-    return JsonResponse({'status': 'success'})
-
-@login_required
 def add_comment(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     

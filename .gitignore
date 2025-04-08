@@ -20,6 +20,10 @@ wheels/
 .installed.cfg
 *.egg
 
+# Python bytecode and cache
+__pycache__/
+*.pyc
+
 # Django
 *.log
 *.pot

@@ -60,10 +60,8 @@ class Task(models.Model):
         on_delete=models.CASCADE,
         related_name='created_tasks'
     )
-    assigned_to = models.ForeignKey(
+    assigned_to = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
         blank=True,
         related_name='assigned_tasks'
     )

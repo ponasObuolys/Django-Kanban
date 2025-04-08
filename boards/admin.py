@@ -17,11 +17,11 @@ class ColumnAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'column', 'created_by', 'assigned_to', 'priority', 'due_date')
+    list_display = ('title', 'column', 'created_by', 'priority', 'due_date')
     list_filter = ('priority', 'created_at', 'due_date')
-    search_fields = ('title', 'description', 'created_by__username', 'assigned_to__username')
+    search_fields = ('title', 'description', 'created_by__username')
     date_hierarchy = 'created_at'
-    filter_horizontal = ('labels',)
+    filter_horizontal = ('labels', 'assigned_to')
 
 @admin.register(Label)
 class LabelAdmin(admin.ModelAdmin):

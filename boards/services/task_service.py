@@ -11,8 +11,9 @@ class TaskService:
         max_position = column.tasks.aggregate(Max('position'))['position__max']
         position = (max_position or 0) + 1
         
-        # Išsaugome žymes atskirai
+        # Išsaugome žymes ir priskirtus vartotojus atskirai
         labels = data.pop('labels', None)
+        assigned_users = data.pop('assigned_to', None)
         
         # Create the task
         task = Task.objects.create(
@@ -26,13 +27,18 @@ class TaskService:
         if labels is not None:
             task.labels.set(labels)
         
+        # Jei yra priskirtų vartotojų, priskiriame juos
+        if assigned_users is not None:
+            task.assigned_to.set(assigned_users)
+        
         return task
 
     @staticmethod
     def update_task(task, data):
         """Update task with provided data"""
-        # Išsaugome žymes atskirai
+        # Išsaugome žymes ir priskirtus vartotojus atskirai
         labels = data.pop('labels', None)
+        assigned_users = data.pop('assigned_to', None)
         
         # Atnaujiname kitus laukus
         for key, value in data.items():
@@ -43,34 +49,11 @@ class TaskService:
         if labels is not None:
             task.labels.set(labels)
         
+        # Jei yra priskirtų vartotojų, atnaujiname juos
+        if assigned_users is not None:
+            task.assigned_to.set(assigned_users)
+        
         return task
-
-    @staticmethod
-    def assign_task(task, assignee, assigner):
-        """Assign task to a user"""
-        old_assignee = task.assigned_to
-        task.assigned_to = assignee
-        task.save()
-        
-        # Notify the new assignee
-        if assignee and assignee != assigner:
-            notify.send(
-                assigner,
-                recipient=assignee,
-                verb='assigned you to',
-                target=task,
-                description=f'You have been assigned to task "{task.title}"'
-            )
-        
-        # Notify the old assignee if they were removed
-        if old_assignee and old_assignee != assignee and old_assignee != assigner:
-            notify.send(
-                assigner,
-                recipient=old_assignee,
-                verb='removed you from',
-                target=task,
-                description=f'You have been unassigned from task "{task.title}"'
-            )
 
     @staticmethod
     def add_comment(task, user, content):
@@ -81,8 +64,8 @@ class TaskService:
             content=content
         )
         
-        # Notify task assignee and creator
-        recipients = {task.assigned_to, task.created_by} - {user, None}
+        # Notify task assignees and creator
+        recipients = set(task.assigned_to.all()) | {task.created_by} - {user, None}
         for recipient in recipients:
             notify.send(
                 user,
@@ -103,8 +86,8 @@ class TaskService:
             uploaded_by=user
         )
         
-        # Notify task assignee and creator
-        recipients = {task.assigned_to, task.created_by} - {user, None}
+        # Notify task assignees and creator
+        recipients = set(task.assigned_to.all()) | {task.created_by} - {user, None}
         for recipient in recipients:
             notify.send(
                 user,

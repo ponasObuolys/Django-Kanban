@@ -61,10 +61,11 @@ class TaskForm(forms.ModelForm):
         queryset=Column.objects.all(),
         widget=forms.HiddenInput(),
     )
-    assigned_to = forms.ModelChoiceField(
+    assigned_to = forms.ModelMultipleChoiceField(
         label=_('Assigned to'),
         required=False,
         queryset=CustomUser.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'form-control'})
     )
     due_date = forms.DateTimeField(
         label=_('Due date'),
