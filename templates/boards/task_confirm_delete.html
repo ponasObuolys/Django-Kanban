@@ -42,7 +42,10 @@
                             {% if task.assigned_to %}
                             <li class="mb-2">
                                 <i class="fas fa-user me-2"></i>
-                                <strong>{% trans "Assigned To" %}:</strong> {{ task.assigned_to.get_full_name|default:task.assigned_to.username }}
+                                <strong>{% trans "Assigned To" %}:</strong> 
+                                {% for user in task.assigned_to.all %}
+                                    {{ user.get_full_name|default:user.username }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
                             </li>
                             {% endif %}
                             {% if task.due_date %}
